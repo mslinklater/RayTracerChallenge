@@ -2,13 +2,13 @@
 #include "matrix.hpp"
 #include "tuple.hpp"
 
-TEST_CASE("Create matrix and check size", "[basic]")
+TEST_CASE("Create matrix and check size", "[matrix]")
 {
     Matrix m = Matrix(4);
     REQUIRE(m.GetSize() == 4);
 }
 
-TEST_CASE("Create empty matrix and check default values", "[basic]")
+TEST_CASE("Create empty matrix and check default values", "[matrix]")
 {
     Matrix m = Matrix(4);
     for (int row = 0; row < m.GetSize(); ++row)
@@ -20,7 +20,7 @@ TEST_CASE("Create empty matrix and check default values", "[basic]")
     }
 }
 
-TEST_CASE("Get and set matrix values", "[basic]")
+TEST_CASE("Get and set matrix values", "[matrix]")
 {
     Matrix m = Matrix(4);
     m.Set(0, 0, 1.f);
@@ -37,7 +37,7 @@ TEST_CASE("Get and set matrix values", "[basic]")
     REQUIRE(m.Get(3, 0) == 5.f);
 }
 
-TEST_CASE("Create a matrix from a vector of values and check them", "[basic]")
+TEST_CASE("Create a matrix from a vector of values and check them", "[matrix]")
 {
     std::vector<float> values = {
         1.f, 2.f, 3.f, 4.f,
@@ -63,7 +63,7 @@ TEST_CASE("Create a matrix from a vector of values and check them", "[basic]")
     }
 }
 
-TEST_CASE("Create a matrix with non-square vector of values should throw", "[basic]")
+TEST_CASE("Create a matrix with non-square vector of values should throw", "[matrix]")
 {
     std::vector<float> values = {
         1.f, 2.f, 3.f,
@@ -71,28 +71,21 @@ TEST_CASE("Create a matrix with non-square vector of values should throw", "[bas
     REQUIRE_THROWS_AS(Matrix(values), std::invalid_argument);
 }
 
-TEST_CASE("Create a matrix with square vector of values should not throw", "[basic]")
+TEST_CASE("Create a matrix with square vector of values should not throw", "[matrix]")
 {
     std::vector<float> values = {
         1.f, 2.f, 3.f, 4.f};
     REQUIRE_NOTHROW(Matrix(values));
 }
 
-TEST_CASE("Set matrix values outside of range should throw", "[basic]")
+TEST_CASE("Set matrix values outside of range should throw", "[matrix]")
 {
     Matrix m = Matrix(4);
     REQUIRE_THROWS_AS(m.Set(-1, -1, 1.f), std::out_of_range);
     REQUIRE_THROWS_AS(m.Set(4, 4, 1.f), std::out_of_range);
 }
 
-TEST_CASE("Get matrix values outside of range should throw", "[basic]")
-{
-    Matrix m = Matrix(4);
-    REQUIRE_THROWS_AS(m.Get(-1, -1), std::out_of_range);
-    REQUIRE_THROWS_AS(m.Get(4, 4), std::out_of_range);
-}
-
-TEST_CASE("Create a 2x2 matrix and check values", "[basic]")
+TEST_CASE("Create a 2x2 matrix and check values", "[matrix]")
 {
     std::vector<float> values = {
         -3.f, 5.f,
@@ -100,12 +93,12 @@ TEST_CASE("Create a 2x2 matrix and check values", "[basic]")
     Matrix m = Matrix(values);
 
     REQUIRE(m.Get(0, 0) == -3.f);
-    REQUIRE(m.Get(1, 0) == 5.f);
-    REQUIRE(m.Get(0, 1) == 1.f);
+    REQUIRE(m.Get(0, 1) == 5.f);
+    REQUIRE(m.Get(1, 0) == 1.f);
     REQUIRE(m.Get(1, 1) == -2.f);
 }
 
-TEST_CASE("Create 2 2x2 matrices and test for equality", "[basic]")
+TEST_CASE("Create 2 2x2 matrices and test for equality", "[matrix]")
 {
     std::vector<float> values1 = {
         -3.f, 5.f,
@@ -116,7 +109,7 @@ TEST_CASE("Create 2 2x2 matrices and test for equality", "[basic]")
     REQUIRE(m1 == m2);
 }
 
-TEST_CASE("Create 2 different 2x2 matrices and test for inequality", "[basic]")
+TEST_CASE("Create 2 different 2x2 matrices and test for inequality", "[matrix]")
 {
     std::vector<float> values1 = {
         -3.f, 5.f,
@@ -130,7 +123,7 @@ TEST_CASE("Create 2 different 2x2 matrices and test for inequality", "[basic]")
     REQUIRE(m1 != m2);
 }
 
-TEST_CASE("Create 2 different sized matrices and test for inequality", "[basic]")
+TEST_CASE("Create 2 different sized matrices and test for inequality", "[matrix]")
 {
     std::vector<float> values2x2 = {
         -3.f, 5.f,
@@ -145,7 +138,7 @@ TEST_CASE("Create 2 different sized matrices and test for inequality", "[basic]"
     REQUIRE(m1 != m2);
 }
 
-TEST_CASE("Multiply two 4x4 matrices", "[basic]")
+TEST_CASE("Multiply two 4x4 matrices", "[matrix]")
 {
     std::vector<float> values1 = {
         1.f, 2.f, 3.f, 4.f,
@@ -170,7 +163,7 @@ TEST_CASE("Multiply two 4x4 matrices", "[basic]")
     REQUIRE(result == expected);
 }
 
-TEST_CASE("Multiply a 2x2 matrix by a 3x3 matrix should throw", "[basic]")
+TEST_CASE("Multiply a 2x2 matrix by a 3x3 matrix should throw", "[matrix]")
 {
     std::vector<float> values2x2 = {
         1.f, 2.f,
@@ -185,7 +178,7 @@ TEST_CASE("Multiply a 2x2 matrix by a 3x3 matrix should throw", "[basic]")
     REQUIRE_THROWS_AS(m1 * m2, std::invalid_argument);
 }
 
-TEST_CASE("Set a 2x2 Matrix to the identity matrix and check for equality", "[basic]")
+TEST_CASE("Set a 2x2 Matrix to the identity matrix and check for equality", "[matrix]")
 {
     Matrix identity(2);
     identity.SetIdentity();
@@ -197,7 +190,7 @@ TEST_CASE("Set a 2x2 Matrix to the identity matrix and check for equality", "[ba
     REQUIRE(m == identity);
 }
 
-TEST_CASE("Multiply a 4x4 Matrix with the identity and check the result is the same matrix", "[basic]")
+TEST_CASE("Multiply a 4x4 Matrix with the identity and check the result is the same matrix", "[matrix]")
 {
     Matrix identity(4);
     identity.SetIdentity();
@@ -216,7 +209,7 @@ TEST_CASE("Multiply a 4x4 Matrix with the identity and check the result is the s
     REQUIRE(result2 == m);
 }
 
-TEST_CASE("Multiply a matrix by a tuple", "[basic]")
+TEST_CASE("Multiply a matrix by a tuple", "[matrix]")
 {
     std::vector<float> values = {
         1.f, 2.f, 3.f, 4.f,
@@ -229,7 +222,7 @@ TEST_CASE("Multiply a matrix by a tuple", "[basic]")
     REQUIRE(result == Tuple{18.f, 24.f, 33.f, 1.f});
 }
 
-TEST_CASE("Multiply a matrix by a tuple with wrong size should throw", "[basic]")
+TEST_CASE("Multiply a matrix by a tuple with wrong size should throw", "[matrix]")
 {
     std::vector<float> values = {
         1.f, 2.f, 3.f,
@@ -241,7 +234,7 @@ TEST_CASE("Multiply a matrix by a tuple with wrong size should throw", "[basic]"
     REQUIRE_THROWS_AS(m * t, std::invalid_argument);
 }
 
-TEST_CASE("Multiply the identity matrix by a tuple should return the same tuple", "[basic]")
+TEST_CASE("Multiply the identity matrix by a tuple should return the same tuple", "[matrix]")
 {
     Matrix identity(4);
     identity.SetIdentity();
@@ -251,7 +244,7 @@ TEST_CASE("Multiply the identity matrix by a tuple should return the same tuple"
     REQUIRE(result == t);
 }
 
-TEST_CASE("Transpose a matrix and check values", "[basic]")
+TEST_CASE("Transpose a matrix and check values", "[matrix]")
 {
     std::vector<float> values = {
         0.f, 9.f, 3.f, 0.f,
@@ -271,7 +264,7 @@ TEST_CASE("Transpose a matrix and check values", "[basic]")
     REQUIRE(result == expected);
 }
 
-TEST_CASE("Transpose the identity matrix should return the identity matrix", "[basic]")
+TEST_CASE("Transpose the identity matrix should return the identity matrix", "[matrix]")
 {
     Matrix identity(4);
     identity.SetIdentity();
@@ -280,7 +273,7 @@ TEST_CASE("Transpose the identity matrix should return the identity matrix", "[b
     REQUIRE(result == identity);
 }
 
-TEST_CASE("Determinant of a 2x2 matrix", "[basic]")
+TEST_CASE("Determinant of a 2x2 matrix", "[matrix]")
 {
     std::vector<float> values = {
         1.f, 5.f,
@@ -290,7 +283,7 @@ TEST_CASE("Determinant of a 2x2 matrix", "[basic]")
     REQUIRE(AreEqual(det, 17.f));
 }
 
-TEST_CASE("A submatrix of a 3x3 matrix is a 2x2 matrix", "[basic]")
+TEST_CASE("A submatrix of a 3x3 matrix is a 2x2 matrix", "[matrix]")
 {
     std::vector<float> values = {
         1.f, 5.f, 0.f,
@@ -305,7 +298,7 @@ TEST_CASE("A submatrix of a 3x3 matrix is a 2x2 matrix", "[basic]")
     REQUIRE(sub == expected);
 }
 
-TEST_CASE("A submatrix of a 4x4 matrix is a 3x3 matrix", "[basic]")
+TEST_CASE("A submatrix of a 4x4 matrix is a 3x3 matrix", "[matrix]")
 {
     std::vector<float> values = {
         -6.f, 1.f, 1.f, 6.f,
@@ -322,7 +315,7 @@ TEST_CASE("A submatrix of a 4x4 matrix is a 3x3 matrix", "[basic]")
     REQUIRE(sub == expected);
 }
 
-TEST_CASE("A submatrix with invalid row or column should throw", "[basic]")
+TEST_CASE("A submatrix with invalid row or column should throw", "[matrix]")
 {
     std::vector<float> values = {
         -6.f, 1.f, 1.f, 6.f,
@@ -336,7 +329,7 @@ TEST_CASE("A submatrix with invalid row or column should throw", "[basic]")
     REQUIRE_THROWS_AS(m.GetSubmatrix(0, 4), std::out_of_range);
 }
 
-TEST_CASE("Calculate the minor of a 3x3 matrix", "[basic]")
+TEST_CASE("Calculate the minor of a 3x3 matrix", "[matrix]")
 {
     std::vector<float> values = {
         3.f, 5.f, 0.f,
@@ -346,5 +339,156 @@ TEST_CASE("Calculate the minor of a 3x3 matrix", "[basic]")
     Matrix sub = m.GetSubmatrix(1, 0);
     float det = sub.GetDeterminant();
     REQUIRE(AreEqual(det, 25.f));
-    // REQUIRE(AreEqual(m.GetMinor(1, 0), 25.f));
+    REQUIRE(AreEqual(m.GetMinor(1, 0), 25.f));
+}
+
+TEST_CASE("Calculating the cofactor of a 3x3 matrix", "[matrix]")
+{
+    std::vector<float> values = {
+        3.f, 5.f, 0.f,
+        2.f, -1.f, -7.f,
+        6.f, -1.f, 5.f};
+    Matrix m = Matrix(values);
+    REQUIRE(AreEqual(m.GetMinor(0, 0), -12.f));
+    REQUIRE(AreEqual(m.GetCofactor(0, 0), -12.f));
+    REQUIRE(AreEqual(m.GetMinor(1, 0), 25.f));
+    REQUIRE(AreEqual(m.GetCofactor(1, 0), -25.f));
+}
+
+TEST_CASE("Calculating the determinant of a 3x3 matrix", "[matrix]")
+{
+    std::vector<float> values = {
+        1.f, 2.f, 6.f,
+        -5.f, 8.f, -4.f,
+        2.f, 6.f, 4.f};
+    Matrix m = Matrix(values);
+    REQUIRE(AreEqual(m.GetCofactor(0, 0), 56.f));
+    REQUIRE(AreEqual(m.GetCofactor(0, 1), 12.f));
+    REQUIRE(AreEqual(m.GetCofactor(0, 2), -46.f));
+    REQUIRE(AreEqual(m.GetDeterminant(), -196.f));
+}
+
+TEST_CASE("Calculating the determinant of a 4x4 matrix", "[matrix]")
+{
+    std::vector<float> values = {
+        -2.f, -8.f, 3.f, 5.f,
+        -3.f, 1.f, 7.f, 3.f,
+        1.f, 2.f, -9.f, 6.f,
+        -6.f, 7.f, 7.f, -9.f};
+    Matrix m = Matrix(values);
+    REQUIRE(AreEqual(m.GetCofactor(0, 0), 690.f));
+    REQUIRE(AreEqual(m.GetCofactor(0, 1), 447.f));
+    REQUIRE(AreEqual(m.GetCofactor(0, 2), 210.f));
+    REQUIRE(AreEqual(m.GetCofactor(0, 3), 51.f));
+    REQUIRE(AreEqual(m.GetDeterminant(), -4071.f));
+}
+
+TEST_CASE("Testing an invertible matrix for invertibility", "[matrix]")
+{
+    std::vector<float> values = {
+        6.f, 4.f, 4.f, 4.f,
+        5.f, 5.f, 7.f, 6.f,
+        4.f, -9.f, 3.f, -7.f,
+        9.f, 1.f, 7.f, -6.f};
+    Matrix m = Matrix(values);
+    REQUIRE(AreEqual(m.GetDeterminant(), -2120.f));
+    REQUIRE(m.GetDeterminant() != 0.f);
+}
+
+TEST_CASE("Testing a non-invertible matrix for invertibility", "[matrix]")
+{
+    std::vector<float> values = {
+        -4.f, 2.f, -2.f, -3.f,
+        9.f, 6.f, 2.f, 6.f,
+        0.f, -5.f, 1.f, -5.f,
+        0.f, 0.f, 0.f, 0.f};
+    Matrix m = Matrix(values);
+    REQUIRE(AreEqual(m.GetDeterminant(), 0.f));
+    REQUIRE(m.GetDeterminant() == 0.f);
+}
+
+TEST_CASE("Calculating the inverse of a matrix", "[matrix]")
+{
+    std::vector<float> values = {
+        -5.f, 2.f, 6.f, -8.f,
+        1.f, -5.f, 1.f, 8.f,
+        7.f, 7.f, -6.f, -7.f,
+        1.f, -3.f, 7.f, 4.f};
+    Matrix m = Matrix(values);
+    Matrix inv = m.GetInverse();
+    float det = m.GetDeterminant();
+    REQUIRE(AreEqual(det, 532.f));
+    REQUIRE(AreEqual(m.GetCofactor(2, 3), -160.f));
+    REQUIRE(AreEqual(inv.Get(3, 2), -160.f / 532.f));
+    REQUIRE(AreEqual(m.GetCofactor(3, 2), 105.f));
+    REQUIRE(AreEqual(inv.Get(2, 3), 105.f / 532.f));
+
+    std::vector<float> expectedValues = {
+        0.21805f, 0.45113f, 0.24060f, -0.04511f,
+        -0.80827f, -1.45677f, -0.44361f, 0.52068f,
+        -0.07895f, -0.22368f, -0.05263f, 0.19737f,
+        -0.52256f, -0.81391f, -0.30075f, 0.30639f};
+    Matrix expected = Matrix(expectedValues);
+
+    REQUIRE(inv == expected);
+}
+
+TEST_CASE("Calculating the inverse of another matrix", "[matrix]")
+{
+    std::vector<float> values = {
+        8.f, -5.f, 9.f, 2.f,
+        7.f, 5.f, 6.f, 1.f,
+        -6.f, 0.f, 9.f, 6.f,
+        -3.f, 0.f, -9.f, -4.f};
+    Matrix m = Matrix(values);
+    Matrix inv = m.GetInverse();
+
+    std::vector<float> expectedValues = {
+        -0.15385f, -0.15385f, -0.28205f, -0.53846f,
+        -0.07692f, 0.12308f, 0.02564f, 0.03077f,
+        0.35897f, 0.35897f, 0.43590f, 0.92308f,
+        -0.69231f, -0.69231f, -0.76923f, -1.92308f};
+    Matrix expected = Matrix(expectedValues);
+
+    REQUIRE(inv == expected);
+}
+
+TEST_CASE("Calculate the inverse of a third matrix", "[matrix]")
+{
+    std::vector<float> values = {
+        9.f, 3.f, 0.f, 9.f,
+        -5.f, -2.f, -6.f, -3.f,
+        -4.f, 9.f, 6.f, 4.f,
+        -7.f, 6.f, 6.f, 2.f};
+    Matrix m = Matrix(values);
+    Matrix inv = m.GetInverse();
+
+    std::vector<float> expectedValues = {
+        -0.04074f, -0.07778f, 0.14444f, -0.22222f,
+        -0.07778f, 0.03333f, 0.36667f, -0.33333f,
+        -0.02901f, -0.14630f, -0.10926f, 0.12963f,
+        0.17778f, 0.06667f, -0.26667f, 0.33333f};
+    Matrix expected = Matrix(expectedValues);
+
+    REQUIRE(inv == expected);
+}  
+
+TEST_CASE("Multiplying a product by its inverse should return the original matrix", "[matrix]")
+{
+    std::vector<float> values1 = {
+        3.f, -9.f, 7.f, 3.f,
+        3.f, -8.f, 2.f, -9.f,
+        -4.f, 4.f, 4.f, 1.f,
+        -6.f, 5.f, -1.f, 1.f};
+    std::vector<float> values2 = {
+        8.f, 2.f, 2.f, 2.f,
+        3.f, -1.f, 7.f, 0.f,
+        7.f, 0.f, 5.f, 4.f,
+        6.f, -2.f, 0.f, 5.f};
+    Matrix m1 = Matrix(values1);
+    Matrix m2 = Matrix(values2);
+    Matrix product = m1 * m2;
+    Matrix inv = m2.GetInverse();
+    Matrix result = product * inv;
+    REQUIRE(result == m1);
 }

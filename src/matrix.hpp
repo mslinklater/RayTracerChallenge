@@ -9,12 +9,15 @@ public:
     Matrix(const std::vector<float> &values);
 
     int GetSize() const;
-    float Get(int col, int row) const;
-    void Set(int col, int row, float value);
+    float Get(int row, int col) const;
+    void Set(int row, int col, float value);
     void SetIdentity();
     Matrix Transpose() const;
     float GetDeterminant() const;
     Matrix GetSubmatrix(int excludeRow, int excludeCol) const;
+    float GetMinor(int row, int col) const;
+    float GetCofactor(int row, int col) const;
+    Matrix GetInverse() const;
 
     bool operator==(const Matrix &other) const;
     bool operator!=(const Matrix &other) const;

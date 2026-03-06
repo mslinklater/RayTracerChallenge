@@ -2,7 +2,7 @@
 #include "color.hpp"
 #include "utils.hpp"
 
-TEST_CASE("Color default values", "[basic]")
+TEST_CASE("Color default values", "[color]")
 {
     Color c;
     REQUIRE(c.r == 0.f);
@@ -10,7 +10,7 @@ TEST_CASE("Color default values", "[basic]")
     REQUIRE(c.b == 0.f);
 }
 
-TEST_CASE("Create color", "[basic]")
+TEST_CASE("Create color", "[color]")
 {
     Color c{-0.5f, 0.4f, 1.7f};
     REQUIRE(c.r == -0.5f);
@@ -18,7 +18,7 @@ TEST_CASE("Create color", "[basic]")
     REQUIRE(c.b == 1.7f);
 }
 
-TEST_CASE("Adding colors", "[basic]")
+TEST_CASE("Adding colors", "[color]")
 {
     Color c1{0.9f, 0.6f, 0.75f};
     Color c2{0.7f, 0.1f, 0.25f};
@@ -28,7 +28,7 @@ TEST_CASE("Adding colors", "[basic]")
     REQUIRE(AreEqual(result.b, 1.0f));
 }
 
-TEST_CASE("Subtracting colors", "[basic]")
+TEST_CASE("Subtracting colors", "[color]")
 {
     Color c1{0.9f, 0.6f, 0.75f};
     Color c2{0.7f, 0.1f, 0.25f};
@@ -38,7 +38,7 @@ TEST_CASE("Subtracting colors", "[basic]")
     REQUIRE(AreEqual(result.b, 0.5f));
 }
 
-TEST_CASE("Multiplying a color by a scalar", "[basic]")
+TEST_CASE("Multiplying a color by a scalar", "[color]")
 {
     Color c{0.2f, 0.3f, 0.4f};
     Color result = c * 2.f;
@@ -47,7 +47,7 @@ TEST_CASE("Multiplying a color by a scalar", "[basic]")
     REQUIRE(AreEqual(result.b, 0.8f));
 }
 
-TEST_CASE("Multiplying colors", "[basic]")
+TEST_CASE("Multiplying colors", "[color]")
 {
     Color c1{1.f, 0.2f, 0.4f};
     Color c2{0.9f, 1.f, 0.1f};

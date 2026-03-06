@@ -23,7 +23,7 @@ int Matrix::GetSize() const
     return size;
 }
 
-float Matrix::Get(int col, int row) const
+float Matrix::Get(int row, int col) const
 {
     if (col < 0 || col >= size || row < 0 || row >= size)
     {
@@ -32,7 +32,7 @@ float Matrix::Get(int col, int row) const
     return values[row * size + col];
 }
 
-void Matrix::Set(int col, int row, float value)
+void Matrix::Set(int row, int col, float value)
 {
     if (col < 0 || col >= size || row < 0 || row >= size)
     {
@@ -49,7 +49,8 @@ bool Matrix::operator==(const Matrix &other) const
     }
     for (size_t i = 0; i < values.size(); ++i)
     {
-        if (values[i] != other.values[i])
+        //if (values[i] != other.values[i])
+        if (!AreEqual(values[i], other.values[i]))
         {
             return false;
         }
@@ -76,9 +77,9 @@ Matrix Matrix::operator*(const Matrix &other) const
             float sum = 0.f;
             for (int k = 0; k < size; ++k)
             {
-                sum += Get(k, row) * other.Get(col, k);
+                sum += Get(row, k) * other.Get(k, col);
             }
-            result.Set(col, row, sum);
+            result.Set(row, col, sum);
         }
     }
     return result;
@@ -98,10 +99,10 @@ Tuple Matrix::operator*(const Tuple &tuple) const
     {
         throw std::invalid_argument("Matrix must be 4x4 to multiply with a tuple.");
     }
-    float x = Get(0, 0) * tuple.x + Get(1, 0) * tuple.y + Get(2, 0) * tuple.z + Get(3, 0) * tuple.w;
-    float y = Get(0, 1) * tuple.x + Get(1, 1) * tuple.y + Get(2, 1) * tuple.z + Get(3, 1) * tuple.w;
-    float z = Get(0, 2) * tuple.x + Get(1, 2) * tuple.y + Get(2, 2) * tuple.z + Get(3, 2) * tuple.w;
-    float w = Get(0, 3) * tuple.x + Get(1, 3) * tuple.y + Get(2, 3) * tuple.z + Get(3, 3) * tuple.w;
+    float x = Get(0, 0) * tuple.x + Get(0, 1) * tuple.y + Get(0, 2) * tuple.z + Get(0, 3) * tuple.w;
+    float y = Get(1, 0) * tuple.x + Get(1, 1) * tuple.y + Get(1, 2) * tuple.z + Get(1, 3) * tuple.w;
+    float z = Get(2, 0) * tuple.x + Get(2, 1) * tuple.y + Get(2, 2) * tuple.z + Get(2, 3) * tuple.w;
+    float w = Get(3, 0) * tuple.x + Get(3, 1) * tuple.y + Get(3, 2) * tuple.z + Get(3, 3) * tuple.w;
     return Tuple{x, y, z, w};
 }
 
@@ -120,15 +121,18 @@ Matrix Matrix::Transpose() const
 
 float Matrix::GetDeterminant() const
 {
+    float determinant = 0.f;
     if (size == 2)
     {
-        return Get(0, 0) * Get(1, 1) - Get(1, 0) * Get(0, 1);
+        determinant = Get(0, 0) * Get(1, 1) - Get(1, 0) * Get(0, 1);
     }
-    float determinant = 0.f;
-    //    for (int col = 0; col < size; ++col)
-    //    {
-    //        determinant += Get(col, 0) * Cofactor(0, col);
-    //    }
+    else
+    {
+        for (int col = 0; col < size; ++col)
+        {
+            determinant += Get(0, col) * GetCofactor(0, col);
+        }
+    }
     return determinant;
 }
 
@@ -155,10 +159,42 @@ Matrix Matrix::GetSubmatrix(int excludeRow, int excludeCol) const
             {
                 continue;
             }
-            submatrix.Set(subCol, subRow, Get(col, row));
+            submatrix.Set(subRow, subCol, Get(row, col));
             ++subCol;
         }
         ++subRow;
     }
     return submatrix;
+}
+
+float Matrix::GetMinor(int row, int col) const
+{
+    Matrix sub = GetSubmatrix(row, col);
+    return sub.GetDeterminant();
+}
+
+float Matrix::GetCofactor(int row, int col) const
+{
+    float minor = GetMinor(row, col);
+    return ((row + col) % 2 == 0) ? minor : -minor;
+}
+
+Matrix Matrix::GetInverse() const
+{
+    float determinant = GetDeterminant();
+    if (AreEqual(determinant, 0.f))
+    {
+        throw std::runtime_error("Matrix is not invertible.");
+    }
+
+    Matrix inverse(size);
+    for (int row = 0; row < size; ++row)
+    {
+        for (int col = 0; col < size; ++col)
+        {
+            float cofactor = GetCofactor(row, col);
+            inverse.Set(col, row, cofactor / determinant); // Note the transpose here
+        }
+    }
+    return inverse;
 }

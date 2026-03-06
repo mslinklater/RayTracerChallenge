@@ -28,6 +28,10 @@ struct Tuple
 
     Tuple operator/(float scalar) const
     {
+        if(scalar == 0.f)
+        {
+            throw std::invalid_argument("Cannot divide by zero.");
+        }
         return Tuple{x / scalar, y / scalar, z / scalar, w / scalar};
     }
 

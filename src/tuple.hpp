@@ -67,6 +67,11 @@ struct Tuple
         return AreEqual(x, other.x) && AreEqual(y, other.y) && AreEqual(z, other.z) && AreEqual(w, other.w);
     }
 
+    bool operator==(const Tuple &other) const
+    {
+        return IsEqual(other);
+    }
+
     Tuple Normalize() const
     {
         float mag = Magnitude();
@@ -80,14 +85,14 @@ struct Tuple
 
 // Point
 
-Tuple Point(float x, float y, float z)
+inline Tuple Point(float x, float y, float z)
 {
     return Tuple{x, y, z, 1.f};
 }
 
 // Vector
 
-Tuple Vector(float x, float y, float z)
+inline Tuple Vector(float x, float y, float z)
 {
     return Tuple{x, y, z, 0.f};
 }

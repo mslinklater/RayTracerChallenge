@@ -1,8 +1,9 @@
 #pragma once
 
 #include <cmath>
+#include <vector>
+#include <string>
 
-bool AreEqual(float a, float b)
-{
-    return std::abs(a - b) < 0.00001f;
-}
+extern bool AreEqual(float a, float b);
+extern int ToPPMChannel(float value);
+extern std::vector<std::string> ReadLinesFromFile(const std::string &filename);

@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-TEST_CASE("Create canvas", "[basic]")
+TEST_CASE("Create canvas", "[canvas]")
 {
     Canvas c{10, 20};
     REQUIRE(c.GetWidth() == 10);
@@ -20,7 +20,7 @@ TEST_CASE("Create canvas", "[basic]")
     }
 }
 
-TEST_CASE("Write pixel to canvas", "[basic]")
+TEST_CASE("Write pixel to canvas", "[canvas]")
 {
     Canvas c{10, 20};
     Color red{1.f, 0.f, 0.f};
@@ -28,7 +28,7 @@ TEST_CASE("Write pixel to canvas", "[basic]")
     REQUIRE(c.GetPixel(2, 3) == red);
 }
 
-TEST_CASE("Pixels outside canvas bounds", "[basic]")
+TEST_CASE("Pixels outside canvas bounds", "[canvas]")
 {
     Canvas c{10, 20};
     Color red{1.f, 0.f, 0.f};
@@ -38,7 +38,7 @@ TEST_CASE("Pixels outside canvas bounds", "[basic]")
     REQUIRE(c.GetPixel(10, 20) == Color{0.f, 0.f, 0.f});
 }
 
-TEST_CASE("Pixels on canvas bounds", "[basic]")
+TEST_CASE("Pixels on canvas bounds", "[canvas]")
 {
     Canvas c{10, 20};
     Color red{1.f, 0.f, 0.f};
@@ -50,7 +50,7 @@ TEST_CASE("Pixels on canvas bounds", "[basic]")
 
 // PPM file output tests
 
-TEST_CASE("Write canvas to PPM file", "[basic]")
+TEST_CASE("Write canvas to PPM file", "[canvas]")
 {
     Canvas c{5, 3};
     c.WriteToPPM("test.ppm");
@@ -63,7 +63,7 @@ TEST_CASE("Write canvas to PPM file", "[basic]")
     REQUIRE(lines[2] == "255");
 }
 
-TEST_CASE("PPM file pixel data", "[basic]")
+TEST_CASE("PPM file pixel data", "[canvas]")
 {
     Canvas c{5, 3};
     Color c1{1.5f, 0.f, 0.f};
@@ -84,7 +84,7 @@ TEST_CASE("PPM file pixel data", "[basic]")
     REQUIRE(lines[5] == "0 0 0 0 0 0 0 0 0 0 0 0 0 0 255");
 }
 
-TEST_CASE("PPM file pixel data with line breaks", "[basic]")
+TEST_CASE("PPM file pixel data with line breaks", "[canvas]")
 {
     Canvas c{10, 2};
     for (int x = 0; x < c.GetWidth(); ++x)

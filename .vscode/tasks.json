@@ -1,0 +1,73 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Coverage: Configure",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "-S",
+                ".",
+                "-B",
+                "build-coverage",
+                "-G",
+                "Ninja",
+                "-DCMAKE_BUILD_TYPE=Debug",
+                "-DENABLE_COVERAGE=ON"
+            ],
+            "group": "build",
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "Coverage: Build",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "build-coverage"
+            ],
+            "group": "build",
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "Coverage: Run Target",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "build-coverage",
+                "--target",
+                "coverage"
+            ],
+            "group": "test"
+        },
+        {
+            "label": "Coverage: HTML Report",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "build-coverage",
+                "--target",
+                "coverage-html"
+            ],
+            "group": "test"
+        },
+        {
+            "label": "Coverage: Full Workflow",
+            "type": "shell",
+            "command": "cmake -S . -B build-coverage -G Ninja -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON && cmake --build build-coverage && cmake --build build-coverage --target coverage",
+            "group": "test"
+        },
+        {
+            "label": "Coverage: Full Workflow + HTML",
+            "type": "shell",
+            "command": "cmake -S . -B build-coverage -G Ninja -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON && cmake --build build-coverage && cmake --build build-coverage --target coverage-html",
+            "group": "test"
+        }
+    ]
+}

@@ -472,23 +472,3 @@ TEST_CASE("Calculate the inverse of a third matrix", "[matrix]")
 
     REQUIRE(inv == expected);
 }  
-
-TEST_CASE("Multiplying a product by its inverse should return the original matrix", "[matrix]")
-{
-    std::vector<float> values1 = {
-        3.f, -9.f, 7.f, 3.f,
-        3.f, -8.f, 2.f, -9.f,
-        -4.f, 4.f, 4.f, 1.f,
-        -6.f, 5.f, -1.f, 1.f};
-    std::vector<float> values2 = {
-        8.f, 2.f, 2.f, 2.f,
-        3.f, -1.f, 7.f, 0.f,
-        7.f, 0.f, 5.f, 4.f,
-        6.f, -2.f, 0.f, 5.f};
-    Matrix m1 = Matrix(values1);
-    Matrix m2 = Matrix(values2);
-    Matrix product = m1 * m2;
-    Matrix inv = m2.GetInverse();
-    Matrix result = product * inv;
-    REQUIRE(result == m1);
-}

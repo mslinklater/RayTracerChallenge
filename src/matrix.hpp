@@ -28,3 +28,7 @@ private:
     int size; // Size of the matrix (e.g., 4 for a 4x4 matrix)
     std::vector<float> values;
 };
+
+extern Matrix CreateTranslation(float x, float y, float z);
+extern Matrix CreateScaling(float x, float y, float z);
+extern Matrix CreateRotationX(float angle);

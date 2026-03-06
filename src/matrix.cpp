@@ -198,3 +198,36 @@ Matrix Matrix::GetInverse() const
     }
     return inverse;
 }
+
+Matrix CreateTranslation(float x, float y, float z)
+{
+    Matrix translation(4);
+    translation.SetIdentity();
+    translation.Set(0, 3, x);
+    translation.Set(1, 3, y);
+    translation.Set(2, 3, z);
+    return translation;
+}
+
+Matrix CreateScaling(float x, float y, float z)
+{
+    Matrix scaling(4);
+    scaling.SetIdentity();
+    scaling.Set(0, 0, x);
+    scaling.Set(1, 1, y);
+    scaling.Set(2, 2, z);
+    return scaling;
+}
+
+Matrix CreateRotationX(float angle)
+{
+    Matrix rotation(4);
+    rotation.SetIdentity();
+    float cosA = std::cos(angle);
+    float sinA = std::sin(angle);
+    rotation.Set(1, 1, cosA);
+    rotation.Set(1, 2, -sinA);
+    rotation.Set(2, 1, sinA);
+    rotation.Set(2, 2, cosA);
+    return rotation;
+}

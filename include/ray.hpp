@@ -8,3 +8,5 @@ struct Ray
     Tuple origin;
     Tuple direction;
 };
+
+extern Tuple Position(const Ray &ray, float t);

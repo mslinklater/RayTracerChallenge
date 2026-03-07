@@ -16,6 +16,11 @@ struct Tuple
         return Tuple{x + other.x, y + other.y, z + other.z, w + other.w};
     }
 
+    Tuple operator-(const Tuple &other) const
+    {
+        return Tuple{x - other.x, y - other.y, z - other.z, w - other.w};
+    }
+
     Tuple operator-() const
     {
         return Tuple{-x, -y, -z, -w};

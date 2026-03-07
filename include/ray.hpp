@@ -1,5 +1,6 @@
 #pragma once
 #include "tuple.hpp"
+#include "sphere.hpp"
 
 struct Ray
 {
@@ -10,3 +11,4 @@ struct Ray
 };
 
 extern Tuple Position(const Ray &ray, float t);
+extern std::vector<float> Intersect(const Sphere &sphere, const Ray &ray);

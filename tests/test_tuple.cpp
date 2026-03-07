@@ -81,7 +81,7 @@ TEST_CASE("Subtracting two points", "[tuple]")
 {
     Tuple p1 = Point(3.f, 2.f, 1.f);
     Tuple p2 = Point(5.f, 6.f, 7.f);
-    Tuple result = p1 + Tuple{-p2.x, -p2.y, -p2.z, -p2.w};
+    Tuple result = p1 - p2;
     REQUIRE(result.x == -2.f);
     REQUIRE(result.y == -4.f);
     REQUIRE(result.z == -6.f);
@@ -92,7 +92,7 @@ TEST_CASE("Subtracting two vectors", "[tuple]")
 {
     Tuple v1 = Vector(3.f, 2.f, 1.f);
     Tuple v2 = Vector(5.f, 6.f, 7.f);
-    Tuple result = v1 + Tuple{-v2.x, -v2.y, -v2.z, -v2.w};
+    Tuple result = v1 - v2;
     REQUIRE(result.x == -2.f);
     REQUIRE(result.y == -4.f);
     REQUIRE(result.z == -6.f);

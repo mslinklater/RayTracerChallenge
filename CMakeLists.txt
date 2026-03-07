@@ -12,6 +12,8 @@ enable_testing()
 
 set(SRC_FILES   src/utils.cpp 
                 src/matrix.cpp
+                src/ray.cpp
+                src/tuple.cpp
                 src/canvas.cpp)
 
 set(PROJECT_COVERAGE_FLAGS "")
@@ -26,22 +28,29 @@ if(ENABLE_COVERAGE)
 endif()
 
 # Main executable
-add_executable(RayTracerChallenge   src/main.cpp ${SRC_FILES})
-target_include_directories(RayTracerChallenge PRIVATE ${PROJECT_SOURCE_DIR}/src)
+add_executable(RayTracerChallenge   main.cpp ${SRC_FILES})
+target_include_directories(RayTracerChallenge PRIVATE ${PROJECT_SOURCE_DIR}/include)
 target_compile_options(RayTracerChallenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
 target_link_options(RayTracerChallenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
+
+# Chapter 4 challenge executable
+add_executable(Chapter4Challenge chapter4.cpp ${SRC_FILES})
+target_include_directories(Chapter4Challenge PRIVATE ${PROJECT_SOURCE_DIR}/include)
+target_compile_options(Chapter4Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
+target_link_options(Chapter4Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
 
 # Test executable
 set(TEST_SRC    tests/test_main.cpp 
                 tests/test_color.cpp 
                 tests/test_tuple.cpp 
                 tests/test_utils.cpp
+                tests/test_ray.cpp
                 tests/test_matrix.cpp
                 tests/test_transformations.cpp
                 tests/test_canvas.cpp)
 
 add_executable(RayTracerChallengeTests ${TEST_SRC} ${SRC_FILES})
-target_include_directories(RayTracerChallengeTests PRIVATE ${PROJECT_SOURCE_DIR}/src)
+target_include_directories(RayTracerChallengeTests PRIVATE ${PROJECT_SOURCE_DIR}/include)
 target_link_libraries(RayTracerChallengeTests PRIVATE Catch2::Catch2WithMain)
 target_compile_options(RayTracerChallengeTests PRIVATE ${PROJECT_COVERAGE_FLAGS})
 target_link_options(RayTracerChallengeTests PRIVATE ${PROJECT_COVERAGE_FLAGS})

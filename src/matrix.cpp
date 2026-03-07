@@ -49,7 +49,7 @@ bool Matrix::operator==(const Matrix &other) const
     }
     for (size_t i = 0; i < values.size(); ++i)
     {
-        //if (values[i] != other.values[i])
+        // if (values[i] != other.values[i])
         if (!AreEqual(values[i], other.values[i]))
         {
             return false;
@@ -199,7 +199,7 @@ Matrix Matrix::GetInverse() const
     return inverse;
 }
 
-Matrix CreateTranslation(float x, float y, float z)
+Matrix Matrix::CreateTranslation(float x, float y, float z)
 {
     Matrix translation(4);
     translation.SetIdentity();
@@ -209,7 +209,7 @@ Matrix CreateTranslation(float x, float y, float z)
     return translation;
 }
 
-Matrix CreateScaling(float x, float y, float z)
+Matrix Matrix::CreateScaling(float x, float y, float z)
 {
     Matrix scaling(4);
     scaling.SetIdentity();
@@ -219,7 +219,7 @@ Matrix CreateScaling(float x, float y, float z)
     return scaling;
 }
 
-Matrix CreateRotationX(float angle)
+Matrix Matrix::CreateRotationX(float angle)
 {
     Matrix rotation(4);
     rotation.SetIdentity();
@@ -230,4 +230,43 @@ Matrix CreateRotationX(float angle)
     rotation.Set(2, 1, sinA);
     rotation.Set(2, 2, cosA);
     return rotation;
+}
+
+Matrix Matrix::CreateRotationY(float angle)
+{
+    Matrix rotation(4);
+    rotation.SetIdentity();
+    float cosA = std::cos(angle);
+    float sinA = std::sin(angle);
+    rotation.Set(0, 0, cosA);
+    rotation.Set(0, 2, sinA);
+    rotation.Set(2, 0, -sinA);
+    rotation.Set(2, 2, cosA);
+    return rotation;
+}
+
+Matrix Matrix::CreateRotationZ(float angle)
+{
+    Matrix rotation(4);
+    rotation.SetIdentity();
+    float cosA = std::cos(angle);
+    float sinA = std::sin(angle);
+    rotation.Set(0, 0, cosA);
+    rotation.Set(0, 1, -sinA);
+    rotation.Set(1, 0, sinA);
+    rotation.Set(1, 1, cosA);
+    return rotation;
+}
+
+Matrix Matrix::CreateShearing(float xy, float xz, float yx, float yz, float zx, float zy)
+{
+    Matrix shearing(4);
+    shearing.SetIdentity();
+    shearing.Set(0, 1, xy);
+    shearing.Set(0, 2, xz);
+    shearing.Set(1, 0, yx);
+    shearing.Set(1, 2, yz);
+    shearing.Set(2, 0, zx);
+    shearing.Set(2, 1, zy);
+    return shearing;
 }

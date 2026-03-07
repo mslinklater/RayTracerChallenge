@@ -24,11 +24,14 @@ public:
     Matrix operator*(const Matrix &other) const;
     Tuple operator*(const Tuple &tuple) const;
 
+    static Matrix CreateTranslation(float x, float y, float z);
+    static Matrix CreateScaling(float x, float y, float z);
+    static Matrix CreateRotationX(float angle);
+    static Matrix CreateRotationY(float angle);
+    static Matrix CreateRotationZ(float angle);
+    static Matrix CreateShearing(float xy, float xz, float yx, float yz, float zx, float zy);
+
 private:
     int size; // Size of the matrix (e.g., 4 for a 4x4 matrix)
     std::vector<float> values;
 };
-
-extern Matrix CreateTranslation(float x, float y, float z);
-extern Matrix CreateScaling(float x, float y, float z);
-extern Matrix CreateRotationX(float angle);

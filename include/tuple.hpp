@@ -28,7 +28,7 @@ struct Tuple
 
     Tuple operator/(float scalar) const
     {
-        if(scalar == 0.f)
+        if (scalar == 0.f)
         {
             throw std::invalid_argument("Cannot divide by zero.");
         }
@@ -76,15 +76,7 @@ struct Tuple
         return IsEqual(other);
     }
 
-    Tuple Normalize() const
-    {
-        float mag = Magnitude();
-        if (mag == 0.f)
-        {
-            return *this; // Can't normalize a zero vector, return it as is
-        }
-        return Tuple{x / mag, y / mag, z / mag, w};
-    }
+    Tuple Normalize() const;
 };
 
 // Point

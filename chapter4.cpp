@@ -26,6 +26,6 @@ int main()
         canvas.WritePixel(point.x, point.y, white);
     }
 
-    canvas.WriteToPPM("chapter4.ppm");
+    canvas.WriteToPPM("../images/chapter4.ppm");
     return 0;
 }

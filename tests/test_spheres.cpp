@@ -94,3 +94,67 @@ TEST_CASE("Intersecting a translated sphere with a ray", "[Spheres]")
 
     REQUIRE(xs.size() == 0);
 }
+
+TEST_CASE("The normal on a sphere at a point on the x axis", "[Spheres]")
+{
+    Sphere sphere;
+    Tuple normal = sphere.NormalAt(Point(1.f, 0.f, 0.f));
+    REQUIRE(normal == Vector(1.f, 0.f, 0.f));
+}
+
+TEST_CASE("The normal on a sphere at a point on the y axis", "[Spheres]")
+{
+    Sphere sphere;
+    Tuple normal = sphere.NormalAt(Point(0.f, 1.f, 0.f));
+    REQUIRE(normal == Vector(0.f, 1.f, 0.f));
+}
+
+TEST_CASE("The normal on a sphere at a point on the z axis", "[Spheres]")
+{
+    Sphere sphere;
+    Tuple normal = sphere.NormalAt(Point(0.f, 0.f, 1.f));
+    REQUIRE(normal == Vector(0.f, 0.f, 1.f));
+}
+
+TEST_CASE("The normal on a sphere at a nonaxial point", "[Spheres]")
+{
+    Sphere sphere;
+    float rootThreeOverThree = std::sqrt(3.f) / 3.f;
+    Tuple normal = sphere.NormalAt(Point(rootThreeOverThree, rootThreeOverThree, rootThreeOverThree));
+    REQUIRE(normal == Vector(rootThreeOverThree, rootThreeOverThree, rootThreeOverThree));
+}
+
+TEST_CASE("The normal on a sphere at a nonaxial point 2", "[Spheres]")
+{
+    Sphere sphere;
+    float rootThreeOverThree = std::sqrt(3.f) / 3.f;
+    Tuple normal = sphere.NormalAt(Point(1.f, 1.f, 1.f));
+    REQUIRE(normal == Vector(rootThreeOverThree, rootThreeOverThree, rootThreeOverThree));
+}
+
+TEST_CASE("The normal is normalised", "[Spheres]")
+{
+    Sphere sphere;
+    float rootThreeOverThree = std::sqrt(3.f) / 3.f;
+    Tuple normal = sphere.NormalAt(Point(1.f, 1.f, 1.f));
+    REQUIRE(normal == normal.Normalize());
+    REQUIRE(AreEqual(normal.Magnitude(), 1.f));
+}
+
+TEST_CASE("Computing the normal on a translated sphere", "[Spheres]")
+{
+    Sphere sphere;
+    sphere.transform = Matrix::CreateTranslation(0.f, 1.f, 0.f);
+    Tuple normal = sphere.NormalAt(Point(0.f, 1.70711f, -0.70711f));
+    REQUIRE(normal == Vector(0.f, 0.70711f, -0.70711f));
+}
+
+TEST_CASE("Computing the normal on a transformed sphere", "[Spheres]")
+{
+    Sphere sphere;
+    Matrix scaling = Matrix::CreateScaling(1.f, 0.5f, 1.f);
+    Matrix rotation = Matrix::CreateRotationZ(M_PI / 5.f);
+    sphere.transform = scaling * rotation;
+    Tuple normal = sphere.NormalAt(Point(0.f, std::sqrt(2.f) / 2.f, -std::sqrt(2.f) / 2.f));
+    REQUIRE(normal == Vector(0.f, 0.97014f, -0.24254f));
+}

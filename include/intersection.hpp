@@ -1,12 +1,13 @@
 #pragma once
 #include "sphere.hpp"
-#include<initializer_list>
+#include "utils.hpp"
+#include <initializer_list>
 
 struct Intersection
 {
     Intersection(float t, const Sphere *object) : t(t), object(object) {}
 
-    float t; // The distance along the ray to the intersection point
+    float t;              // The distance along the ray to the intersection point
     const Sphere *object; // Pointer to the intersected object (in this case, a sphere)
 
     bool operator==(const Intersection &other) const

@@ -9,3 +9,9 @@ Tuple Tuple::Normalize() const
     }
     return Tuple{x / mag, y / mag, z / mag, w};
 }
+
+Tuple Tuple::Reflect(const Tuple &normal) const
+{
+    // Reflection formula: v - n * 2 * (v . n)
+    return *this - normal * 2.f * (*this | normal);
+}

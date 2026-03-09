@@ -239,3 +239,19 @@ TEST_CASE("Cross product of two vectors", "[tuple]")
     REQUIRE(cross1.IsEqual(Vector(-1.f, 2.f, -1.f)));
     REQUIRE(cross2.IsEqual(Vector(1.f, -2.f, 1.f)));
 }
+
+TEST_CASE("Reflecting a vector approaching at 45 degrees", "[tuple]")
+{
+    Tuple v = Vector(1.f, -1.f, 0.f);
+    Tuple n = Vector(0.f, 1.f, 0.f);
+    Tuple r = v.Reflect(n); // v - n * 2.f * (v | n);
+    REQUIRE(r.IsEqual(Vector(1.f, 1.f, 0.f)));
+}
+
+TEST_CASE("Reflecting a vector off a slanted surface", "[tuple]")
+{
+    Tuple v = Vector(0.f, -1.f, 0.f);
+    Tuple n = Vector(std::sqrt(2.f) / 2.f, std::sqrt(2.f) / 2.f, 0.f);
+    Tuple r = v.Reflect(n); // v - n * 2.f * (v | n);
+    REQUIRE(r.IsEqual(Vector(1.f, 0.f, 0.f)));
+}

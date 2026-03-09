@@ -82,6 +82,7 @@ struct Tuple
     }
 
     Tuple Normalize() const;
+    Tuple Reflect(const Tuple &normal) const;
 };
 
 // Point

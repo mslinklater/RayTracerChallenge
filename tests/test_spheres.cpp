@@ -1,6 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include "sphere.hpp"
 #include "ray.hpp"
+#include "material.hpp"
 
 TEST_CASE("A ray intersects a sphere at two points", "[Spheres]")
 {
@@ -58,25 +59,25 @@ TEST_CASE("The sphere is behind the ray", "[Spheres]")
 TEST_CASE("A spheres default transformation", "[Spheres]")
 {
     Sphere sphere;
-    sphere.transform.SetIdentity();
+    sphere.GetMutableTransform().SetIdentity();
     Matrix expected(4);
     expected.SetIdentity();
-    REQUIRE(sphere.transform == expected);
+    REQUIRE(sphere.GetTransform() == expected);
 }
 
 TEST_CASE("Changing a spheres transformation", "[Spheres]")
 {
     Sphere sphere;
     Matrix translation = Matrix::CreateTranslation(2.f, 3.f, 4.f);
-    sphere.transform = translation;
+    sphere.SetTransform(translation);
     Matrix expected = Matrix::CreateTranslation(2.f, 3.f, 4.f);
-    REQUIRE(sphere.transform == expected);
+    REQUIRE(sphere.GetTransform() == expected);
 }
 
 TEST_CASE("Intersecting a scaled sphere with a ray", "[Spheres]")
 {
     Sphere sphere;
-    sphere.transform = Matrix::CreateScaling(2.f, 2.f, 2.f);
+    sphere.SetTransform(Matrix::CreateScaling(2.f, 2.f, 2.f));
     Ray ray(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
     auto xs = Intersect(sphere, ray);
 
@@ -88,7 +89,7 @@ TEST_CASE("Intersecting a scaled sphere with a ray", "[Spheres]")
 TEST_CASE("Intersecting a translated sphere with a ray", "[Spheres]")
 {
     Sphere sphere;
-    sphere.transform = Matrix::CreateTranslation(5.f, 0.f, 0.f);
+    sphere.SetTransform(Matrix::CreateTranslation(5.f, 0.f, 0.f));
     Ray ray(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
     auto xs = Intersect(sphere, ray);
 
@@ -144,7 +145,7 @@ TEST_CASE("The normal is normalised", "[Spheres]")
 TEST_CASE("Computing the normal on a translated sphere", "[Spheres]")
 {
     Sphere sphere;
-    sphere.transform = Matrix::CreateTranslation(0.f, 1.f, 0.f);
+    sphere.SetTransform(Matrix::CreateTranslation(0.f, 1.f, 0.f));
     Tuple normal = sphere.NormalAt(Point(0.f, 1.70711f, -0.70711f));
     REQUIRE(normal == Vector(0.f, 0.70711f, -0.70711f));
 }
@@ -154,7 +155,28 @@ TEST_CASE("Computing the normal on a transformed sphere", "[Spheres]")
     Sphere sphere;
     Matrix scaling = Matrix::CreateScaling(1.f, 0.5f, 1.f);
     Matrix rotation = Matrix::CreateRotationZ(M_PI / 5.f);
-    sphere.transform = scaling * rotation;
+    sphere.SetTransform(scaling * rotation);
     Tuple normal = sphere.NormalAt(Point(0.f, std::sqrt(2.f) / 2.f, -std::sqrt(2.f) / 2.f));
     REQUIRE(normal == Vector(0.f, 0.97014f, -0.24254f));
+}
+
+TEST_CASE("A sphere has a material", "[Spheres]")
+{
+    Sphere sphere;
+    Material m = sphere.GetMaterial();
+    Material expected;
+    REQUIRE(m.GetColor() == expected.GetColor());
+    REQUIRE(m.GetAmbient() == expected.GetAmbient());
+    REQUIRE(m.GetDiffuse() == expected.GetDiffuse());
+    REQUIRE(m.GetSpecular() == expected.GetSpecular());
+    REQUIRE(m.GetShininess() == expected.GetShininess());
+}
+
+TEST_CASE("A sphere may be assigned a material", "[Spheres]")
+{
+    Sphere sphere;
+    Material m;
+    m.SetColor(Color(1.f, 0.2f, 1.f));
+    sphere.SetMaterial(m);
+    REQUIRE(sphere.GetMaterial().GetColor() == Color(1.f, 0.2f, 1.f));
 }

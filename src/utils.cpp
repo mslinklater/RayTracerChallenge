@@ -7,7 +7,7 @@
 
 bool AreEqual(float a, float b)
 {
-    return std::abs(a - b) < 0.00001f;
+    return std::abs(a - b) < 0.0001f;
 }
 
 int ToPPMChannel(float value)

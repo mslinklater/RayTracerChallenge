@@ -13,6 +13,7 @@ enable_testing()
 set(SRC_FILES   src/utils.cpp 
                 src/matrix.cpp
                 src/ray.cpp
+                src/light.cpp
                 src/tuple.cpp
                 src/canvas.cpp)
 
@@ -44,6 +45,12 @@ add_executable(Chapter5Challenge chapter5.cpp ${SRC_FILES})
 target_include_directories(Chapter5Challenge PRIVATE ${PROJECT_SOURCE_DIR}/include)
 target_compile_options(Chapter5Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
 target_link_options(Chapter5Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
+
+# Chapter 6 challenge executable
+add_executable(Chapter6Challenge chapter6.cpp ${SRC_FILES})
+target_include_directories(Chapter6Challenge PRIVATE ${PROJECT_SOURCE_DIR}/include)
+target_compile_options(Chapter6Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
+target_link_options(Chapter6Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
 
 # Test executable
 set(TEST_SRC    tests/test_main.cpp 

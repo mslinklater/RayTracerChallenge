@@ -23,7 +23,7 @@ void Canvas::WritePixel(int x, int y, const Color &color)
     {
         return; // Ignore out-of-bounds writes
     }
-    pixels[y * width + x] = color;
+    pixels[(height - y) * width + x] = color;
 }
 
 void Canvas::WriteToPPM(const std::string &filename) const

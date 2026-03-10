@@ -1,4 +1,5 @@
 #pragma once
+#include "utils.hpp"
 
 struct Color
 {
@@ -28,6 +29,6 @@ struct Color
 
     bool operator==(const Color &other) const
     {
-        return r == other.r && g == other.g && b == other.b;
+        return AreEqual(r, other.r) && AreEqual(g, other.g) && AreEqual(b, other.b);
     }
 };

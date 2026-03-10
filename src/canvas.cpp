@@ -12,7 +12,7 @@ Color Canvas::GetPixel(int x, int y) const
     {
         return Color{0.f, 0.f, 0.f}; // Return default color for out-of-bounds pixels
     }
-    return pixels[y * width + x];
+    return pixels[(height - 1 - y) * width + x];
 }
 
 void Canvas::WritePixel(int x, int y, const Color &color)
@@ -21,7 +21,7 @@ void Canvas::WritePixel(int x, int y, const Color &color)
     {
         return; // Ignore out-of-bounds writes
     }
-    pixels[y * width + x] = color;
+    pixels[(height - 1 - y) * width + x] = color;
 }
 
 void Canvas::WriteToPPM(const std::string &filename) const

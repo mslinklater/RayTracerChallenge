@@ -25,3 +25,5 @@ private:
     float specular;  // The specular reflection coefficient
     float shininess; // The shininess factor for specular highlights
 };
+
+bool operator==(const Material &lhs, const Material &rhs);

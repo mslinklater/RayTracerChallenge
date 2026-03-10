@@ -471,4 +471,4 @@ TEST_CASE("Calculate the inverse of a third matrix", "[matrix]")
     Matrix expected = Matrix(expectedValues);
 
     REQUIRE(inv == expected);
-}  
+}

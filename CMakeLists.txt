@@ -15,6 +15,8 @@ set(SRC_FILES   src/utils.cpp
                 src/ray.cpp
                 src/light.cpp
                 src/tuple.cpp
+                src/material.cpp
+                src/world.cpp
                 src/canvas.cpp)
 
 set(PROJECT_COVERAGE_FLAGS "")
@@ -58,6 +60,7 @@ set(TEST_SRC    tests/test_main.cpp
                 tests/test_tuples.cpp 
                 tests/test_utils.cpp
                 tests/test_rays.cpp
+                tests/test_world.cpp
                 tests/test_intersections.cpp
                 tests/test_spheres.cpp
                 tests/test_lights.cpp

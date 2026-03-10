@@ -2,11 +2,9 @@
 #include "utils.hpp"
 #include <fstream>
 
-namespace
+Canvas::Canvas(int width, int height) : width(width), height(height), pixels(width * height)
 {
 }
-
-Canvas::Canvas(int width, int height) : width(width), height(height), pixels(width * height) {}
 
 Color Canvas::GetPixel(int x, int y) const
 {
@@ -23,7 +21,7 @@ void Canvas::WritePixel(int x, int y, const Color &color)
     {
         return; // Ignore out-of-bounds writes
     }
-    pixels[(height - y) * width + x] = color;
+    pixels[y * width + x] = color;
 }
 
 void Canvas::WriteToPPM(const std::string &filename) const

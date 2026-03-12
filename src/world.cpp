@@ -50,6 +50,6 @@ std::vector<Intersection> IntersectWorld(const World &world, const Ray &ray)
     }
     // sort intersections by t value
     std::sort(intersections.begin(), intersections.end(), [](const Intersection &a, const Intersection &b)
-              { return a.t < b.t; });
+              { return a.GetT() < b.GetT(); });
     return intersections;
 }

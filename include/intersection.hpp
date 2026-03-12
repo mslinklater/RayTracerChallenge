@@ -3,17 +3,22 @@
 #include "utils.hpp"
 #include <initializer_list>
 
-struct Intersection
+class Intersection
 {
+public:
     Intersection(float t, const Sphere *object) : t(t), object(object) {}
 
-    float t;              // The distance along the ray to the intersection point
-    const Sphere *object; // Pointer to the intersected object (in this case, a sphere)
+    float GetT() const { return t; }
+    const Sphere *GetObject() const { return object; }
 
     bool operator==(const Intersection &other) const
     {
         return AreEqual(t, other.t) && object == other.object;
     }
+
+private:
+    float t;              // The distance along the ray to the intersection point
+    const Sphere *object; // Pointer to the intersected object (in this case, a sphere)
 };
 
 // input is a list of intersections, output is the hit (the intersection with the lowest non-negative t)
@@ -27,9 +32,9 @@ inline Intersection GetClosestIntersection(const std::vector<Intersection> &inte
     Intersection hit(0.f, nullptr);
     for (const auto &intersection : intersections)
     {
-        if (intersection.t >= 0.f)
+        if (intersection.GetT() >= 0.f)
         {
-            if (hit.object == nullptr || intersection.t < hit.t)
+            if (hit.GetObject() == nullptr || intersection.GetT() < hit.GetT())
             {
                 hit = intersection;
             }

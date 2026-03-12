@@ -6,8 +6,8 @@ TEST_CASE("An intersection sets the object on the intersection", "[Ray]")
 {
     Sphere sphere;
     Intersection intersection(3.5f, &sphere);
-    REQUIRE(intersection.object == &sphere);
-    REQUIRE(intersection.t == 3.5f);
+    REQUIRE(intersection.GetObject() == &sphere);
+    REQUIRE(intersection.GetT() == 3.5f);
 }
 
 TEST_CASE("Aggregating intersections", "[Ray]")
@@ -18,10 +18,10 @@ TEST_CASE("Aggregating intersections", "[Ray]")
     auto xs = Intersections({i1, i2});
 
     REQUIRE(xs.size() == 2);
-    REQUIRE(xs[0].t == 1.f);
-    REQUIRE(xs[0].object == &sphere);
-    REQUIRE(xs[1].t == 2.f);
-    REQUIRE(xs[1].object == &sphere);
+    REQUIRE(xs[0].GetT() == 1.f);
+    REQUIRE(xs[0].GetObject() == &sphere);
+    REQUIRE(xs[1].GetT() == 2.f);
+    REQUIRE(xs[1].GetObject() == &sphere);
 }
 
 TEST_CASE("The hit, when all intersections have positive t", "[Ray]")
@@ -54,7 +54,7 @@ TEST_CASE("The hit, when all intersections have negative t", "[Ray]")
     auto xs = Intersections({i1, i2});
     auto hit = GetClosestIntersection(xs);
 
-    REQUIRE(hit.object == nullptr);
+    REQUIRE(hit.GetObject() == nullptr);
 }
 
 TEST_CASE("The hit is always the lowest non-negative intersection", "[Ray]")

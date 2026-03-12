@@ -51,8 +51,8 @@ TEST_CASE("Intersect a world with a ray")
     Ray r(Point(0.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
     auto xs = IntersectWorld(w, r);
     REQUIRE(xs.size() == 4);
-    REQUIRE(AreEqual(xs[0].t, 4.f));
-    REQUIRE(AreEqual(xs[1].t, 4.5f));
-    REQUIRE(AreEqual(xs[2].t, 5.5f));
-    REQUIRE(AreEqual(xs[3].t, 6.f));
+    REQUIRE(AreEqual(xs[0].GetT(), 4.f));
+    REQUIRE(AreEqual(xs[1].GetT(), 4.5f));
+    REQUIRE(AreEqual(xs[2].GetT(), 5.5f));
+    REQUIRE(AreEqual(xs[3].GetT(), 6.f));
 }

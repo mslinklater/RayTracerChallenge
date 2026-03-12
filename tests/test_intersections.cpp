@@ -30,7 +30,7 @@ TEST_CASE("The hit, when all intersections have positive t", "[Ray]")
     Intersection i1(1.f, &sphere);
     Intersection i2(2.f, &sphere);
     auto xs = Intersections({i1, i2});
-    auto hit = Hit(xs);
+    auto hit = GetClosestIntersection(xs);
 
     REQUIRE(hit == i1);
 }
@@ -41,7 +41,7 @@ TEST_CASE("The hit, when some intersections have negative t", "[Ray]")
     Intersection i1(-1.f, &sphere);
     Intersection i2(2.f, &sphere);
     auto xs = Intersections({i1, i2});
-    auto hit = Hit(xs);
+    auto hit = GetClosestIntersection(xs);
 
     REQUIRE(hit == i2);
 }
@@ -52,7 +52,7 @@ TEST_CASE("The hit, when all intersections have negative t", "[Ray]")
     Intersection i1(-2.f, &sphere);
     Intersection i2(-1.f, &sphere);
     auto xs = Intersections({i1, i2});
-    auto hit = Hit(xs);
+    auto hit = GetClosestIntersection(xs);
 
     REQUIRE(hit.object == nullptr);
 }
@@ -65,7 +65,7 @@ TEST_CASE("The hit is always the lowest non-negative intersection", "[Ray]")
     Intersection i3(-3.f, &sphere);
     Intersection i4(2.f, &sphere);
     auto xs = Intersections({i1, i2, i3, i4});
-    auto hit = Hit(xs);
+    auto hit = GetClosestIntersection(xs);
 
     REQUIRE(hit == i4);
 }

@@ -22,7 +22,7 @@ inline std::vector<Intersection> Intersections(std::initializer_list<Intersectio
     return std::vector<Intersection>(list);
 }
 
-inline Intersection Hit(const std::vector<Intersection> &intersections)
+inline Intersection GetClosestIntersection(const std::vector<Intersection> &intersections)
 {
     Intersection hit(0.f, nullptr);
     for (const auto &intersection : intersections)

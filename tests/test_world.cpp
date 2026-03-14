@@ -56,3 +56,28 @@ TEST_CASE("Intersect a world with a ray")
     REQUIRE(AreEqual(xs[2].GetT(), 5.5f));
     REQUIRE(AreEqual(xs[3].GetT(), 6.f));
 }
+
+#if 0
+TEST_CASE("Shading an intersection", "[world]")
+{
+    World w = DefaultWorld();
+    Ray r(Point(0.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
+    auto shape = &w.GetObjects()[0];
+    Intersection i(4.f, shape);
+    auto comps = PrepareComputations(i, r);
+    auto color = ShadeHit(w, comps);
+    REQUIRE(color == Color(0.38066f, 0.47583f, 0.2855f));
+}
+
+TEST_CASE("Shading an intersection from the inside", "[world]")
+{
+    World w = DefaultWorld();
+    w.GetLights()[0] = Light(Point(0.f, 0.25f, 0.f), Color(1.f, 1.f, 1.f));
+    Ray r(Point(0.f, 0.f, 0.f), Tuple(0.f, 0.f, 1.f));
+    auto shape = &w.GetObjects()[1];
+    Intersection i(0.5f, shape);
+    auto comps = PrepareComputations(i, r);
+    auto color = ShadeHit(w, comps);
+    REQUIRE(color == Color(0.90498f, 0.90498f, 0.90498f));
+}
+#endif

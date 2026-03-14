@@ -1,6 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include "sphere.hpp"
 #include "intersection.hpp"
+#include "ray.hpp"
 
 TEST_CASE("An intersection sets the object on the intersection", "[Ray]")
 {
@@ -68,4 +69,41 @@ TEST_CASE("The hit is always the lowest non-negative intersection", "[Ray]")
     auto hit = GetClosestIntersection(xs);
 
     REQUIRE(hit == i4);
+}
+
+TEST_CASE("Precomputing the state of an intersection", "[Ray]")
+{
+    Ray r(Point(0.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
+    Sphere s;
+    Intersection i(4.f, &s);
+    Computations comps = PrepareComputations(i, r);
+
+    REQUIRE(comps.t == i.GetT());
+    REQUIRE(comps.object == i.GetObject());
+    REQUIRE(comps.point == Point(0.f, 0.f, -1.f));
+    REQUIRE(comps.eyeVector == Tuple(0.f, 0.f, -1.f));
+    REQUIRE(comps.normalVector == Tuple(0.f, 0.f, -1.f));
+}
+
+TEST_CASE("The hit, when an intersection occurs on the outside", "[Ray]")
+{
+    Ray r(Point(0.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
+    Sphere s;
+    Intersection i(4.f, &s);
+    Computations comps = PrepareComputations(i, r);
+
+    REQUIRE(comps.inside == false);
+}
+
+TEST_CASE("The hit, when an intersection occurs on the inside", "[Ray]")
+{
+    Ray r(Point(0.f, 0.f, 0.f), Tuple(0.f, 0.f, 1.f));
+    Sphere s;
+    Intersection i(1.f, &s);
+    Computations comps = PrepareComputations(i, r);
+
+    REQUIRE(comps.point == Point(0.f, 0.f, 1.f));
+    REQUIRE(comps.eyeVector == Tuple(0.f, 0.f, -1.f));
+    REQUIRE(comps.normalVector == Tuple(0.f, 0.f, -1.f));
+    REQUIRE(comps.inside == true);
 }

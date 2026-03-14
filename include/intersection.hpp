@@ -1,7 +1,18 @@
 #pragma once
 #include "sphere.hpp"
 #include "utils.hpp"
+#include "ray.hpp"
 #include <initializer_list>
+
+struct Computations
+{
+    float t = 0.f;
+    const Sphere *object = nullptr;
+    Tuple point = {0.f, 0.f, 0.f, 1.f};
+    Tuple eyeVector = {0.f, 0.f, 0.f, 0.f};
+    Tuple normalVector = {0.f, 0.f, 0.f, 0.f};
+    bool inside = false; // Indicates whether the intersection occurs on the inside of the object
+};
 
 class Intersection
 {
@@ -11,10 +22,7 @@ public:
     float GetT() const { return t; }
     const Sphere *GetObject() const { return object; }
 
-    bool operator==(const Intersection &other) const
-    {
-        return AreEqual(t, other.t) && object == other.object;
-    }
+    bool operator==(const Intersection &other) const;
 
 private:
     float t;              // The distance along the ray to the intersection point
@@ -22,23 +30,6 @@ private:
 };
 
 // input is a list of intersections, output is the hit (the intersection with the lowest non-negative t)
-inline std::vector<Intersection> Intersections(std::initializer_list<Intersection> list)
-{
-    return std::vector<Intersection>(list);
-}
-
-inline Intersection GetClosestIntersection(const std::vector<Intersection> &intersections)
-{
-    Intersection hit(0.f, nullptr);
-    for (const auto &intersection : intersections)
-    {
-        if (intersection.GetT() >= 0.f)
-        {
-            if (hit.GetObject() == nullptr || intersection.GetT() < hit.GetT())
-            {
-                hit = intersection;
-            }
-        }
-    }
-    return hit;
-}
+extern std::vector<Intersection> Intersections(std::initializer_list<Intersection> list);
+extern Intersection GetClosestIntersection(const std::vector<Intersection> &intersections);
+extern Computations PrepareComputations(const Intersection &intersection, const Ray &ray);

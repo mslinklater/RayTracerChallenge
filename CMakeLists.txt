@@ -11,10 +11,13 @@ find_package(Catch2 3 REQUIRED)
 enable_testing()
 
 set(SRC_FILES   src/utils.cpp 
+                src/color.cpp
                 src/matrix.cpp
+                src/sphere.cpp
                 src/ray.cpp
                 src/light.cpp
                 src/tuple.cpp
+                src/intersection.cpp
                 src/material.cpp
                 src/world.cpp
                 src/canvas.cpp)

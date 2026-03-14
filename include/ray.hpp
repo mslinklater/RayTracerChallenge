@@ -4,6 +4,7 @@
 
 struct Matrix;
 
+// TODO: make members private and add const accessors
 struct Ray
 {
     Ray(const Tuple &origin, const Tuple &direction) : origin(origin), direction(direction) {}
@@ -12,7 +13,7 @@ struct Ray
     Tuple direction;
 };
 
-extern Tuple Position(const Ray &ray, float t);
+extern Tuple Position(const Ray &ray, float t); // TODO: rename this and fold in to class Ray
 
 extern std::vector<float> Intersect(const Sphere &sphere, const Ray &ray);
 

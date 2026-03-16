@@ -270,3 +270,26 @@ Matrix Matrix::CreateShearing(float xy, float xz, float yx, float yz, float zx, 
     shearing.Set(2, 1, zy);
     return shearing;
 }
+
+Matrix Matrix::ViewTransform(const Tuple &from, const Tuple &to, const Tuple &up)
+{
+    Tuple forward = (to - from).Normalize();
+    Tuple upNormalized = up.Normalize();
+    Tuple left = forward ^ upNormalized;
+    Tuple trueUp = left ^ forward;
+
+    Matrix orientation(4);
+    orientation.SetIdentity();
+    orientation.Set(0, 0, left.x);
+    orientation.Set(0, 1, left.y);
+    orientation.Set(0, 2, left.z);
+    orientation.Set(1, 0, trueUp.x);
+    orientation.Set(1, 1, trueUp.y);
+    orientation.Set(1, 2, trueUp.z);
+    orientation.Set(2, 0, -forward.x);
+    orientation.Set(2, 1, -forward.y);
+    orientation.Set(2, 2, -forward.z);
+
+    Matrix translation = Matrix::CreateTranslation(-from.x, -from.y, -from.z);
+    return orientation * translation;
+}

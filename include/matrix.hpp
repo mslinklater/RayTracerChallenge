@@ -30,6 +30,7 @@ public:
     static Matrix CreateRotationY(float angle);
     static Matrix CreateRotationZ(float angle);
     static Matrix CreateShearing(float xy, float xz, float yx, float yz, float zx, float zy);
+    static Matrix ViewTransform(const Tuple &from, const Tuple &to, const Tuple &up);
 
 private:
     int size; // Size of the matrix (e.g., 4 for a 4x4 matrix)

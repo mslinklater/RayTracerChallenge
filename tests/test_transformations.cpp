@@ -160,3 +160,45 @@ TEST_CASE("Individual transformations are applied in sequence", "[transformation
     Tuple translatedPoint = translation * scaledPoint;
     REQUIRE(translatedPoint == Point(15.f, 0.f, 7.f));
 }
+
+TEST_CASE("The transformation matrix for the default orientation", "[transformations]")
+{
+    Tuple from = Point(0.f, 0.f, 0.f);
+    Tuple to = Point(0.f, 0.f, -1.f);
+    Tuple up = Tuple(0.f, 1.f, 0.f);
+    Matrix t = Matrix::ViewTransform(from, to, up);
+    Matrix identity(4);
+    identity.SetIdentity();
+    REQUIRE(t == identity);
+}
+
+TEST_CASE("A view transformation matrix looking in positive z direction", "[transformations]")
+{
+    Tuple from = Point(0.f, 0.f, 0.f);
+    Tuple to = Point(0.f, 0.f, 1.f);
+    Tuple up = Tuple(0.f, 1.f, 0.f);
+    Matrix t = Matrix::ViewTransform(from, to, up);
+    REQUIRE(t == Matrix::CreateScaling(-1.f, 1.f, -1.f));
+}
+
+TEST_CASE("The view transformation moves the world", "[transformations]")
+{
+    Tuple from = Point(0.f, 0.f, 8.f);
+    Tuple to = Point(0.f, 0.f, 0.f);
+    Tuple up = Tuple(0.f, 1.f, 0.f);
+    Matrix t = Matrix::ViewTransform(from, to, up);
+    REQUIRE(t == Matrix::CreateTranslation(0.f, 0.f, -8.f));
+}
+
+TEST_CASE("An arbitrary view transformation", "[transformations]")
+{
+    Tuple from = Point(1.f, 3.f, 2.f);
+    Tuple to = Point(4.f, -2.f, 8.f);
+    Tuple up = Tuple(1.f, 1.f, 0.f);
+    Matrix t = Matrix::ViewTransform(from, to, up);
+    REQUIRE(t == Matrix(
+                     {-0.50709f, 0.50709f, 0.67612f, -2.36643f,
+                      0.76772f, 0.60609f, 0.12122f, -2.82843f,
+                      -0.35857f, 0.59761f, -0.71714f, 0.f,
+                      0.f, 0.f, 0.f, 1.f}));
+}

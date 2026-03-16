@@ -1,5 +1,7 @@
 #include "world.hpp"
 #include "ray.hpp"
+#include "light.hpp"
+#include "intersection.hpp"
 #include <algorithm>
 
 const std::vector<Sphere> &World::GetObjects() const
@@ -52,4 +54,73 @@ std::vector<Intersection> IntersectWorld(const World &world, const Ray &ray)
     std::sort(intersections.begin(), intersections.end(), [](const Intersection &a, const Intersection &b)
               { return a.GetT() < b.GetT(); });
     return intersections;
+}
+
+const Light &World::GetLight(size_t index) const
+{
+    if (index >= lights.size())
+    {
+        throw std::out_of_range("Light index out of range.");
+    }
+    return lights[index];
+}
+
+Light &World::GetMutableLight(size_t index)
+{
+    if (index >= lights.size())
+    {
+        throw std::out_of_range("Light index out of range.");
+    }
+    return lights[index];
+}
+
+const Sphere &World::GetObject(size_t index) const
+{
+    if (index >= objects.size())
+    {
+        throw std::out_of_range("Object index out of range.");
+    }
+    return objects[index];
+}
+
+Sphere &World::GetMutableObject(size_t index)
+{
+    if (index >= objects.size())
+    {
+        throw std::out_of_range("Object index out of range.");
+    }
+    return objects[index];
+}
+
+void World::ReplaceLight(int index, const Light &light)
+{
+    if (index < 0 || static_cast<size_t>(index) >= lights.size())
+    {
+        throw std::out_of_range("Light index out of range.");
+    }
+    lights[index] = light;
+}
+
+Color ShadeHit(const World &world, const Computations &comps)
+{
+    return Lighting(comps.object->GetMaterial(), world.GetLight(0), comps.point, comps.eyeVector, comps.normalVector);
+}
+
+Color ColorAt(const World &world, const Ray &ray)
+{
+    std::vector<Intersection> intersections = IntersectWorld(world, ray);
+    if (intersections.empty())
+    {
+        return Color(0.f, 0.f, 0.f); // Return black if no intersections
+    }
+    // find the first intersection with a positive t value
+    auto it = std::find_if(intersections.begin(), intersections.end(), [](const Intersection &intersection)
+                           { return intersection.GetT() >= 0.f; });
+    if (it == intersections.end())
+    {
+        return Color(0.f, 0.f, 0.f); // Return black if all intersections are behind the ray
+    }
+    const Intersection &hit = *it;
+    Computations comps = PrepareComputations(hit, ray);
+    return ShadeHit(world, comps);
 }

@@ -6,6 +6,8 @@
 World DefaultWorld()
 {
     World w;
+    Light light(Point(-10.f, 10.f, -10.f), Color(1.f, 1.f, 1.f));
+    w.AddLight(light);
 
     Sphere s1;
     s1.GetMutableMaterial().SetColor(Color(0.8f, 1.f, 0.6f));
@@ -57,13 +59,23 @@ TEST_CASE("Intersect a world with a ray")
     REQUIRE(AreEqual(xs[3].GetT(), 6.f));
 }
 
-#if 0
+TEST_CASE("Is able to replace a light in the world", "[world]")
+{
+    World w = DefaultWorld();
+    Light light(Point(0.f, 0.25f, 0.f), Color(1.f, 1.f, 1.f));
+    w.AddLight(light);
+    Light newLight(Point(0.f, 0.25f, 0.f), Color(1.f, 1.f, 1.f));
+    w.ReplaceLight(0, newLight);
+    REQUIRE(w.GetLight(0).position == Point(0.f, 0.25f, 0.f));
+    REQUIRE(w.GetLight(0).intensity == Color(1.f, 1.f, 1.f));
+}
+
 TEST_CASE("Shading an intersection", "[world]")
 {
     World w = DefaultWorld();
     Ray r(Point(0.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
-    auto shape = &w.GetObjects()[0];
-    Intersection i(4.f, shape);
+    Sphere shape = w.GetObject(0);
+    Intersection i(4.f, &shape);
     auto comps = PrepareComputations(i, r);
     auto color = ShadeHit(w, comps);
     REQUIRE(color == Color(0.38066f, 0.47583f, 0.2855f));
@@ -72,12 +84,39 @@ TEST_CASE("Shading an intersection", "[world]")
 TEST_CASE("Shading an intersection from the inside", "[world]")
 {
     World w = DefaultWorld();
-    w.GetLights()[0] = Light(Point(0.f, 0.25f, 0.f), Color(1.f, 1.f, 1.f));
+    w.ReplaceLight(0, Light(Point(0.f, 0.25f, 0.f), Color(1.f, 1.f, 1.f)));
     Ray r(Point(0.f, 0.f, 0.f), Tuple(0.f, 0.f, 1.f));
-    auto shape = &w.GetObjects()[1];
-    Intersection i(0.5f, shape);
+    Sphere shape = w.GetObject(1);
+    Intersection i(0.5f, &shape);
     auto comps = PrepareComputations(i, r);
     auto color = ShadeHit(w, comps);
     REQUIRE(color == Color(0.90498f, 0.90498f, 0.90498f));
 }
-#endif
+
+TEST_CASE("The colour when a ray misses", "[world]")
+{
+    World w = DefaultWorld();
+    Ray r(Point(0.f, 0.f, -5.f), Tuple(0.f, 1.f, 0.f));
+    Color color = ColorAt(w, r);
+    REQUIRE(color == Color(0.f, 0.f, 0.f));
+}
+
+TEST_CASE("The colour when a ray hits", "[world]")
+{
+    World w = DefaultWorld();
+    Ray r(Point(0.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
+    Color color = ColorAt(w, r);
+    REQUIRE(color == Color(0.38066f, 0.47583f, 0.2855f));
+}
+
+TEST_CASE("The colour with an intersection behind the ray", "[world]")
+{
+    World w = DefaultWorld();
+    Sphere &outer = w.GetMutableObject(0);
+    Sphere &inner = w.GetMutableObject(1);
+    outer.GetMutableMaterial().SetAmbient(1.f);
+    inner.GetMutableMaterial().SetAmbient(1.f);
+    Ray r(Point(0.f, 0.f, 0.75f), Tuple(0.f, 0.f, -1.f));
+    Color color = ColorAt(w, r);
+    REQUIRE(color == inner.GetMaterial().GetColor());
+}

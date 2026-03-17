@@ -18,8 +18,4 @@ private:
     Tuple direction;
 };
 
-// extern Tuple Position(const Ray &ray, float t); // TODO: rename this and fold in to class Ray
-
-extern std::vector<float> Intersect(const Sphere &sphere, const Ray &ray);
-
 extern Ray operator*(const Ray &ray, const Matrix &matrix);

@@ -2,6 +2,7 @@
 #include "sphere.hpp"
 #include "intersection.hpp"
 #include "ray.hpp"
+#include "renderer.hpp"
 
 TEST_CASE("An intersection sets the object on the intersection", "[Ray]")
 {

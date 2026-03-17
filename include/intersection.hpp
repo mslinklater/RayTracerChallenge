@@ -27,8 +27,3 @@ private:
     float t;              // The distance along the ray to the intersection point
     const Sphere *object; // Pointer to the intersected object (in this case, a sphere)
 };
-
-// input is a list of intersections, output is the hit (the intersection with the lowest non-negative t)
-extern std::vector<Intersection> Intersections(std::initializer_list<Intersection> list);
-extern Intersection GetClosestIntersection(const std::vector<Intersection> &intersections);
-extern Computations PrepareComputations(const Intersection &intersection, const Ray &ray);

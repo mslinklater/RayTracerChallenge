@@ -3,6 +3,7 @@
 #include "ray.hpp"
 #include "material.hpp"
 #include "maths.hpp"
+#include "renderer.hpp"
 
 TEST_CASE("A ray intersects a sphere at two points", "[Spheres]")
 {

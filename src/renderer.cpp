@@ -99,3 +99,90 @@ Color Lighting(const Material &material, const Light &light, const Tuple &positi
 
     return ambient + diffuse + specular;
 }
+
+World DefaultWorld()
+{
+    World w;
+    Light light(Point(-10.f, 10.f, -10.f), Color(1.f, 1.f, 1.f));
+    w.AddLight(light);
+
+    Sphere s1;
+    s1.GetMutableMaterial().SetColor(Color(0.8f, 1.f, 0.6f));
+    s1.GetMutableMaterial().SetDiffuse(0.7f);
+    s1.GetMutableMaterial().SetSpecular(0.2f);
+    w.AddObject(s1);
+
+    Sphere s2;
+    s2.SetTransform(Matrix::CreateScaling(0.5f, 0.5f, 0.5f));
+    w.AddObject(s2);
+    return w;
+}
+
+std::vector<Intersection> Intersections(std::initializer_list<Intersection> list)
+{
+    return std::vector<Intersection>(list);
+}
+
+Intersection GetClosestIntersection(const std::vector<Intersection> &intersections)
+{
+    Intersection hit(0.f, nullptr);
+    for (const auto &intersection : intersections)
+    {
+        if (intersection.GetT() >= 0.f)
+        {
+            if (hit.GetObject() == nullptr || intersection.GetT() < hit.GetT())
+            {
+                hit = intersection;
+            }
+        }
+    }
+    return hit;
+}
+
+Computations PrepareComputations(const Intersection &intersection, const Ray &ray)
+{
+    Computations comps;
+    comps.t = intersection.GetT();
+    comps.object = intersection.GetObject();
+    comps.point = ray.PositionAt(comps.t);
+    comps.eyeVector = -ray.GetDirection();
+    comps.normalVector = comps.object->NormalAt(comps.point);
+
+    if ((comps.normalVector | comps.eyeVector) < 0.f)
+    {
+        comps.inside = true;
+        comps.normalVector = -comps.normalVector;
+    }
+
+    return comps;
+}
+
+std::vector<float> Intersect(const Sphere &sphere, const Ray &ray)
+{
+    Ray transformedRay = ray * sphere.GetTransform().GetInverse();
+
+    // For a sphere centered at the origin with radius 1, the intersection can be calculated using the quadratic formula.
+    // The coefficients of the quadratic equation are derived from substituting the ray equation into the sphere equation.
+    Tuple sphereToRay = transformedRay.GetOrigin() - Point(0.f, 0.f, 0.f);   // Since the sphere is at the origin, we can use the ray's origin directly
+    float a = transformedRay.GetDirection() | transformedRay.GetDirection(); // Dot product of direction with itself
+    float b = 2.f * (transformedRay.GetDirection() | sphereToRay);           // 2 times the dot product of direction and origin
+    float c = (sphereToRay | sphereToRay) - 1.f;                             // Dot product of origin with itself minus radius squared
+
+    float discriminant = b * b - 4.f * a * c;
+
+    std::vector<float> intersections;
+    if (discriminant < 0.f)
+    {
+        // No intersections
+        return intersections;
+    }
+    else
+    {
+        float sqrtDiscriminant = std::sqrt(discriminant);
+        float t1 = (-b - sqrtDiscriminant) / (2.f * a);
+        float t2 = (-b + sqrtDiscriminant) / (2.f * a);
+        intersections.push_back(t1);
+        intersections.push_back(t2);
+        return intersections;
+    }
+}

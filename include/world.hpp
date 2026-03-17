@@ -31,5 +31,3 @@ private:
     std::vector<Sphere> objects;
     std::vector<Light> lights;
 };
-
-extern World DefaultWorld();

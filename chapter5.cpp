@@ -8,6 +8,7 @@
 #include "ray.hpp"
 #include "sphere.hpp"
 #include "maths.hpp"
+#include "renderer.hpp"
 
 static constexpr int kCanvasSize = 200;
 

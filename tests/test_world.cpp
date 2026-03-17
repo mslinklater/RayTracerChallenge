@@ -4,6 +4,7 @@
 #include "intersection.hpp"
 #include "maths.hpp"
 #include "renderer.hpp"
+#include "computations.hpp"
 
 TEST_CASE("Creating a world", "[world]")
 {

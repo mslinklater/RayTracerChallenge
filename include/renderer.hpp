@@ -6,6 +6,7 @@ class Camera;
 class World;
 class Ray;
 class Light;
+struct Computations;
 
 extern Canvas Render(const Camera &camera, const World &world);
 extern Color ColorAt(const World &world, const Ray &ray);

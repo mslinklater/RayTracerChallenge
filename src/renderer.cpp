@@ -2,6 +2,7 @@
 #include "camera.hpp"
 #include "intersection.hpp"
 #include "world.hpp"
+#include "computations.hpp"
 
 Canvas Render(const Camera &camera, const World &world)
 {

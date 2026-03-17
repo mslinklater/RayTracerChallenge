@@ -18,10 +18,10 @@ TEST_CASE("Computing a point from a distance", "[Rays]")
 {
     Ray ray(Point(2.f, 3.f, 4.f), Vector(1.f, 0.f, 0.f));
 
-    REQUIRE(Position(ray, 0.f) == Point(2.f, 3.f, 4.f));
-    REQUIRE(Position(ray, 1.f) == Point(3.f, 3.f, 4.f));
-    REQUIRE(Position(ray, -1.f) == Point(1.f, 3.f, 4.f));
-    REQUIRE(Position(ray, 2.5f) == Point(4.5f, 3.f, 4.f));
+    REQUIRE(ray.PositionAt(0.f) == Point(2.f, 3.f, 4.f));
+    REQUIRE(ray.PositionAt(1.f) == Point(3.f, 3.f, 4.f));
+    REQUIRE(ray.PositionAt(-1.f) == Point(1.f, 3.f, 4.f));
+    REQUIRE(ray.PositionAt(2.5f) == Point(4.5f, 3.f, 4.f));
 }
 
 TEST_CASE("Translating a ray", "[Rays]")

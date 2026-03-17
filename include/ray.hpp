@@ -11,13 +11,14 @@ public:
 
     Tuple GetOrigin() const { return origin; }
     Tuple GetDirection() const { return direction; }
+    Tuple PositionAt(float t) const { return origin + direction * t; }
 
 private:
     Tuple origin;
     Tuple direction;
 };
 
-extern Tuple Position(const Ray &ray, float t); // TODO: rename this and fold in to class Ray
+// extern Tuple Position(const Ray &ray, float t); // TODO: rename this and fold in to class Ray
 
 extern std::vector<float> Intersect(const Sphere &sphere, const Ray &ray);
 

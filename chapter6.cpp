@@ -9,6 +9,7 @@
 #include "sphere.hpp"
 #include "maths.hpp"
 #include "light.hpp"
+#include "renderer.hpp"
 
 static constexpr int kCanvasSize = 500;
 
@@ -33,7 +34,7 @@ int main()
             auto xs = Intersect(sphere, ray);
             if (!xs.empty())
             {
-                Tuple position = Position(ray, xs[0]);
+                Tuple position = ray.PositionAt(xs[0]);
                 Tuple normalVector = sphere.NormalAt(position);
                 Tuple eyeVector = -ray.GetDirection();
                 Color color = Lighting(sphere.GetMaterial(), light, position, eyeVector, normalVector);

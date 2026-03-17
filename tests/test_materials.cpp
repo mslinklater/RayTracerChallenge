@@ -2,6 +2,7 @@
 #include "material.hpp"
 #include "tuple.hpp"
 #include "light.hpp"
+#include "renderer.hpp"
 
 TEST_CASE("Create a material and check default values", "[materials]")
 {

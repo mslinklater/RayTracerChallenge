@@ -12,5 +12,3 @@ struct Light
 
     bool operator==(const Light &other) const;
 };
-
-extern Color Lighting(const Material &material, const Light &light, const Tuple &position, const Tuple &eyeVector, const Tuple &normalVector);

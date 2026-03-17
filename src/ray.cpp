@@ -2,10 +2,10 @@
 #include "tuple.hpp"
 #include "matrix.hpp"
 
-Tuple Position(const Ray &ray, float t)
-{
-    return ray.GetOrigin() + ray.GetDirection() * t;
-}
+// Tuple Position(const Ray &ray, float t)
+//{
+//     return ray.GetOrigin() + ray.GetDirection() * t;
+// }
 
 std::vector<float> Intersect(const Sphere &sphere, const Ray &ray)
 {

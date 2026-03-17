@@ -8,6 +8,7 @@ option(ENABLE_COVERAGE "Build with coverage instrumentation" OFF)
 
 find_package(Catch2 3 REQUIRED)
 
+include(Catch)  # This provides catch_discover_tests()
 enable_testing()
 
 set(SRC_FILES   src/utils.cpp 
@@ -80,7 +81,9 @@ target_include_directories(RayTracerChallengeTests PRIVATE ${PROJECT_SOURCE_DIR}
 target_link_libraries(RayTracerChallengeTests PRIVATE Catch2::Catch2WithMain)
 target_compile_options(RayTracerChallengeTests PRIVATE ${PROJECT_COVERAGE_FLAGS})
 target_link_options(RayTracerChallengeTests PRIVATE ${PROJECT_COVERAGE_FLAGS})
-add_test(NAME RayTracerChallengeTests COMMAND RayTracerChallengeTests)
+
+# Use Catch2's test discovery instead of manual add_test
+catch_discover_tests(RayTracerChallengeTests)
 
 if(ENABLE_COVERAGE)
     find_program(LCOV_BIN lcov)

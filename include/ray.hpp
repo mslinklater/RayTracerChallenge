@@ -4,11 +4,15 @@
 
 struct Matrix;
 
-// TODO: make members private and add const accessors
-struct Ray
+class Ray
 {
+public:
     Ray(const Tuple &origin, const Tuple &direction) : origin(origin), direction(direction) {}
 
+    Tuple GetOrigin() const { return origin; }
+    Tuple GetDirection() const { return direction; }
+
+private:
     Tuple origin;
     Tuple direction;
 };

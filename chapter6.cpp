@@ -35,7 +35,7 @@ int main()
             {
                 Tuple position = Position(ray, xs[0]);
                 Tuple normalVector = sphere.NormalAt(position);
-                Tuple eyeVector = -ray.direction;
+                Tuple eyeVector = -ray.GetDirection();
                 Color color = Lighting(sphere.GetMaterial(), light, position, eyeVector, normalVector);
                 canvas.WritePixel(x, y, color);
             }

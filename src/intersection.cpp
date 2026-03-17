@@ -32,7 +32,7 @@ Computations PrepareComputations(const Intersection &intersection, const Ray &ra
     comps.t = intersection.GetT();
     comps.object = intersection.GetObject();
     comps.point = Position(ray, comps.t);
-    comps.eyeVector = -ray.direction;
+    comps.eyeVector = -ray.GetDirection();
     comps.normalVector = comps.object->NormalAt(comps.point);
 
     if ((comps.normalVector | comps.eyeVector) < 0.f)

@@ -11,6 +11,7 @@ find_package(Catch2 3 REQUIRED)
 enable_testing()
 
 set(SRC_FILES   src/utils.cpp 
+                src/camera.cpp
                 src/color.cpp
                 src/matrix.cpp
                 src/sphere.cpp
@@ -59,6 +60,7 @@ target_link_options(Chapter6Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
 
 # Test executable
 set(TEST_SRC    tests/test_main.cpp 
+                tests/test_camera.cpp 
                 tests/test_color.cpp 
                 tests/test_tuples.cpp 
                 tests/test_utils.cpp

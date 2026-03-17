@@ -4,7 +4,7 @@
 
 Tuple Position(const Ray &ray, float t)
 {
-    return ray.origin + ray.direction * t;
+    return ray.GetOrigin() + ray.GetDirection() * t;
 }
 
 std::vector<float> Intersect(const Sphere &sphere, const Ray &ray)
@@ -13,10 +13,10 @@ std::vector<float> Intersect(const Sphere &sphere, const Ray &ray)
 
     // For a sphere centered at the origin with radius 1, the intersection can be calculated using the quadratic formula.
     // The coefficients of the quadratic equation are derived from substituting the ray equation into the sphere equation.
-    Tuple sphereToRay = transformedRay.origin - Point(0.f, 0.f, 0.f); // Since the sphere is at the origin, we can use the ray's origin directly
-    float a = transformedRay.direction | transformedRay.direction;    // Dot product of direction with itself
-    float b = 2.f * (transformedRay.direction | sphereToRay);         // 2 times the dot product of direction and origin
-    float c = (sphereToRay | sphereToRay) - 1.f;                      // Dot product of origin with itself minus radius squared
+    Tuple sphereToRay = transformedRay.GetOrigin() - Point(0.f, 0.f, 0.f);   // Since the sphere is at the origin, we can use the ray's origin directly
+    float a = transformedRay.GetDirection() | transformedRay.GetDirection(); // Dot product of direction with itself
+    float b = 2.f * (transformedRay.GetDirection() | sphereToRay);           // 2 times the dot product of direction and origin
+    float c = (sphereToRay | sphereToRay) - 1.f;                             // Dot product of origin with itself minus radius squared
 
     float discriminant = b * b - 4.f * a * c;
 
@@ -39,5 +39,5 @@ std::vector<float> Intersect(const Sphere &sphere, const Ray &ray)
 
 Ray operator*(const Ray &ray, const Matrix &matrix)
 {
-    return Ray(matrix * ray.origin, matrix * ray.direction);
+    return Ray(matrix * ray.GetOrigin(), matrix * ray.GetDirection());
 }

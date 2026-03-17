@@ -35,3 +35,4 @@ private:
 extern std::vector<Intersection> IntersectWorld(const World &world, const Ray &ray);
 extern Color ShadeHit(const World &world, const Computations &comps);
 extern Color ColorAt(const World &world, const Ray &ray);
+extern World DefaultWorld();

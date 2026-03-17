@@ -10,8 +10,8 @@ TEST_CASE("A ray is created with an origin and a direction", "[Rays]")
     Tuple direction = Vector(4.f, 5.f, 6.f);
     Ray ray(origin, direction);
 
-    REQUIRE(ray.origin == origin);
-    REQUIRE(ray.direction == direction);
+    REQUIRE(ray.GetOrigin() == origin);
+    REQUIRE(ray.GetDirection() == direction);
 }
 
 TEST_CASE("Computing a point from a distance", "[Rays]")
@@ -30,8 +30,8 @@ TEST_CASE("Translating a ray", "[Rays]")
     Matrix translation = Matrix::CreateTranslation(3.f, 4.f, 5.f);
     Ray translatedRay = ray * translation;
 
-    REQUIRE(translatedRay.origin == Point(4.f, 6.f, 8.f));
-    REQUIRE(translatedRay.direction == Vector(0.f, 1.f, 0.f));
+    REQUIRE(translatedRay.GetOrigin() == Point(4.f, 6.f, 8.f));
+    REQUIRE(translatedRay.GetDirection() == Vector(0.f, 1.f, 0.f));
 }
 
 TEST_CASE("Scaling a ray", "[Rays]")
@@ -40,6 +40,6 @@ TEST_CASE("Scaling a ray", "[Rays]")
     Matrix scaling = Matrix::CreateScaling(2.f, 3.f, 4.f);
     Ray scaledRay = ray * scaling;
 
-    REQUIRE(scaledRay.origin == Point(2.f, 6.f, 12.f));
-    REQUIRE(scaledRay.direction == Vector(0.f, 3.f, 0.f));
+    REQUIRE(scaledRay.GetOrigin() == Point(2.f, 6.f, 12.f));
+    REQUIRE(scaledRay.GetDirection() == Vector(0.f, 3.f, 0.f));
 }

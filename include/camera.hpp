@@ -27,6 +27,3 @@ private:
     float halfWidth;
     float halfHeight;
 };
-
-// TODO: Put this somewhere else? Maybe in utils.hpp?
-extern Canvas Render(const Camera &camera, const World &world);

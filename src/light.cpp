@@ -1,3 +1,4 @@
+#include <cmath>
 #include "light.hpp"
 #include "material.hpp"
 #include "tuple.hpp"

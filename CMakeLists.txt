@@ -20,6 +20,7 @@ set(SRC_FILES   src/utils.cpp
                 src/tuple.cpp
                 src/intersection.cpp
                 src/material.cpp
+                src/renderer.cpp
                 src/world.cpp
                 src/canvas.cpp)
 

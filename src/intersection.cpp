@@ -1,4 +1,5 @@
 #include "intersection.hpp"
+#include "maths.hpp"
 
 bool Intersection::operator==(const Intersection &other) const
 {

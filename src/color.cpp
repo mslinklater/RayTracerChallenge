@@ -1,4 +1,5 @@
 #include "color.hpp"
+#include "maths.hpp"
 
 Color Color::operator+(const Color &other) const
 {

@@ -2,6 +2,8 @@
 #include "world.hpp"
 #include "ray.hpp"
 #include "intersection.hpp"
+#include "maths.hpp"
+#include "renderer.hpp"
 
 TEST_CASE("Creating a world", "[world]")
 {

@@ -1,14 +1,9 @@
-#include "utils.hpp"
+// #include "utils.hpp"
 #include <cmath>
 #include <algorithm>
 #include <fstream>
 #include <string>
 #include <vector>
-
-bool AreEqual(float a, float b)
-{
-    return std::abs(a - b) < 0.0001f;
-}
 
 int ToPPMChannel(float value)
 {

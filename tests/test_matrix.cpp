@@ -1,6 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include "matrix.hpp"
 #include "tuple.hpp"
+#include "maths.hpp"
 
 TEST_CASE("Create matrix and check size", "[matrix]")
 {

@@ -1,4 +1,6 @@
+#include <stdexcept>
 #include "tuple.hpp"
+#include "maths.hpp"
 
 Tuple Tuple::Normalize() const
 {

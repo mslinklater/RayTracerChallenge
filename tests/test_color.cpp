@@ -1,6 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include "color.hpp"
-#include "utils.hpp"
+// #include "utils.hpp"
+#include "maths.hpp"
 
 TEST_CASE("Color default values", "[color]")
 {

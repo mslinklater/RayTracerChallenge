@@ -2,6 +2,7 @@
 #include "sphere.hpp"
 #include "ray.hpp"
 #include "material.hpp"
+#include "maths.hpp"
 
 TEST_CASE("A ray intersects a sphere at two points", "[Spheres]")
 {

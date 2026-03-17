@@ -64,20 +64,3 @@ Ray Camera::RayForPixel(int px, int py) const
 
     return Ray(origin, direction);
 }
-
-Canvas Render(const Camera &camera, const World &world)
-{
-    Canvas canvas(camera.GetHSize(), camera.GetVSize());
-
-    for (int y = 0; y < camera.GetVSize(); y++)
-    {
-        for (int x = 0; x < camera.GetHSize(); x++)
-        {
-            Ray ray = camera.RayForPixel(x, y);
-            Color color = ColorAt(world, ray);
-            canvas.WritePixel(x, y, color);
-        }
-    }
-
-    return canvas;
-}

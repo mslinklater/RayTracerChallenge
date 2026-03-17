@@ -3,6 +3,7 @@
 #include "ray.hpp"
 #include "canvas.hpp"
 #include "world.hpp"
+#include "renderer.hpp"
 
 TEST_CASE("Constructing a camera", "[camera]")
 {

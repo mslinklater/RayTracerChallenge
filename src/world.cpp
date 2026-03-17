@@ -38,24 +38,6 @@ bool World::ContainsObject(const Sphere &object) const
     return false;
 }
 
-std::vector<Intersection> IntersectWorld(const World &world, const Ray &ray)
-{
-    std::vector<Intersection> intersections;
-    for (const auto &object : world.GetObjects())
-    {
-        std::vector<float> objectIntersections = Intersect(object, ray);
-        for (const auto &distance : objectIntersections)
-        {
-            Intersection intersection(distance, &object);
-            intersections.push_back(intersection);
-        }
-    }
-    // sort intersections by t value
-    std::sort(intersections.begin(), intersections.end(), [](const Intersection &a, const Intersection &b)
-              { return a.GetT() < b.GetT(); });
-    return intersections;
-}
-
 const Light &World::GetLight(size_t index) const
 {
     if (index >= lights.size())
@@ -99,30 +81,6 @@ void World::ReplaceLight(int index, const Light &light)
         throw std::out_of_range("Light index out of range.");
     }
     lights[index] = light;
-}
-
-Color ShadeHit(const World &world, const Computations &comps)
-{
-    return Lighting(comps.object->GetMaterial(), world.GetLight(0), comps.point, comps.eyeVector, comps.normalVector);
-}
-
-Color ColorAt(const World &world, const Ray &ray)
-{
-    std::vector<Intersection> intersections = IntersectWorld(world, ray);
-    if (intersections.empty())
-    {
-        return Color(0.f, 0.f, 0.f); // Return black if no intersections
-    }
-    // find the first intersection with a positive t value
-    auto it = std::find_if(intersections.begin(), intersections.end(), [](const Intersection &intersection)
-                           { return intersection.GetT() >= 0.f; });
-    if (it == intersections.end())
-    {
-        return Color(0.f, 0.f, 0.f); // Return black if all intersections are behind the ray
-    }
-    const Intersection &hit = *it;
-    Computations comps = PrepareComputations(hit, ray);
-    return ShadeHit(world, comps);
 }
 
 World DefaultWorld()

@@ -1,6 +1,5 @@
 #pragma once
 #include "sphere.hpp"
-#include "utils.hpp"
 #include "ray.hpp"
 #include <initializer_list>
 

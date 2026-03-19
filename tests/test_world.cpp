@@ -13,7 +13,7 @@ TEST_CASE("Creating a world", "[world]")
     REQUIRE(world.GetLights().empty());
 }
 
-TEST_CASE("The default world")
+TEST_CASE("The default world", "[world]")
 {
     World w = DefaultWorld();
 
@@ -32,7 +32,7 @@ TEST_CASE("The default world")
     REQUIRE(w.ContainsObject(s2));
 }
 
-TEST_CASE("Intersect a world with a ray")
+TEST_CASE("Intersect a world with a ray", "[world]")
 {
     World w = DefaultWorld();
     Ray r(Point(0.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
@@ -104,4 +104,38 @@ TEST_CASE("The colour with an intersection behind the ray", "[world]")
     Ray r(Point(0.f, 0.f, 0.75f), Tuple(0.f, 0.f, -1.f));
     Color color = ColorAt(w, r);
     REQUIRE(color == inner.GetMaterial().GetColor());
+}
+
+TEST_CASE("World with one spheres to the side. Make sure sphere is able to be hit", "[world]")
+{
+    World w;
+    Sphere s1;
+    s1.SetTransform(Matrix::CreateTranslation(2.f, 0.f, 0.f));
+    w.AddObject(s1);
+    Ray r1(Point(2.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
+    auto xs1 = IntersectWorld(w, r1);
+    REQUIRE(xs1.size() == 2);
+    REQUIRE(xs1[0].GetObject() == &s1);
+    REQUIRE(xs1[1].GetObject() == &s1);
+}
+
+TEST_CASE("World with two spheres side by side. Make sure each sphere is able to be hit", "[world]")
+{
+    World w;
+    Sphere s1;
+    Sphere s2;
+    s1.SetTransform(Matrix::CreateTranslation(2.f, 0.f, 0.f));
+    s2.SetTransform(Matrix::CreateTranslation(-2.f, 0.f, 0.f));
+    w.AddObject(s1);
+    w.AddObject(s2);
+    Ray r1(Point(2.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
+    Ray r2(Point(-2.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
+    auto xs1 = IntersectWorld(w, r1);
+    auto xs2 = IntersectWorld(w, r2);
+    REQUIRE(xs1.size() == 2);
+    REQUIRE(xs1[0].GetObject() == &s1);
+    REQUIRE(xs1[1].GetObject() == &s1);
+    REQUIRE(xs2.size() == 2);
+    REQUIRE(xs2[0].GetObject() == &s2);
+    REQUIRE(xs2[1].GetObject() == &s2);
 }

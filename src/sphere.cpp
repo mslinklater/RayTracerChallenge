@@ -11,3 +11,8 @@ Tuple Sphere::NormalAt(const Tuple &point) const
     worldNormal.w = 0.f; // Ensure it's a vector
     return worldNormal.Normalize();
 }
+
+bool operator==(const Sphere &s1, const Sphere &s2)
+{
+    return s1.GetTransform() == s2.GetTransform() && s1.GetMaterial() == s2.GetMaterial();
+}

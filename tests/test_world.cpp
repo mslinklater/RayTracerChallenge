@@ -13,6 +13,14 @@ TEST_CASE("Creating a world", "[world]")
     REQUIRE(world.GetLights().empty());
 }
 
+TEST_CASE("Adding an object to the world returns a ptr to the stored object, not the one passed in", "[world]")
+{
+    World world;
+    Sphere s;
+    const Sphere *storedSphere = world.AddObject(s);
+    REQUIRE(storedSphere != &s);
+}
+
 TEST_CASE("The default world", "[world]")
 {
     World w = DefaultWorld();
@@ -110,13 +118,13 @@ TEST_CASE("World with one spheres to the side. Make sure sphere is able to be hi
 {
     World w;
     Sphere s1;
-    s1.SetTransform(Matrix::CreateTranslation(2.f, 0.f, 0.f));
-    w.AddObject(s1);
-    Ray r1(Point(2.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
+    s1.SetTransform(Matrix::CreateTranslation(2.f, 5.f, 0.f));
+    const Sphere *worldSphere = w.AddObject(s1);
+    Ray r1(Point(2.f, 5.f, -5.f), Tuple(0.f, 0.f, 1.f));
     auto xs1 = IntersectWorld(w, r1);
     REQUIRE(xs1.size() == 2);
-    REQUIRE(xs1[0].GetObject() == &s1);
-    REQUIRE(xs1[1].GetObject() == &s1);
+    REQUIRE(xs1[0].GetObject() == worldSphere);
+    REQUIRE(xs1[1].GetObject() == worldSphere);
 }
 
 TEST_CASE("World with two spheres side by side. Make sure each sphere is able to be hit", "[world]")
@@ -126,16 +134,16 @@ TEST_CASE("World with two spheres side by side. Make sure each sphere is able to
     Sphere s2;
     s1.SetTransform(Matrix::CreateTranslation(2.f, 0.f, 0.f));
     s2.SetTransform(Matrix::CreateTranslation(-2.f, 0.f, 0.f));
-    w.AddObject(s1);
-    w.AddObject(s2);
+    const Sphere *worldS1 = w.AddObject(s1);
+    const Sphere *worldS2 = w.AddObject(s2);
     Ray r1(Point(2.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
     Ray r2(Point(-2.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
     auto xs1 = IntersectWorld(w, r1);
     auto xs2 = IntersectWorld(w, r2);
     REQUIRE(xs1.size() == 2);
-    REQUIRE(xs1[0].GetObject() == &s1);
-    REQUIRE(xs1[1].GetObject() == &s1);
+    REQUIRE(xs1[0].GetObject() == worldS1);
+    REQUIRE(xs1[1].GetObject() == worldS1);
     REQUIRE(xs2.size() == 2);
-    REQUIRE(xs2[0].GetObject() == &s2);
-    REQUIRE(xs2[1].GetObject() == &s2);
+    REQUIRE(xs2[0].GetObject() == worldS2);
+    REQUIRE(xs2[1].GetObject() == worldS2);
 }

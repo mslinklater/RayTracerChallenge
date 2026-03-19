@@ -15,5 +15,5 @@ public:
 
 private:
     float t;              // The distance along the ray to the intersection point
-    const Sphere *object; // Pointer to the intersected object (in this case, a sphere)
+    const Sphere *object; // Pointer to the intersected object (null means no hit)
 };

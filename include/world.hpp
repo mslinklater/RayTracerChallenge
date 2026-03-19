@@ -16,7 +16,11 @@ public:
     void ReplaceLight(int index, const Light &light);
 
     void AddLight(const Light &light) { lights.push_back(light); }
-    void AddObject(const Sphere &object) { objects.push_back(object); }
+    const Sphere *AddObject(const Sphere &object)
+    {
+        objects.push_back(object);
+        return &objects.back();
+    }
 
     const Sphere &GetObject(size_t index) const;
     const Light &GetLight(size_t index) const;

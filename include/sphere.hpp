@@ -24,3 +24,5 @@ private:
     Matrix transform;  // The transformation matrix for the sphere (default is identity)
     Material material; // The material properties of the sphere
 };
+
+bool operator==(const Sphere &s1, const Sphere &s2);

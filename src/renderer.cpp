@@ -60,6 +60,7 @@ std::vector<Intersection> IntersectWorld(const World &world, const Ray &ray)
 
 Color ShadeHit(const World &world, const Computations &comps)
 {
+    // TODO: Handle multiple lights and shadows
     return Lighting(comps.object->GetMaterial(), world.GetLight(0), comps.point, comps.eyeVector, comps.normalVector);
 }
 

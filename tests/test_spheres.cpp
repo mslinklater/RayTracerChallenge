@@ -7,7 +7,7 @@
 
 TEST_CASE("A ray intersects a sphere at two points", "[Spheres]")
 {
-    Sphere sphere;
+    Sphere sphere("sphere");
     Ray ray(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
     auto xs = Intersect(sphere, ray);
 
@@ -18,7 +18,7 @@ TEST_CASE("A ray intersects a sphere at two points", "[Spheres]")
 
 TEST_CASE("A ray intersects a sphere at tangent - two identical points", "[Spheres]")
 {
-    Sphere sphere;
+    Sphere sphere("sphere");
     Ray ray(Point(0.f, 1.f, -5.f), Vector(0.f, 0.f, 1.f));
     auto xs = Intersect(sphere, ray);
 
@@ -29,7 +29,7 @@ TEST_CASE("A ray intersects a sphere at tangent - two identical points", "[Spher
 
 TEST_CASE("A ray misses a sphere", "[Spheres]")
 {
-    Sphere sphere;
+    Sphere sphere("sphere");
     Ray ray(Point(0.f, 2.f, -5.f), Vector(0.f, 0.f, 1.f));
     auto xs = Intersect(sphere, ray);
 
@@ -38,7 +38,7 @@ TEST_CASE("A ray misses a sphere", "[Spheres]")
 
 TEST_CASE("A ray originates inside a sphere", "[Spheres]")
 {
-    Sphere sphere;
+    Sphere sphere("sphere");
     Ray ray(Point(0.f, 0.f, 0.f), Vector(0.f, 0.f, 1.f));
     auto xs = Intersect(sphere, ray);
 
@@ -49,7 +49,7 @@ TEST_CASE("A ray originates inside a sphere", "[Spheres]")
 
 TEST_CASE("The sphere is behind the ray", "[Spheres]")
 {
-    Sphere sphere;
+    Sphere sphere("sphere");
     Ray ray(Point(0.f, 0.f, 5.f), Vector(0.f, 0.f, 1.f));
     auto xs = Intersect(sphere, ray);
 
@@ -60,7 +60,7 @@ TEST_CASE("The sphere is behind the ray", "[Spheres]")
 
 TEST_CASE("A spheres default transformation", "[Spheres]")
 {
-    Sphere sphere;
+    Sphere sphere("sphere");
     sphere.GetMutableTransform().SetIdentity();
     Matrix expected(4);
     expected.SetIdentity();
@@ -69,7 +69,7 @@ TEST_CASE("A spheres default transformation", "[Spheres]")
 
 TEST_CASE("Changing a spheres transformation", "[Spheres]")
 {
-    Sphere sphere;
+    Sphere sphere("sphere");
     Matrix translation = Matrix::CreateTranslation(2.f, 3.f, 4.f);
     sphere.SetTransform(translation);
     Matrix expected = Matrix::CreateTranslation(2.f, 3.f, 4.f);
@@ -78,7 +78,7 @@ TEST_CASE("Changing a spheres transformation", "[Spheres]")
 
 TEST_CASE("Intersecting a scaled sphere with a ray", "[Spheres]")
 {
-    Sphere sphere;
+    Sphere sphere("sphere");
     sphere.SetTransform(Matrix::CreateScaling(2.f, 2.f, 2.f));
     Ray ray(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
     auto xs = Intersect(sphere, ray);
@@ -90,7 +90,7 @@ TEST_CASE("Intersecting a scaled sphere with a ray", "[Spheres]")
 
 TEST_CASE("Intersecting a translated sphere with a ray", "[Spheres]")
 {
-    Sphere sphere;
+    Sphere sphere("sphere");
     sphere.SetTransform(Matrix::CreateTranslation(5.f, 0.f, 0.f));
     Ray ray(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
     auto xs = Intersect(sphere, ray);
@@ -100,28 +100,28 @@ TEST_CASE("Intersecting a translated sphere with a ray", "[Spheres]")
 
 TEST_CASE("The normal on a sphere at a point on the x axis", "[Spheres]")
 {
-    Sphere sphere;
+    Sphere sphere("sphere");
     Tuple normal = sphere.NormalAt(Point(1.f, 0.f, 0.f));
     REQUIRE(normal == Vector(1.f, 0.f, 0.f));
 }
 
 TEST_CASE("The normal on a sphere at a point on the y axis", "[Spheres]")
 {
-    Sphere sphere;
+    Sphere sphere("sphere");
     Tuple normal = sphere.NormalAt(Point(0.f, 1.f, 0.f));
     REQUIRE(normal == Vector(0.f, 1.f, 0.f));
 }
 
 TEST_CASE("The normal on a sphere at a point on the z axis", "[Spheres]")
 {
-    Sphere sphere;
+    Sphere sphere("sphere");
     Tuple normal = sphere.NormalAt(Point(0.f, 0.f, 1.f));
     REQUIRE(normal == Vector(0.f, 0.f, 1.f));
 }
 
 TEST_CASE("The normal on a sphere at a nonaxial point", "[Spheres]")
 {
-    Sphere sphere;
+    Sphere sphere("sphere");
     float rootThreeOverThree = std::sqrt(3.f) / 3.f;
     Tuple normal = sphere.NormalAt(Point(rootThreeOverThree, rootThreeOverThree, rootThreeOverThree));
     REQUIRE(normal == Vector(rootThreeOverThree, rootThreeOverThree, rootThreeOverThree));
@@ -129,7 +129,7 @@ TEST_CASE("The normal on a sphere at a nonaxial point", "[Spheres]")
 
 TEST_CASE("The normal on a sphere at a nonaxial point 2", "[Spheres]")
 {
-    Sphere sphere;
+    Sphere sphere("sphere");
     float rootThreeOverThree = std::sqrt(3.f) / 3.f;
     Tuple normal = sphere.NormalAt(Point(1.f, 1.f, 1.f));
     REQUIRE(normal == Vector(rootThreeOverThree, rootThreeOverThree, rootThreeOverThree));
@@ -137,7 +137,7 @@ TEST_CASE("The normal on a sphere at a nonaxial point 2", "[Spheres]")
 
 TEST_CASE("The normal is normalised", "[Spheres]")
 {
-    Sphere sphere;
+    Sphere sphere("sphere");
     float rootThreeOverThree = std::sqrt(3.f) / 3.f;
     Tuple normal = sphere.NormalAt(Point(1.f, 1.f, 1.f));
     REQUIRE(normal == normal.Normalize());
@@ -146,7 +146,7 @@ TEST_CASE("The normal is normalised", "[Spheres]")
 
 TEST_CASE("Computing the normal on a translated sphere", "[Spheres]")
 {
-    Sphere sphere;
+    Sphere sphere("sphere");
     sphere.SetTransform(Matrix::CreateTranslation(0.f, 1.f, 0.f));
     Tuple normal = sphere.NormalAt(Point(0.f, 1.70711f, -0.70711f));
     REQUIRE(normal == Vector(0.f, 0.70711f, -0.70711f));
@@ -154,7 +154,7 @@ TEST_CASE("Computing the normal on a translated sphere", "[Spheres]")
 
 TEST_CASE("Computing the normal on a transformed sphere", "[Spheres]")
 {
-    Sphere sphere;
+    Sphere sphere("sphere");
     Matrix scaling = Matrix::CreateScaling(1.f, 0.5f, 1.f);
     Matrix rotation = Matrix::CreateRotationZ(M_PI / 5.f);
     sphere.SetTransform(scaling * rotation);
@@ -164,7 +164,7 @@ TEST_CASE("Computing the normal on a transformed sphere", "[Spheres]")
 
 TEST_CASE("A sphere has a material", "[Spheres]")
 {
-    Sphere sphere;
+    Sphere sphere("sphere");
     Material m = sphere.GetMaterial();
     Material expected;
     REQUIRE(m.GetColor() == expected.GetColor());
@@ -176,7 +176,7 @@ TEST_CASE("A sphere has a material", "[Spheres]")
 
 TEST_CASE("A sphere may be assigned a material", "[Spheres]")
 {
-    Sphere sphere;
+    Sphere sphere("sphere");
     Material m;
     m.SetColor(Color(1.f, 0.2f, 1.f));
     sphere.SetMaterial(m);

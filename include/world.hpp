@@ -4,13 +4,15 @@
 #include "intersection.hpp"
 #include "ray.hpp"
 #include <vector>
+#include <deque>
 
 class World
 {
 public:
     World() = default;
 
-    const std::vector<Sphere> &GetObjects() const;
+    // TODO - change this back to vector when we have a better way to handle object lifetimes and comparisons
+    const std::deque<Sphere> &GetObjects() const;
     const std::vector<Light> &GetLights() const;
 
     void ReplaceLight(int index, const Light &light);
@@ -32,6 +34,6 @@ public:
     bool ContainsObject(const Sphere &object) const;
 
 private:
-    std::vector<Sphere> objects;
+    std::deque<Sphere> objects;
     std::vector<Light> lights;
 };

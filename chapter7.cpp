@@ -22,14 +22,14 @@ int main()
     world.AddLight(light);
 
     // Floor
-    Sphere floor;
+    Sphere floor("floor");
     floor.SetTransform(Matrix::CreateScaling(10.0f, 0.01f, 10.0f));
     floor.GetMutableMaterial().SetColor(Color(1.0f, 0.9f, 0.9f));
     floor.GetMutableMaterial().SetSpecular(0.0f);
     world.AddObject(floor);
 
     // Left wall
-    Sphere leftWall;
+    Sphere leftWall("leftWall");
     leftWall.SetTransform(Matrix::CreateTranslation(0.0f, 0.0f, 5.0f) * Matrix::CreateRotationY(-M_PI / 4.0f) * Matrix::CreateRotationX(M_PI / 2.0f) * Matrix::CreateScaling(10.0f, 0.01f, 10.0f));
     leftWall.SetMaterial(floor.GetMaterial());
     world.AddObject(leftWall);

@@ -4,7 +4,7 @@
 #include "intersection.hpp"
 #include <algorithm>
 
-const std::vector<Sphere> &World::GetObjects() const
+const std::deque<Sphere> &World::GetObjects() const
 {
     return objects;
 }

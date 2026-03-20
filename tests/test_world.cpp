@@ -16,7 +16,7 @@ TEST_CASE("Creating a world", "[world]")
 TEST_CASE("Adding an object to the world returns a ptr to the stored object, not the one passed in", "[world]")
 {
     World world;
-    Sphere s;
+    Sphere s("s");
     const Sphere *storedSphere = world.AddObject(s);
     REQUIRE(storedSphere != &s);
 }
@@ -28,12 +28,12 @@ TEST_CASE("The default world", "[world]")
     Light light = Light(Point(-10.f, 10.f, -10.f), Color(1.f, 1.f, 1.f));
     w.AddLight(light);
 
-    Sphere s1;
+    Sphere s1("s1");
     s1.GetMutableMaterial().SetColor(Color(0.8f, 1.f, 0.6f));
     s1.GetMutableMaterial().SetDiffuse(0.7f);
     s1.GetMutableMaterial().SetSpecular(0.2f);
 
-    Sphere s2;
+    Sphere s2("s2");
     s2.SetTransform(Matrix::CreateScaling(0.5f, 0.5f, 0.5f));
 
     REQUIRE(w.ContainsObject(s1));
@@ -117,7 +117,7 @@ TEST_CASE("The colour with an intersection behind the ray", "[world]")
 TEST_CASE("World with one spheres to the side. Make sure sphere is able to be hit", "[world]")
 {
     World w;
-    Sphere s1;
+    Sphere s1("s1");
     s1.SetTransform(Matrix::CreateTranslation(2.f, 5.f, 0.f));
     const Sphere *worldSphere = w.AddObject(s1);
     Ray r1(Point(2.f, 5.f, -5.f), Tuple(0.f, 0.f, 1.f));
@@ -130,20 +130,36 @@ TEST_CASE("World with one spheres to the side. Make sure sphere is able to be hi
 TEST_CASE("World with two spheres side by side. Make sure each sphere is able to be hit", "[world]")
 {
     World w;
-    Sphere s1;
-    Sphere s2;
+    Sphere s1("s1");
+    Sphere s2("s2");
     s1.SetTransform(Matrix::CreateTranslation(2.f, 0.f, 0.f));
     s2.SetTransform(Matrix::CreateTranslation(-2.f, 0.f, 0.f));
     const Sphere *worldS1 = w.AddObject(s1);
     const Sphere *worldS2 = w.AddObject(s2);
     Ray r1(Point(2.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
     Ray r2(Point(-2.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
-    auto xs1 = IntersectWorld(w, r1);
-    auto xs2 = IntersectWorld(w, r2);
+    std::vector<Intersection> xs1 = IntersectWorld(w, r1);
+    std::vector<Intersection> xs2 = IntersectWorld(w, r2);
     REQUIRE(xs1.size() == 2);
     REQUIRE(xs1[0].GetObject() == worldS1);
     REQUIRE(xs1[1].GetObject() == worldS1);
     REQUIRE(xs2.size() == 2);
     REQUIRE(xs2[0].GetObject() == worldS2);
     REQUIRE(xs2[1].GetObject() == worldS2);
+}
+
+TEST_CASE("World with two spheres side by side. Make sure the object hit has a known pointer", "[world]")
+{
+    World w;
+    Sphere s1("s1");
+    Sphere s2("s2");
+    s1.SetTransform(Matrix::CreateTranslation(2.f, 0.f, 0.f));
+    s2.SetTransform(Matrix::CreateTranslation(-2.f, 0.f, 0.f));
+    const Sphere *worldS1 = w.AddObject(s1);
+    const Sphere *worldS2 = w.AddObject(s2);
+    Ray r1(Point(2.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
+    std::vector<Intersection> xs1 = IntersectWorld(w, r1);
+    REQUIRE(xs1.size() == 2);
+    bool bOneOfThemHit = (xs1[0].GetObject() == worldS1) || (xs1[0].GetObject() == worldS2);
+    REQUIRE(bOneOfThemHit);
 }

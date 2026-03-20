@@ -43,10 +43,11 @@ Color ColorAt(const World &world, const Ray &ray)
 std::vector<Intersection> IntersectWorld(const World &world, const Ray &ray)
 {
     std::vector<Intersection> intersections;
-    for (const auto &object : world.GetObjects())
+    for (const Sphere &object : world.GetObjects())
     {
+        const Sphere *spherePtr = &object;
         std::vector<float> objectIntersections = Intersect(object, ray);
-        for (const auto &distance : objectIntersections)
+        for (const float &distance : objectIntersections)
         {
             Intersection intersection(distance, &object);
             intersections.push_back(intersection);
@@ -108,13 +109,13 @@ World DefaultWorld()
     Light light(Point(-10.f, 10.f, -10.f), Color(1.f, 1.f, 1.f));
     w.AddLight(light);
 
-    Sphere s1;
+    Sphere s1("s1");
     s1.GetMutableMaterial().SetColor(Color(0.8f, 1.f, 0.6f));
     s1.GetMutableMaterial().SetDiffuse(0.7f);
     s1.GetMutableMaterial().SetSpecular(0.2f);
     w.AddObject(s1);
 
-    Sphere s2;
+    Sphere s2("s2");
     s2.SetTransform(Matrix::CreateScaling(0.5f, 0.5f, 0.5f));
     w.AddObject(s2);
     return w;

@@ -20,7 +20,7 @@ int main()
     Canvas canvas{kCanvasSize, kCanvasSize};
     float invCanvas = 1.f / kCanvasSize;
 
-    Sphere sphere;
+    Sphere sphere("sphere");
     Material m;
     m.SetColor(Color(1.f, 0.2f, 1.f));
     sphere.SetMaterial(m);

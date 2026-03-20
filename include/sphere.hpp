@@ -5,7 +5,7 @@
 class Sphere
 {
 public:
-    Sphere() : transform(4)
+    Sphere(const std::string &name) : transform(4), name(name)
     {
         transform.SetIdentity();
     }
@@ -20,9 +20,12 @@ public:
     Matrix &GetMutableTransform() { return transform; }
     void SetTransform(const Matrix &t) { transform = t; }
 
+    const std::string &GetName() const { return name; }
+
 private:
     Matrix transform;  // The transformation matrix for the sphere (default is identity)
     Material material; // The material properties of the sphere
+    std::string name;
 };
 
 bool operator==(const Sphere &s1, const Sphere &s2);

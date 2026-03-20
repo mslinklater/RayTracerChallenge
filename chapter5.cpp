@@ -20,7 +20,7 @@ int main()
     float invCanvas = 1.f / kCanvasSize;
     Color red{1.f, 0.f, 0.f};
 
-    Sphere sphere;
+    Sphere sphere("sphere");
 
     for (int x = 0; x < kCanvasSize; x++)
     {

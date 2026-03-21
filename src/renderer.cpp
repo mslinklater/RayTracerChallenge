@@ -4,7 +4,7 @@
 #include "world.hpp"
 #include "computations.hpp"
 
-Canvas Render(const Camera &camera, const World &world)
+Canvas Renderer::Render(const Camera &camera, const World &world)
 {
     Canvas canvas(camera.GetHSize(), camera.GetVSize());
 
@@ -21,7 +21,7 @@ Canvas Render(const Camera &camera, const World &world)
     return canvas;
 }
 
-Color ColorAt(const World &world, const Ray &ray)
+Color Renderer::ColorAt(const World &world, const Ray &ray)
 {
     std::vector<Intersection> intersections = IntersectWorld(world, ray);
     if (intersections.empty())
@@ -40,7 +40,7 @@ Color ColorAt(const World &world, const Ray &ray)
     return ShadeHit(world, comps);
 }
 
-std::vector<Intersection> IntersectWorld(const World &world, const Ray &ray)
+std::vector<Intersection> Renderer::IntersectWorld(const World &world, const Ray &ray)
 {
     std::vector<Intersection> intersections;
     for (ObjectId objectId = 0; objectId < world.GetObjects().size(); ++objectId)
@@ -59,13 +59,13 @@ std::vector<Intersection> IntersectWorld(const World &world, const Ray &ray)
     return intersections;
 }
 
-Color ShadeHit(const World &world, const Computations &comps)
+Color Renderer::ShadeHit(const World &world, const Computations &comps)
 {
     // TODO: Handle multiple lights and shadows
     return Lighting(world.GetObject(comps.objectId).GetMaterial(), world.GetLight(0), comps.point, comps.eyeVector, comps.normalVector);
 }
 
-Color Lighting(const Material &material, const Light &light, const Tuple &position, const Tuple &eyeVector, const Tuple &normalVector)
+Color Renderer::Lighting(const Material &material, const Light &light, const Tuple &position, const Tuple &eyeVector, const Tuple &normalVector)
 {
     Color effectiveColor = material.GetColor() * light.intensity;
     Tuple lightVector = (light.position - position).Normalize();
@@ -103,7 +103,7 @@ Color Lighting(const Material &material, const Light &light, const Tuple &positi
     return ambient + diffuse + specular;
 }
 
-World DefaultWorld()
+World Renderer::DefaultWorld()
 {
     World w;
     Light light(Point(-10.f, 10.f, -10.f), Color(1.f, 1.f, 1.f));
@@ -121,12 +121,12 @@ World DefaultWorld()
     return w;
 }
 
-std::vector<Intersection> Intersections(std::initializer_list<Intersection> list)
+std::vector<Intersection> Renderer::Intersections(std::initializer_list<Intersection> list)
 {
     return std::vector<Intersection>(list);
 }
 
-Intersection GetClosestIntersection(const std::vector<Intersection> &intersections)
+Intersection Renderer::GetClosestIntersection(const std::vector<Intersection> &intersections)
 {
     Intersection hit(0.f, kInvalidObjectId);
     for (const auto &intersection : intersections)
@@ -142,7 +142,7 @@ Intersection GetClosestIntersection(const std::vector<Intersection> &intersectio
     return hit;
 }
 
-Computations PrepareComputations(const Intersection &intersection, const Ray &ray, const World &world)
+Computations Renderer::PrepareComputations(const Intersection &intersection, const Ray &ray, const World &world)
 {
     Computations comps;
     comps.t = intersection.GetT();
@@ -160,7 +160,7 @@ Computations PrepareComputations(const Intersection &intersection, const Ray &ra
     return comps;
 }
 
-std::vector<float> Intersect(const Sphere &sphere, const Ray &ray)
+std::vector<float> Renderer::Intersect(const Sphere &sphere, const Ray &ray)
 {
     Ray transformedRay = ray * sphere.GetTransform().GetInverse();
 

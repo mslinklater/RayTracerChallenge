@@ -31,13 +31,13 @@ int main()
         for (int y = 0; y < kCanvasSize; y++)
         {
             Ray ray(Point(0.f, 0.f, -3.f), Vector((x - kCanvasSize / 2.f) * invCanvas, (y - kCanvasSize / 2.f) * invCanvas, 1.f));
-            auto xs = Intersect(sphere, ray);
+            auto xs = Renderer::Intersect(sphere, ray);
             if (!xs.empty())
             {
                 Tuple position = ray.PositionAt(xs[0]);
                 Tuple normalVector = sphere.NormalAt(position);
                 Tuple eyeVector = -ray.GetDirection();
-                Color color = Lighting(sphere.GetMaterial(), light, position, eyeVector, normalVector);
+                Color color = Renderer::Lighting(sphere.GetMaterial(), light, position, eyeVector, normalVector);
                 canvas.WritePixel(x, y, color);
             }
         }

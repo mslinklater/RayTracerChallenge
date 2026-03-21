@@ -41,7 +41,7 @@ TEST_CASE_METHOD(LightingFixture, "Lighting with the eye between the light and t
     Tuple normalVector = Vector(0.f, 0.f, -1.f);
     Light light(Point(0.f, 0.f, -10.f), Color(1.f, 1.f, 1.f));
 
-    Color result = Lighting(material, light, position, eyeVector, normalVector);
+    Color result = Renderer::Lighting(material, light, position, eyeVector, normalVector);
     REQUIRE(result == Color(1.9f, 1.9f, 1.9f));
 }
 
@@ -51,7 +51,7 @@ TEST_CASE_METHOD(LightingFixture, "Lighting with the eye between the light and t
     Tuple normalVector = Vector(0.f, 0.f, -1.f);
     Light light(Point(0.f, 0.f, -10.f), Color(1.f, 1.f, 1.f));
 
-    Color result = Lighting(material, light, position, eyeVector, normalVector);
+    Color result = Renderer::Lighting(material, light, position, eyeVector, normalVector);
     REQUIRE(result == Color(1.0f, 1.0f, 1.0f));
 }
 
@@ -61,7 +61,7 @@ TEST_CASE_METHOD(LightingFixture, "Lighting with the eye opposite the surface, l
     Tuple normalVector = Vector(0.f, 0.f, -1.f);
     Light light(Point(0.f, 10.f, -10.f), Color(1.f, 1.f, 1.f));
 
-    Color result = Lighting(material, light, position, eyeVector, normalVector);
+    Color result = Renderer::Lighting(material, light, position, eyeVector, normalVector);
     REQUIRE(result == Color(0.7364f, 0.7364f, 0.7364f));
 }
 
@@ -71,7 +71,7 @@ TEST_CASE_METHOD(LightingFixture, "Lighting with the eye in the path of the refl
     Tuple normalVector = Vector(0.f, 0.f, -1.f);
     Light light(Point(0.f, 10.f, -10.f), Color(1.f, 1.f, 1.f));
 
-    Color result = Lighting(material, light, position, eyeVector, normalVector);
+    Color result = Renderer::Lighting(material, light, position, eyeVector, normalVector);
     REQUIRE(result == Color(1.6364f, 1.6364f, 1.6364f));
 }
 
@@ -81,6 +81,6 @@ TEST_CASE_METHOD(LightingFixture, "Lighting with the light behind the surface", 
     Tuple normalVector = Vector(0.f, 0.f, -1.f);
     Light light(Point(0.f, 0.f, 10.f), Color(1.f, 1.f, 1.f));
 
-    Color result = Lighting(material, light, position, eyeVector, normalVector);
+    Color result = Renderer::Lighting(material, light, position, eyeVector, normalVector);
     REQUIRE(result == Color(0.1f, 0.1f, 0.1f));
 }

@@ -64,7 +64,7 @@ int main()
     left.GetMutableMaterial().SetSpecular(0.3f);
     world.AddObject(left);
 
-    Canvas canvas = Render(camera, world);
+    Canvas canvas = Renderer::Render(camera, world);
     canvas.WriteToPPM("../images/chapter7.ppm");
     std::cout << "Done" << std::endl;
     return 0;

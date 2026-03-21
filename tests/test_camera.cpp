@@ -65,12 +65,12 @@ TEST_CASE("Constructing a ray when the camera is transformed", "[camera]")
 
 TEST_CASE("Rendering a world with a camera", "[camera]")
 {
-    World w = DefaultWorld();
+    World w = Renderer::DefaultWorld();
     Camera c(11, 11, M_PI / 2.f);
     Tuple from = Point(0.f, 0.f, -5.f);
     Tuple to = Point(0.f, 0.f, 0.f);
     Tuple up = Vector(0.f, 1.f, 0.f);
     c.SetTransform(Matrix::ViewTransform(from, to, up));
-    Canvas canvas = Render(c, w);
+    Canvas canvas = Renderer::Render(c, w);
     REQUIRE(canvas.GetPixel(5, 5) == Color(0.38066f, 0.47583f, 0.2855f));
 }

@@ -96,8 +96,10 @@ if(ENABLE_COVERAGE)
     find_program(GENHTML_BIN genhtml)
     if(LCOV_BIN)
         add_custom_target(coverage
+            COMMAND ${LCOV_BIN} --zerocounters --directory ${CMAKE_BINARY_DIR}
             COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-            COMMAND ${LCOV_BIN} --capture --ignore-errors inconsistent,unsupported,format --directory ${CMAKE_BINARY_DIR} --output-file ${CMAKE_BINARY_DIR}/coverage.info
+            COMMAND ${LCOV_BIN} --capture --ignore-errors inconsistent,unsupported,format --directory ${CMAKE_BINARY_DIR} --output-file ${CMAKE_BINARY_DIR}/coverage_raw.info
+            COMMAND ${LCOV_BIN} --extract ${CMAKE_BINARY_DIR}/coverage_raw.info "${CMAKE_SOURCE_DIR}/src/*" "${CMAKE_SOURCE_DIR}/include/*" --ignore-errors inconsistent,unused --output-file ${CMAKE_BINARY_DIR}/coverage.info
             WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
             DEPENDS RayTracerChallengeTests
             COMMENT "Running tests and generating ${CMAKE_BINARY_DIR}/coverage.info"
@@ -106,7 +108,7 @@ if(ENABLE_COVERAGE)
 
         if(GENHTML_BIN)
             add_custom_target(coverage-html
-                COMMAND ${GENHTML_BIN} ${CMAKE_BINARY_DIR}/coverage.info --ignore-errors category --output-directory ${CMAKE_BINARY_DIR}/html
+                COMMAND ${GENHTML_BIN} ${CMAKE_BINARY_DIR}/coverage.info --ignore-errors category,inconsistent --output-directory ${CMAKE_BINARY_DIR}/html
                 WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
                 DEPENDS coverage
                 COMMENT "Generating HTML coverage report in ${CMAKE_BINARY_DIR}/html"

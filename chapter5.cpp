@@ -27,7 +27,7 @@ int main()
         for (int y = 0; y < kCanvasSize; y++)
         {
             Ray ray(Point(0.f, 0.f, -3.f), Vector((x - kCanvasSize / 2.f) * invCanvas, (y - kCanvasSize / 2.f) * invCanvas, 1.f));
-            auto xs = Intersect(sphere, ray);
+            auto xs = Renderer::Intersect(sphere, ray);
             if (!xs.empty())
             {
                 canvas.WritePixel(x, y, red);

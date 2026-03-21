@@ -10,6 +10,7 @@
 #include "maths.hpp"
 #include "light.hpp"
 #include "renderer.hpp"
+#include "enums.hpp"
 
 static constexpr int kCanvasSize = 500;
 
@@ -37,7 +38,7 @@ int main()
                 Tuple position = ray.PositionAt(xs[0]);
                 Tuple normalVector = sphere.NormalAt(position);
                 Tuple eyeVector = -ray.GetDirection();
-                Color color = Renderer::Lighting(sphere.GetMaterial(), light, position, eyeVector, normalVector);
+                Color color = Renderer::Lighting(sphere.GetMaterial(), light, position, eyeVector, normalVector, EInShadow::No);
                 canvas.WritePixel(x, y, color);
             }
         }

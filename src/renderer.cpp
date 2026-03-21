@@ -62,16 +62,22 @@ std::vector<Intersection> Renderer::IntersectWorld(const World &world, const Ray
 Color Renderer::ShadeHit(const World &world, const Computations &comps)
 {
     // TODO: Handle multiple lights and shadows
-    return Lighting(world.GetObject(comps.objectId).GetMaterial(), world.GetLight(0), comps.point, comps.eyeVector, comps.normalVector);
+    return Lighting(world.GetObject(comps.objectId).GetMaterial(), world.GetLight(0), comps.point, comps.eyeVector, comps.normalVector, EInShadow::No);
 }
 
-Color Renderer::Lighting(const Material &material, const Light &light, const Tuple &position, const Tuple &eyeVector, const Tuple &normalVector)
+Color Renderer::Lighting(const Material &material, const Light &light, const Tuple &position, const Tuple &eyeVector, const Tuple &normalVector, EInShadow inShadow)
 {
     Color effectiveColor = material.GetColor() * light.intensity;
     Tuple lightVector = (light.position - position).Normalize();
 
     // the three components of the Phong reflection model: ambient, diffuse, and specular
     Color ambient = effectiveColor * material.GetAmbient();
+
+    if (inShadow == EInShadow::Yes)
+    {
+        return ambient; // Only ambient component contributes to the color if the point is in shadow
+    }
+
     Color diffuse;
     Color specular;
 

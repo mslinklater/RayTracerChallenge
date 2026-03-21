@@ -13,12 +13,12 @@ TEST_CASE("Creating a world", "[world]")
     REQUIRE(world.GetLights().empty());
 }
 
-TEST_CASE("Adding an object to the world returns a ptr to the stored object, not the one passed in", "[world]")
+TEST_CASE("Adding an object to the world returns a stable object ID", "[world]")
 {
     World world;
     Sphere s("s");
-    const Sphere *storedSphere = world.AddObject(s);
-    REQUIRE(storedSphere != &s);
+    ObjectId id = world.AddObject(s);
+    REQUIRE(id == 0);
 }
 
 TEST_CASE("The default world", "[world]")
@@ -67,9 +67,8 @@ TEST_CASE("Shading an intersection", "[world]")
 {
     World w = DefaultWorld();
     Ray r(Point(0.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
-    Sphere shape = w.GetObject(0);
-    Intersection i(4.f, &shape);
-    auto comps = PrepareComputations(i, r);
+    Intersection i(4.f, 0);
+    auto comps = PrepareComputations(i, r, w);
     auto color = ShadeHit(w, comps);
     REQUIRE(color == Color(0.38066f, 0.47583f, 0.2855f));
 }
@@ -79,9 +78,8 @@ TEST_CASE("Shading an intersection from the inside", "[world]")
     World w = DefaultWorld();
     w.ReplaceLight(0, Light(Point(0.f, 0.25f, 0.f), Color(1.f, 1.f, 1.f)));
     Ray r(Point(0.f, 0.f, 0.f), Tuple(0.f, 0.f, 1.f));
-    Sphere shape = w.GetObject(1);
-    Intersection i(0.5f, &shape);
-    auto comps = PrepareComputations(i, r);
+    Intersection i(0.5f, 1);
+    auto comps = PrepareComputations(i, r, w);
     auto color = ShadeHit(w, comps);
     REQUIRE(color == Color(0.90498f, 0.90498f, 0.90498f));
 }
@@ -119,12 +117,12 @@ TEST_CASE("World with one spheres to the side. Make sure sphere is able to be hi
     World w;
     Sphere s1("s1");
     s1.SetTransform(Matrix::CreateTranslation(2.f, 5.f, 0.f));
-    const Sphere *worldSphere = w.AddObject(s1);
+    ObjectId worldSphereId = w.AddObject(s1);
     Ray r1(Point(2.f, 5.f, -5.f), Tuple(0.f, 0.f, 1.f));
     auto xs1 = IntersectWorld(w, r1);
     REQUIRE(xs1.size() == 2);
-    REQUIRE(xs1[0].GetObject() == worldSphere);
-    REQUIRE(xs1[1].GetObject() == worldSphere);
+    REQUIRE(xs1[0].GetObjectId() == worldSphereId);
+    REQUIRE(xs1[1].GetObjectId() == worldSphereId);
 }
 
 TEST_CASE("World with two spheres side by side. Make sure each sphere is able to be hit", "[world]")
@@ -134,32 +132,32 @@ TEST_CASE("World with two spheres side by side. Make sure each sphere is able to
     Sphere s2("s2");
     s1.SetTransform(Matrix::CreateTranslation(2.f, 0.f, 0.f));
     s2.SetTransform(Matrix::CreateTranslation(-2.f, 0.f, 0.f));
-    const Sphere *worldS1 = w.AddObject(s1);
-    const Sphere *worldS2 = w.AddObject(s2);
+    ObjectId worldS1Id = w.AddObject(s1);
+    ObjectId worldS2Id = w.AddObject(s2);
     Ray r1(Point(2.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
     Ray r2(Point(-2.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
     std::vector<Intersection> xs1 = IntersectWorld(w, r1);
     std::vector<Intersection> xs2 = IntersectWorld(w, r2);
     REQUIRE(xs1.size() == 2);
-    REQUIRE(xs1[0].GetObject() == worldS1);
-    REQUIRE(xs1[1].GetObject() == worldS1);
+    REQUIRE(xs1[0].GetObjectId() == worldS1Id);
+    REQUIRE(xs1[1].GetObjectId() == worldS1Id);
     REQUIRE(xs2.size() == 2);
-    REQUIRE(xs2[0].GetObject() == worldS2);
-    REQUIRE(xs2[1].GetObject() == worldS2);
+    REQUIRE(xs2[0].GetObjectId() == worldS2Id);
+    REQUIRE(xs2[1].GetObjectId() == worldS2Id);
 }
 
-TEST_CASE("World with two spheres side by side. Make sure the object hit has a known pointer", "[world]")
+TEST_CASE("World with two spheres side by side. Make sure the object hit has a known ID", "[world]")
 {
     World w;
     Sphere s1("s1");
     Sphere s2("s2");
     s1.SetTransform(Matrix::CreateTranslation(2.f, 0.f, 0.f));
     s2.SetTransform(Matrix::CreateTranslation(-2.f, 0.f, 0.f));
-    const Sphere *worldS1 = w.AddObject(s1);
-    const Sphere *worldS2 = w.AddObject(s2);
+    ObjectId worldS1Id = w.AddObject(s1);
+    ObjectId worldS2Id = w.AddObject(s2);
     Ray r1(Point(2.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
     std::vector<Intersection> xs1 = IntersectWorld(w, r1);
     REQUIRE(xs1.size() == 2);
-    bool bOneOfThemHit = (xs1[0].GetObject() == worldS1) || (xs1[0].GetObject() == worldS2);
+    bool bOneOfThemHit = (xs1[0].GetObjectId() == worldS1Id) || (xs1[0].GetObjectId() == worldS2Id);
     REQUIRE(bOneOfThemHit);
 }

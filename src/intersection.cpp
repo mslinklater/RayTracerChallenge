@@ -3,5 +3,5 @@
 
 bool Intersection::operator==(const Intersection &other) const
 {
-    return AreEqual(t, other.t) && object == other.object;
+    return AreEqual(t, other.t) && objectId == other.objectId;
 }

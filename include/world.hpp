@@ -11,17 +11,16 @@ class World
 public:
     World() = default;
 
-    // TODO - change this back to vector when we have a better way to handle object lifetimes and comparisons
     const std::deque<Sphere> &GetObjects() const;
     const std::vector<Light> &GetLights() const;
 
     void ReplaceLight(int index, const Light &light);
 
     void AddLight(const Light &light) { lights.push_back(light); }
-    const Sphere *AddObject(const Sphere &object)
+    ObjectId AddObject(const Sphere &object)
     {
         objects.push_back(object);
-        return &objects.back();
+        return objects.size() - 1;
     }
 
     const Sphere &GetObject(size_t index) const;

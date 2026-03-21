@@ -1,6 +1,6 @@
 # Copilot Instructions
 
-This is a C++20 implementation of [The Ray Tracer Challenge](http://raytracerchallenge.com/) book, built incrementally chapter by chapter.
+This is a C++20 implementation of [The Ray Tracer Challenge](http://raytracerchallenge.com/) book, built incrementally chapter by chapter. The development process is test-driven, with a comprehensive suite of Catch2 unit tests covering all core types and behaviours. The code style emphasizes clarity and maintainability, with consistent naming conventions and operator overloads for mathematical operations. The architecture is modular, with separate header and source files for each type, and a clear separation between the core ray tracing logic and the chapter-specific demos.
 
 ## Build & Test
 

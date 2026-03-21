@@ -79,9 +79,9 @@ TEST_CASE("PPM file pixel data", "[canvas]")
     auto lines = ReadLinesFromFile("test.ppm");
 
     REQUIRE(lines.size() >= 6);
-    REQUIRE(lines[5] == "255 0 0 0 0 0 0 0 0 0 0 0 0 0 0");
+    REQUIRE(lines[3] == "255 0 0 0 0 0 0 0 0 0 0 0 0 0 0");
     REQUIRE(lines[4] == "0 0 0 0 0 0 0 128 0 0 0 0 0 0 0");
-    REQUIRE(lines[3] == "0 0 0 0 0 0 0 0 0 0 0 0 0 0 255");
+    REQUIRE(lines[5] == "0 0 0 0 0 0 0 0 0 0 0 0 0 0 255");
 }
 
 TEST_CASE("PPM file pixel data with line breaks", "[canvas]")
@@ -104,16 +104,15 @@ TEST_CASE("PPM file pixel data with line breaks", "[canvas]")
     REQUIRE(lines[4] == "153 255 204 153 255 204 153 255 204 153 255 204 153");
 }
 
-TEST_CASE("Ensure that coordinate 0,0 is the bottom left of the image", "[canvas]")
+TEST_CASE("Ensure that coordinate 0,0 is the top left of the image", "[canvas]")
 {
     Canvas c{5, 3};
     Color red{1.f, 0.f, 0.f};
     c.WritePixel(0, 0, red);
-    c.WriteToPPM("ensureoriginisbottomleft.ppm");
+    c.WriteToPPM("ensureoriginistopleft.ppm");
 
-    auto lines = ReadLinesFromFile("ensureoriginisbottomleft.ppm");
+    auto lines = ReadLinesFromFile("ensureoriginistopleft.ppm");
 
     REQUIRE(lines.size() >= 4);
-    // line 5 as the first 3 lines are header, then the next 3 are the contents
-    REQUIRE(lines[5] == "255 0 0 0 0 0 0 0 0 0 0 0 0 0 0");
+    REQUIRE(lines[3] == "255 0 0 0 0 0 0 0 0 0 0 0 0 0 0");
 }

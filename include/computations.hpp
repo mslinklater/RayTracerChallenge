@@ -1,11 +1,11 @@
 #pragma once
 #include "tuple.hpp"
-class Sphere;
+#include "intersection.hpp"
 
 struct Computations
 {
     float t = 0.f;
-    const Sphere *object = nullptr;
+    ObjectId objectId = kInvalidObjectId;
     Tuple point = {0.f, 0.f, 0.f, 1.f};
     Tuple eyeVector = {0.f, 0.f, 0.f, 0.f};
     Tuple normalVector = {0.f, 0.f, 0.f, 0.f};

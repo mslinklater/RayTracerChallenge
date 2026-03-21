@@ -1,19 +1,21 @@
 #pragma once
-#include "sphere.hpp"
-#include "ray.hpp"
+#include <cstddef>
 #include <initializer_list>
+
+using ObjectId = std::size_t;
+static constexpr ObjectId kInvalidObjectId = static_cast<ObjectId>(-1);
 
 class Intersection
 {
 public:
-    Intersection(float t, const Sphere *object) : t(t), object(object) {}
+    Intersection(float t, ObjectId objectId) : t(t), objectId(objectId) {}
 
     float GetT() const { return t; }
-    const Sphere *GetObject() const { return object; }
+    ObjectId GetObjectId() const { return objectId; }
 
     bool operator==(const Intersection &other) const;
 
 private:
-    float t;              // The distance along the ray to the intersection point
-    const Sphere *object; // Pointer to the intersected object (null means no hit)
+    float t;           // The distance along the ray to the intersection point
+    ObjectId objectId; // Stable id of the intersected object (invalid id means no hit)
 };

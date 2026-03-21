@@ -36,20 +36,20 @@ Color ColorAt(const World &world, const Ray &ray)
         return Color(0.f, 0.f, 0.f); // Return black if all intersections are behind the ray
     }
     const Intersection &hit = *it;
-    Computations comps = PrepareComputations(hit, ray);
+    Computations comps = PrepareComputations(hit, ray, world);
     return ShadeHit(world, comps);
 }
 
 std::vector<Intersection> IntersectWorld(const World &world, const Ray &ray)
 {
     std::vector<Intersection> intersections;
-    for (const Sphere &object : world.GetObjects())
+    for (ObjectId objectId = 0; objectId < world.GetObjects().size(); ++objectId)
     {
-        const Sphere *spherePtr = &object;
+        const Sphere &object = world.GetObject(objectId);
         std::vector<float> objectIntersections = Intersect(object, ray);
         for (const float &distance : objectIntersections)
         {
-            Intersection intersection(distance, &object);
+            Intersection intersection(distance, objectId);
             intersections.push_back(intersection);
         }
     }
@@ -62,7 +62,7 @@ std::vector<Intersection> IntersectWorld(const World &world, const Ray &ray)
 Color ShadeHit(const World &world, const Computations &comps)
 {
     // TODO: Handle multiple lights and shadows
-    return Lighting(comps.object->GetMaterial(), world.GetLight(0), comps.point, comps.eyeVector, comps.normalVector);
+    return Lighting(world.GetObject(comps.objectId).GetMaterial(), world.GetLight(0), comps.point, comps.eyeVector, comps.normalVector);
 }
 
 Color Lighting(const Material &material, const Light &light, const Tuple &position, const Tuple &eyeVector, const Tuple &normalVector)
@@ -128,12 +128,12 @@ std::vector<Intersection> Intersections(std::initializer_list<Intersection> list
 
 Intersection GetClosestIntersection(const std::vector<Intersection> &intersections)
 {
-    Intersection hit(0.f, nullptr);
+    Intersection hit(0.f, kInvalidObjectId);
     for (const auto &intersection : intersections)
     {
         if (intersection.GetT() >= 0.f)
         {
-            if (hit.GetObject() == nullptr || intersection.GetT() < hit.GetT())
+            if (hit.GetObjectId() == kInvalidObjectId || intersection.GetT() < hit.GetT())
             {
                 hit = intersection;
             }
@@ -142,14 +142,14 @@ Intersection GetClosestIntersection(const std::vector<Intersection> &intersectio
     return hit;
 }
 
-Computations PrepareComputations(const Intersection &intersection, const Ray &ray)
+Computations PrepareComputations(const Intersection &intersection, const Ray &ray, const World &world)
 {
     Computations comps;
     comps.t = intersection.GetT();
-    comps.object = intersection.GetObject();
+    comps.objectId = intersection.GetObjectId();
     comps.point = ray.PositionAt(comps.t);
     comps.eyeVector = -ray.GetDirection();
-    comps.normalVector = comps.object->NormalAt(comps.point);
+    comps.normalVector = world.GetObject(comps.objectId).NormalAt(comps.point);
 
     if ((comps.normalVector | comps.eyeVector) < 0.f)
     {

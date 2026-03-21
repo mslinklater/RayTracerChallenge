@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cmath>
 
 static constexpr float kDegreesToRadians = 3.14159265f / 180.f;

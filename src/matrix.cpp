@@ -88,9 +88,12 @@ Matrix Matrix::operator*(const Matrix &other) const
 
 void Matrix::SetIdentity()
 {
-    for (int i = 0; i < size; ++i)
+    for (int row = 0; row < size; ++row)
     {
-        Set(i, i, 1.f);
+        for (int col = 0; col < size; ++col)
+        {
+            Set(row, col, (row == col) ? 1.f : 0.f);
+        }
     }
 }
 

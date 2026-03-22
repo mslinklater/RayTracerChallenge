@@ -1,11 +1,12 @@
 #pragma once
 #include "matrix.hpp"
 #include "material.hpp"
+#include "shape.hpp"
 
-class Sphere
+class Sphere : public Shape
 {
 public:
-    Sphere(const std::string &name) : transform(4), name(name)
+    Sphere(const std::string &name) : Shape(name), transform(4)
     {
         transform.SetIdentity();
     }
@@ -25,7 +26,6 @@ public:
 private:
     Matrix transform;  // The transformation matrix for the sphere (default is identity)
     Material material; // The material properties of the sphere
-    std::string name;
 };
 
 bool operator==(const Sphere &s1, const Sphere &s2);

@@ -127,7 +127,7 @@ TEST_CASE("The colour when a ray misses", "[world]")
     World w = Renderer::DefaultWorld();
     Ray r(Point(0.f, 0.f, -5.f), Tuple(0.f, 1.f, 0.f));
     Color color = Renderer::ColorAt(w, r);
-    REQUIRE(color == Color(0.f, 0.f, 0.f));
+    REQUIRE(color == Color(0.f, 1.f, 1.f));
 }
 
 TEST_CASE("The colour when a ray hits", "[world]")

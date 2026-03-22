@@ -84,6 +84,7 @@ set(TEST_SRC    tests/test_main.cpp
                 tests/test_spheres.cpp
                 tests/test_lights.cpp
                 tests/test_lighting.cpp
+                tests/test_shapes.cpp
                 tests/test_materials.cpp
                 tests/test_matrix.cpp
                 tests/test_transformations.cpp

@@ -123,5 +123,5 @@ TEST_CASE("The hit should offset the point", "[Ray]")
     Computations comps = Renderer::PrepareComputations(i, r, w);
 
     REQUIRE(comps.overPoint.z < kEpsilon / 2.f);
-    REQUIRE(comps.point.z < comps.overPoint.z);
+    REQUIRE(comps.point.z > comps.overPoint.z);
 }

@@ -161,3 +161,48 @@ TEST_CASE("World with two spheres side by side. Make sure the object hit has a k
     bool bOneOfThemHit = (xs1[0].GetObjectId() == worldS1Id) || (xs1[0].GetObjectId() == worldS2Id);
     REQUIRE(bOneOfThemHit);
 }
+
+TEST_CASE("There is no shadow when nothing is collinear with point and light", "[world]")
+{
+    World w = Renderer::DefaultWorld();
+    Tuple point = Point(0.f, 10.f, 0.f);
+    REQUIRE(Renderer::IsShadowed(w, point) == EInShadow::No);
+}
+
+TEST_CASE("The shadow when an object is between the point and the light", "[world]")
+{
+    World w = Renderer::DefaultWorld();
+    Tuple point = Point(10.f, -10.f, 10.f);
+    REQUIRE(Renderer::IsShadowed(w, point) == EInShadow::Yes);
+}
+
+TEST_CASE("There is no shadow when an object is behind the light", "[world]")
+{
+    World w = Renderer::DefaultWorld();
+    Tuple point = Point(-20.f, 20.f, -20.f);
+    REQUIRE(Renderer::IsShadowed(w, point) == EInShadow::No);
+}
+
+TEST_CASE("There is no shadow when an object is behind the point", "[world]")
+{
+    World w = Renderer::DefaultWorld();
+    Tuple point = Point(-2.f, 2.f, -2.f);
+    REQUIRE(Renderer::IsShadowed(w, point) == EInShadow::No);
+}
+
+TEST_CASE("ShadeHit is given an intersection in shadow", "[world]")
+{
+    World w;
+    Light light(Point(0.f, 0.f, -10.f), Color(1.f, 1.f, 1.f));
+    w.AddLight(light);
+    Sphere s1("s1");
+    w.AddObject(s1);
+    Sphere s2("s2");
+    s2.SetTransform(Matrix::CreateTranslation(0.f, 0.f, 10.f));
+    ObjectId s2id = w.AddObject(s2);
+    Ray r(Point(0.f, 0.f, 5.f), Tuple(0.f, 0.f, 1.f));
+    Intersection i(4.f, 0);
+    Computations comps = Renderer::PrepareComputations(i, r, w);
+    Color color = Renderer::ShadeHit(w, comps);
+    REQUIRE(color == Color(0.1f, 0.1f, 0.1f));
+}

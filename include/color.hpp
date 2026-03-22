@@ -12,3 +12,5 @@ struct Color
     Color operator*(const Color &other) const;
     bool operator==(const Color &other) const;
 };
+
+static constexpr Color kBackgroundColor(0.f, 1.f, 1.f);

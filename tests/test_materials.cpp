@@ -15,82 +15,19 @@ TEST_CASE("Create a material and check default values", "[materials]")
     REQUIRE(m.GetShininess() == 200.f);
 }
 
-//////////////////////////////////////////////////////////////////////////////
-// Lighting fixture
-
-struct LightingFixture
+TEST_CASE("Create a material, set values and check updated values", "[materials]")
 {
-    LightingFixture()
-        : material(Material()), position(Point(0.f, 0.f, 0.f))
-    {
-        // Shared setup logic runs before every fixture-based test.
-    }
+    Material m = Material();
 
-    ~LightingFixture()
-    {
-        // Shared teardown logic runs after every fixture-based test.
-    }
+    m.SetColor(Color(0.5f, 0.5f, 0.5f));
+    m.SetAmbient(0.2f);
+    m.SetDiffuse(0.8f);
+    m.SetSpecular(0.7f);
+    m.SetShininess(100.f);
 
-    Material material;
-    Tuple position;
-};
-
-TEST_CASE_METHOD(LightingFixture, "Lighting with the eye between the light and the surface", "[materials][fixture]")
-{
-    Tuple eyeVector = Vector(0.f, 0.f, -1.f);
-    Tuple normalVector = Vector(0.f, 0.f, -1.f);
-    Light light(Point(0.f, 0.f, -10.f), Color(1.f, 1.f, 1.f));
-
-    Color result = Renderer::Lighting(material, light, position, eyeVector, normalVector, EInShadow::No);
-    REQUIRE(result == Color(1.9f, 1.9f, 1.9f));
-}
-
-TEST_CASE_METHOD(LightingFixture, "Lighting with the surface in shadow", "[materials][fixture]")
-{
-    Tuple eyeVector = Vector(0.f, 0.f, -1.f);
-    Tuple normalVector = Vector(0.f, 0.f, -1.f);
-    Light light(Point(0.f, 0.f, -10.f), Color(1.f, 1.f, 1.f));
-
-    Color result = Renderer::Lighting(material, light, position, eyeVector, normalVector, EInShadow::Yes);
-    REQUIRE(result == Color(0.1f, 0.1f, 0.1f));
-}
-
-TEST_CASE_METHOD(LightingFixture, "Lighting with the eye between the light and the surface, eye offset 45 degrees", "[materials][fixture]")
-{
-    Tuple eyeVector = Vector(0.f, std::sqrt(2.f) / 2.f, -std::sqrt(2.f) / 2.f);
-    Tuple normalVector = Vector(0.f, 0.f, -1.f);
-    Light light(Point(0.f, 0.f, -10.f), Color(1.f, 1.f, 1.f));
-
-    Color result = Renderer::Lighting(material, light, position, eyeVector, normalVector, EInShadow::No);
-    REQUIRE(result == Color(1.0f, 1.0f, 1.0f));
-}
-
-TEST_CASE_METHOD(LightingFixture, "Lighting with the eye opposite the surface, light offset 45 degrees", "[materials][fixture]")
-{
-    Tuple eyeVector = Vector(0.f, 0.f, -1.f);
-    Tuple normalVector = Vector(0.f, 0.f, -1.f);
-    Light light(Point(0.f, 10.f, -10.f), Color(1.f, 1.f, 1.f));
-
-    Color result = Renderer::Lighting(material, light, position, eyeVector, normalVector, EInShadow::No);
-    REQUIRE(result == Color(0.7364f, 0.7364f, 0.7364f));
-}
-
-TEST_CASE_METHOD(LightingFixture, "Lighting with the eye in the path of the reflection vector", "[materials][fixture]")
-{
-    Tuple eyeVector = Vector(0.f, -std::sqrt(2.f) / 2.f, -std::sqrt(2.f) / 2.f);
-    Tuple normalVector = Vector(0.f, 0.f, -1.f);
-    Light light(Point(0.f, 10.f, -10.f), Color(1.f, 1.f, 1.f));
-
-    Color result = Renderer::Lighting(material, light, position, eyeVector, normalVector, EInShadow::No);
-    REQUIRE(result == Color(1.6364f, 1.6364f, 1.6364f));
-}
-
-TEST_CASE_METHOD(LightingFixture, "Lighting with the light behind the surface", "[materials][fixture]")
-{
-    Tuple eyeVector = Vector(0.f, 0.f, -1.f);
-    Tuple normalVector = Vector(0.f, 0.f, -1.f);
-    Light light(Point(0.f, 0.f, 10.f), Color(1.f, 1.f, 1.f));
-
-    Color result = Renderer::Lighting(material, light, position, eyeVector, normalVector, EInShadow::No);
-    REQUIRE(result == Color(0.1f, 0.1f, 0.1f));
+    REQUIRE(m.GetColor() == Color(0.5f, 0.5f, 0.5f));
+    REQUIRE(m.GetAmbient() == 0.2f);
+    REQUIRE(m.GetDiffuse() == 0.8f);
+    REQUIRE(m.GetSpecular() == 0.7f);
+    REQUIRE(m.GetShininess() == 100.f);
 }

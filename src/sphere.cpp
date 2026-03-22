@@ -14,5 +14,5 @@ Tuple Sphere::NormalAt(const Tuple &point) const
 
 bool operator==(const Sphere &s1, const Sphere &s2)
 {
-    return s1.GetTransform() == s2.GetTransform() && s1.GetMaterial() == s2.GetMaterial();
+    return s1.GetTransform() == s2.GetTransform() && s1.GetMaterial() == s2.GetMaterial() && s1.GetName() == s2.GetName();
 }

@@ -256,3 +256,11 @@ TEST_CASE("Reflecting a vector off a slanted surface", "[tuple]")
     Tuple r = v.Reflect(n); // v - n * 2.f * (v | n);
     REQUIRE(r.IsEqual(Vector(1.f, 0.f, 0.f)));
 }
+
+TEST_CASE("Cross product of parallel vectors should be zero vector", "[tuple]")
+{
+    Tuple v1 = Vector(1.f, 2.f, 3.f);
+    Tuple v2 = Vector(2.f, 4.f, 6.f);
+    Tuple cross = v1 ^ v2;
+    REQUIRE(cross.IsEqual(Vector(0.f, 0.f, 0.f)));
+}

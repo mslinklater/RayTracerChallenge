@@ -13,6 +13,43 @@ TEST_CASE("Creating a world", "[world]")
     REQUIRE(world.GetLights().empty());
 }
 
+TEST_CASE("Test ContainsObject and ContainsLight", "[world]")
+{
+    World world;
+    Sphere s("s");
+    Light l(Point(0.f, 0.f, 0.f), Color(1.f, 1.f, 1.f));
+    REQUIRE_FALSE(world.ContainsObject(s));
+    REQUIRE_FALSE(world.ContainsLight(l));
+    world.AddObject(s);
+    world.AddLight(l);
+    REQUIRE(world.ContainsObject(s));
+    REQUIRE(world.ContainsLight(l));
+}
+
+TEST_CASE("Test GetMutableObject changes persist in the world", "[world]")
+{
+    World world;
+    Sphere s("s");
+    ObjectId id = world.AddObject(s);
+    Sphere &mutableS = world.GetMutableObject(id);
+    mutableS.GetMutableMaterial().SetColor(Color(0.5f, 0.5f, 0.5f));
+    const Sphere &constS = world.GetObject(id);
+    REQUIRE(constS.GetMaterial().GetColor() == Color(0.5f, 0.5f, 0.5f));
+}
+
+TEST_CASE("Test GetMutableLight changes persist in the world", "[world]")
+{
+    World world;
+    Light l(Point(0.f, 0.f, 0.f), Color(1.f, 1.f, 1.f));
+    world.AddLight(l);
+    Light &mutableL = world.GetMutableLight(0);
+    mutableL.position = Point(1.f, 1.f, 1.f);
+    mutableL.intensity = Color(0.5f, 0.5f, 0.5f);
+    const Light &constL = world.GetLight(0);
+    REQUIRE(constL.position == Point(1.f, 1.f, 1.f));
+    REQUIRE(constL.intensity == Color(0.5f, 0.5f, 0.5f));
+}
+
 TEST_CASE("Adding an object to the world returns a stable object ID", "[world]")
 {
     World world;
@@ -38,6 +75,7 @@ TEST_CASE("The default world", "[world]")
 
     REQUIRE(w.ContainsObject(s1));
     REQUIRE(w.ContainsObject(s2));
+    REQUIRE(w.ContainsLight(light));
 }
 
 TEST_CASE("Intersect a world with a ray", "[world]")

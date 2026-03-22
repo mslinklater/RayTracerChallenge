@@ -16,6 +16,16 @@ TEST_CASE("A ray intersects a sphere at two points", "[Spheres]")
     REQUIRE(xs[1] == 6.f);
 }
 
+TEST_CASE("Test Sphere equality operator", "[Spheres]")
+{
+    Sphere s1("s1");
+    Sphere s2("s1");
+    Sphere s3("s3");
+
+    REQUIRE(s1 == s2);
+    REQUIRE(s1 != s3);
+}
+
 TEST_CASE("A ray intersects a sphere at tangent - two identical points", "[Spheres]")
 {
     Sphere sphere("sphere");

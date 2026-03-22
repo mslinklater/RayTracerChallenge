@@ -31,6 +31,9 @@ Canvas Renderer::Render(const Camera &camera, const World &world)
     std::vector<std::thread> workers;
     workers.reserve(threadCount);
 
+    std::cout << "Rendering using " << threadCount << " threads for " << totalRows << " rows\n"
+              << std::flush;
+
     auto renderRows = [&]()
     {
         while (true)

@@ -5,6 +5,7 @@
 #include "world.hpp"
 #include "renderer.hpp"
 #include "computations.hpp"
+#include "maths.hpp"
 
 TEST_CASE("An intersection sets the object on the intersection", "[Ray]")
 {
@@ -109,4 +110,18 @@ TEST_CASE("The hit, when an intersection occurs on the inside", "[Ray]")
     REQUIRE(comps.eyeVector == Tuple(0.f, 0.f, -1.f));
     REQUIRE(comps.normalVector == Tuple(0.f, 0.f, -1.f));
     REQUIRE(comps.inside == true);
+}
+
+TEST_CASE("The hit should offset the point", "[Ray]")
+{
+    Ray r(Point(0.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
+    World w;
+    Sphere s("s");
+    s.SetTransform(Matrix::CreateTranslation(0.f, 0.f, 1.f));
+    ObjectId id = w.AddObject(s);
+    Intersection i(5.f, id);
+    Computations comps = Renderer::PrepareComputations(i, r, w);
+
+    REQUIRE(comps.overPoint.z < kEpsilon / 2.f);
+    REQUIRE(comps.point.z < comps.overPoint.z);
 }

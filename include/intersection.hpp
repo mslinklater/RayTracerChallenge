@@ -1,9 +1,7 @@
 #pragma once
 #include <cstddef>
 #include <initializer_list>
-
-using ObjectId = std::size_t;
-static constexpr ObjectId kInvalidObjectId = static_cast<ObjectId>(-1);
+#include "types.hpp"
 
 class Intersection
 {

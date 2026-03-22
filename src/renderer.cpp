@@ -3,19 +3,65 @@
 #include "intersection.hpp"
 #include "world.hpp"
 #include "computations.hpp"
+#include "maths.hpp"
+#include <algorithm>
+#include <atomic>
+#include <iostream>
+#include <mutex>
+#include <thread>
+#include <vector>
 
 Canvas Renderer::Render(const Camera &camera, const World &world)
 {
     Canvas canvas(camera.GetHSize(), camera.GetVSize());
 
-    for (int y = 0; y < camera.GetVSize(); y++)
+    const int totalRows = camera.GetVSize();
+    if (totalRows <= 0)
     {
-        for (int x = 0; x < camera.GetHSize(); x++)
+        return canvas;
+    }
+
+    const unsigned int hardwareThreads = std::thread::hardware_concurrency();
+    const unsigned int maxThreads = hardwareThreads == 0 ? 1u : hardwareThreads;
+    const unsigned int threadCount = std::min(maxThreads, static_cast<unsigned int>(totalRows));
+
+    std::atomic<int> nextRow{0};
+    std::atomic<int> completedRows{0};
+    std::mutex outputMutex;
+    std::vector<std::thread> workers;
+    workers.reserve(threadCount);
+
+    auto renderRows = [&]()
+    {
+        while (true)
         {
-            Ray ray = camera.RayForPixel(x, y);
-            Color color = ColorAt(world, ray);
-            canvas.WritePixel(x, y, color);
+            const int y = nextRow.fetch_add(1);
+            if (y >= totalRows)
+            {
+                return;
+            }
+
+            for (int x = 0; x < camera.GetHSize(); ++x)
+            {
+                Ray ray = camera.RayForPixel(x, y);
+                Color color = ColorAt(world, ray);
+                canvas.WritePixel(x, y, color);
+            }
+
+            const int done = completedRows.fetch_add(1) + 1;
+            std::lock_guard<std::mutex> lock(outputMutex);
+            std::cout << "Rendering row " << done << " of " << totalRows << "\r" << std::flush;
         }
+    };
+
+    for (unsigned int i = 0; i < threadCount; ++i)
+    {
+        workers.emplace_back(renderRows);
+    }
+
+    for (std::thread &worker : workers)
+    {
+        worker.join();
     }
 
     return canvas;
@@ -26,7 +72,7 @@ Color Renderer::ColorAt(const World &world, const Ray &ray)
     std::vector<Intersection> intersections = IntersectWorld(world, ray);
     if (intersections.empty())
     {
-        return Color(0.f, 0.f, 0.f); // Return black if no intersections
+        return kBackgroundColor; // Return cyan if no intersections
     }
     // find the first intersection with a positive t value
     auto it = std::find_if(intersections.begin(), intersections.end(), [](const Intersection &intersection)
@@ -61,8 +107,8 @@ std::vector<Intersection> Renderer::IntersectWorld(const World &world, const Ray
 
 Color Renderer::ShadeHit(const World &world, const Computations &comps)
 {
-    // TODO: Handle multiple lights and shadows
-    return Lighting(world.GetObject(comps.objectId).GetMaterial(), world.GetLight(0), comps.point, comps.eyeVector, comps.normalVector, EInShadow::No);
+    EInShadow inShadow = IsShadowed(world, comps.overPoint);
+    return Lighting(world.GetObject(comps.objectId).GetMaterial(), world.GetLight(0), comps.point, comps.eyeVector, comps.normalVector, inShadow);
 }
 
 Color Renderer::Lighting(const Material &material, const Light &light, const Tuple &position, const Tuple &eyeVector, const Tuple &normalVector, EInShadow inShadow)
@@ -163,6 +209,7 @@ Computations Renderer::PrepareComputations(const Intersection &intersection, con
         comps.normalVector = -comps.normalVector;
     }
 
+    comps.overPoint = comps.point + comps.normalVector * kEpsilon * 2.f;
     return comps;
 }
 
@@ -194,4 +241,24 @@ std::vector<float> Renderer::Intersect(const Sphere &sphere, const Ray &ray)
         intersections.push_back(t2);
         return intersections;
     }
+}
+
+EInShadow Renderer::IsShadowed(const World &world, const Tuple &point)
+{
+    const Light &light = world.GetLight(0); // Assuming only one light for now
+    Tuple lightVector = light.position - point;
+    float distanceToLight = lightVector.Magnitude();
+    Ray shadowRay(point, lightVector.Normalize());
+
+    std::vector<Intersection> intersections = IntersectWorld(world, shadowRay);
+    auto it = std::find_if(intersections.begin(), intersections.end(),
+                           [distanceToLight](const Intersection &intersection)
+                           {
+                               return intersection.GetT() >= 0.f && intersection.GetT() < distanceToLight;
+                           });
+    if (it != intersections.end())
+    {
+        return EInShadow::Yes; // There is an object between the point and the light
+    }
+    return EInShadow::No; // No object is blocking the light
 }

@@ -66,6 +66,12 @@ target_include_directories(Chapter7Challenge PRIVATE ${PROJECT_SOURCE_DIR}/inclu
 target_compile_options(Chapter7Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
 target_link_options(Chapter7Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
 
+# Chapter 8 challenge executable
+add_executable(Chapter8Challenge chapter8.cpp ${SRC_FILES})
+target_include_directories(Chapter8Challenge PRIVATE ${PROJECT_SOURCE_DIR}/include)
+target_compile_options(Chapter8Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
+target_link_options(Chapter8Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
+
 # Test executable
 set(TEST_SRC    tests/test_main.cpp 
                 tests/test_camera.cpp 

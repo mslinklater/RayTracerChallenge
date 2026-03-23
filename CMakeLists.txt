@@ -15,6 +15,7 @@ set(SRC_FILES   src/utils.cpp
                 src/camera.cpp
                 src/color.cpp
                 src/matrix.cpp
+                src/shape.cpp
                 src/sphere.cpp
                 src/ray.cpp
                 src/light.cpp

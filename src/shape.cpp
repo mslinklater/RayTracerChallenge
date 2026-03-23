@@ -12,3 +12,8 @@ Tuple Shape::NormalAt(const Tuple &point) const
     worldNormal.w = 0.f; // Ensure it's a vector
     return worldNormal.Normalize();
 }
+
+std::vector<float> Shape::Intersect(const Ray &ray) const
+{
+    return std::vector<float>(); // Default implementation returns an empty vector (no intersections)
+}

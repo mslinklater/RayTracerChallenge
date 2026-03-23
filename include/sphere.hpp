@@ -10,7 +10,7 @@ public:
     {
     }
 
-private:
+    std::vector<float> Intersect(const Ray &ray) const override;
 };
 
 bool operator==(const Sphere &s1, const Sphere &s2);

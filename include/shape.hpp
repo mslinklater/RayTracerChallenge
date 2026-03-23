@@ -3,6 +3,8 @@
 #include "matrix.hpp"
 #include "material.hpp"
 
+class Ray;
+
 class Shape
 {
 public:
@@ -24,6 +26,8 @@ public:
     const std::string &GetName() const { return name; }
 
     Tuple NormalAt(const Tuple &point) const;
+
+    virtual std::vector<float> Intersect(const Ray &ray) const;
 
 protected:
     std::string name;

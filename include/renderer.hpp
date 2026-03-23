@@ -24,7 +24,7 @@ public:
     static std::vector<Intersection> Intersections(std::initializer_list<Intersection> list);
     static Intersection GetClosestIntersection(const std::vector<Intersection> &intersections);
     static Computations PrepareComputations(const Intersection &intersection, const Ray &ray, const World &world);
-    static std::vector<float> Intersect(const Sphere &sphere, const Ray &ray);
+    //    static std::vector<float> Intersect(const Sphere &sphere, const Ray &ray);
     static EInShadow IsShadowed(const World &world, const Tuple &point);
 
 private:

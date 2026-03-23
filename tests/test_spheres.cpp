@@ -9,7 +9,7 @@ TEST_CASE("A ray intersects a sphere at two points", "[Spheres]")
 {
     Sphere sphere("sphere");
     Ray ray(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
-    auto xs = Renderer::Intersect(sphere, ray);
+    auto xs = sphere.Intersect(ray);
 
     REQUIRE(xs.size() == 2);
     REQUIRE(xs[0] == 4.f);
@@ -30,7 +30,7 @@ TEST_CASE("A ray intersects a sphere at tangent - two identical points", "[Spher
 {
     Sphere sphere("sphere");
     Ray ray(Point(0.f, 1.f, -5.f), Vector(0.f, 0.f, 1.f));
-    auto xs = Renderer::Intersect(sphere, ray);
+    auto xs = sphere.Intersect(ray);
 
     REQUIRE(xs.size() == 2);
     REQUIRE(xs[0] == 5.f);
@@ -41,7 +41,7 @@ TEST_CASE("A ray misses a sphere", "[Spheres]")
 {
     Sphere sphere("sphere");
     Ray ray(Point(0.f, 2.f, -5.f), Vector(0.f, 0.f, 1.f));
-    auto xs = Renderer::Intersect(sphere, ray);
+    auto xs = sphere.Intersect(ray);
 
     REQUIRE(xs.size() == 0);
 }
@@ -50,7 +50,7 @@ TEST_CASE("A ray originates inside a sphere", "[Spheres]")
 {
     Sphere sphere("sphere");
     Ray ray(Point(0.f, 0.f, 0.f), Vector(0.f, 0.f, 1.f));
-    auto xs = Renderer::Intersect(sphere, ray);
+    auto xs = sphere.Intersect(ray);
 
     REQUIRE(xs.size() == 2);
     REQUIRE(xs[0] == -1.f);
@@ -61,7 +61,7 @@ TEST_CASE("The sphere is behind the ray", "[Spheres]")
 {
     Sphere sphere("sphere");
     Ray ray(Point(0.f, 0.f, 5.f), Vector(0.f, 0.f, 1.f));
-    auto xs = Renderer::Intersect(sphere, ray);
+    auto xs = sphere.Intersect(ray);
 
     REQUIRE(xs.size() == 2);
     REQUIRE(xs[0] == -6.f);
@@ -91,7 +91,7 @@ TEST_CASE("Intersecting a scaled sphere with a ray", "[Spheres]")
     Sphere sphere("sphere");
     sphere.SetTransform(Matrix::CreateScaling(2.f, 2.f, 2.f));
     Ray ray(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
-    auto xs = Renderer::Intersect(sphere, ray);
+    auto xs = sphere.Intersect(ray);
 
     REQUIRE(xs.size() == 2);
     REQUIRE(xs[0] == 3.f);
@@ -103,7 +103,7 @@ TEST_CASE("Intersecting a translated sphere with a ray", "[Spheres]")
     Sphere sphere("sphere");
     sphere.SetTransform(Matrix::CreateTranslation(5.f, 0.f, 0.f));
     Ray ray(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
-    auto xs = Renderer::Intersect(sphere, ray);
+    auto xs = sphere.Intersect(ray);
 
     REQUIRE(xs.size() == 0);
 }

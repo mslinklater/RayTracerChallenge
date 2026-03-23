@@ -95,7 +95,7 @@ std::vector<Intersection> Renderer::IntersectWorld(const World &world, const Ray
     for (ObjectId objectId = 0; objectId < world.GetObjects().size(); ++objectId)
     {
         const Sphere &object = world.GetObject(objectId);
-        std::vector<float> objectIntersections = Intersect(object, ray);
+        std::vector<float> objectIntersections = object.Intersect(ray);
         for (const float &distance : objectIntersections)
         {
             Intersection intersection(distance, objectId);
@@ -214,36 +214,6 @@ Computations Renderer::PrepareComputations(const Intersection &intersection, con
 
     comps.overPoint = comps.point + comps.normalVector * kEpsilon * 2.f;
     return comps;
-}
-
-std::vector<float> Renderer::Intersect(const Sphere &sphere, const Ray &ray)
-{
-    Ray transformedRay = ray * sphere.GetTransform().GetInverse();
-
-    // For a sphere centered at the origin with radius 1, the intersection can be calculated using the quadratic formula.
-    // The coefficients of the quadratic equation are derived from substituting the ray equation into the sphere equation.
-    Tuple sphereToRay = transformedRay.GetOrigin() - Point(0.f, 0.f, 0.f);   // Since the sphere is at the origin, we can use the ray's origin directly
-    float a = transformedRay.GetDirection() | transformedRay.GetDirection(); // Dot product of direction with itself
-    float b = 2.f * (transformedRay.GetDirection() | sphereToRay);           // 2 times the dot product of direction and origin
-    float c = (sphereToRay | sphereToRay) - 1.f;                             // Dot product of origin with itself minus radius squared
-
-    float discriminant = b * b - 4.f * a * c;
-
-    std::vector<float> intersections;
-    if (discriminant < 0.f)
-    {
-        // No intersections
-        return intersections;
-    }
-    else
-    {
-        float sqrtDiscriminant = std::sqrt(discriminant);
-        float t1 = (-b - sqrtDiscriminant) / (2.f * a);
-        float t2 = (-b + sqrtDiscriminant) / (2.f * a);
-        intersections.push_back(t1);
-        intersections.push_back(t2);
-        return intersections;
-    }
 }
 
 EInShadow Renderer::IsShadowed(const World &world, const Tuple &point)

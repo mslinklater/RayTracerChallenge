@@ -11,7 +11,7 @@ find_package(Catch2 3 REQUIRED)
 include(Catch)  # This provides catch_discover_tests()
 enable_testing()
 
-set(SRC_FILES   src/utils.cpp 
+set(SRC_FILES   src/utils.cpp
                 src/camera.cpp
                 src/color.cpp
                 src/matrix.cpp
@@ -74,10 +74,10 @@ target_compile_options(Chapter8Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
 target_link_options(Chapter8Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
 
 # Test executable
-set(TEST_SRC    tests/test_main.cpp 
-                tests/test_camera.cpp 
-                tests/test_color.cpp 
-                tests/test_tuples.cpp 
+set(TEST_SRC    tests/test_main.cpp
+                tests/test_camera.cpp
+                tests/test_color.cpp
+                tests/test_tuples.cpp
                 tests/test_utils.cpp
                 tests/test_rays.cpp
                 tests/test_world.cpp

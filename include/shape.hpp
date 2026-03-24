@@ -2,8 +2,7 @@
 #include <string>
 #include "matrix.hpp"
 #include "material.hpp"
-
-class Ray;
+#include "ray.hpp"
 
 class Shape
 {

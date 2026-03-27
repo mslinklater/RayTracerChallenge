@@ -5,6 +5,7 @@ struct Matrix;
 
 class Ray {
 public:
+  Ray() : origin(0.f, 0.f, 0.f, 1.f), direction(0.f, 0.f, 1.f, 0.f) {}
   Ray(const Tuple &origin, const Tuple &direction)
       : origin(origin), direction(direction) {}
 

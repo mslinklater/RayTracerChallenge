@@ -1,4 +1,5 @@
 #include <catch2/catch_test_macros.hpp>
+#include "shape.hpp"
 #include "sphere.hpp"
 #include "ray.hpp"
 #include "material.hpp"
@@ -88,24 +89,24 @@ TEST_CASE("Changing a spheres transformation", "[Spheres]")
 
 TEST_CASE("Intersecting a scaled sphere with a ray", "[Spheres]")
 {
-    Sphere sphere("sphere");
-    sphere.SetTransform(Matrix::CreateScaling(2.f, 2.f, 2.f));
+    Shape testShape("testShape");
+    testShape.SetTransform(Matrix::CreateScaling(2.f, 2.f, 2.f));
     Ray ray(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
-    auto xs = sphere.Intersect(ray);
+    auto xs = testShape.Intersect(ray);
 
-    REQUIRE(xs.size() == 2);
-    REQUIRE(xs[0] == 3.f);
-    REQUIRE(xs[1] == 7.f);
+    REQUIRE(gSavedRay.GetOrigin() == Point(0.f, 0.f, -2.5f));
+    REQUIRE(gSavedRay.GetDirection() == Vector(0.f, 0.f, 0.5f));
 }
 
 TEST_CASE("Intersecting a translated sphere with a ray", "[Spheres]")
 {
-    Sphere sphere("sphere");
-    sphere.SetTransform(Matrix::CreateTranslation(5.f, 0.f, 0.f));
+    Shape testShape("testShape");
+    testShape.SetTransform(Matrix::CreateTranslation(5.f, 0.f, 0.f));
     Ray ray(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
-    auto xs = sphere.Intersect(ray);
+    auto xs = testShape.Intersect(ray);
 
-    REQUIRE(xs.size() == 0);
+    REQUIRE(gSavedRay.GetOrigin() == Point(-5.f, 0.f, -5.f));
+    REQUIRE(gSavedRay.GetDirection() == Vector(0.f, 0.f, 1.f));
 }
 
 TEST_CASE("The normal on a sphere at a point on the x axis", "[Spheres]")

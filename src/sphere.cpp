@@ -6,16 +6,14 @@ bool operator==(const Sphere &s1, const Sphere &s2)
     return s1.GetTransform() == s2.GetTransform() && s1.GetMaterial() == s2.GetMaterial() && s1.GetName() == s2.GetName();
 }
 
-std::vector<float> Sphere::Intersect(const Ray &ray) const
+std::vector<float> Sphere::IntersectLocal(const Ray &ray) const
 {
-    Ray transformedRay = ray * transform.GetInverse();
-
     // For a sphere centered at the origin with radius 1, the intersection can be calculated using the quadratic formula.
     // The coefficients of the quadratic equation are derived from substituting the ray equation into the sphere equation.
-    Tuple sphereToRay = transformedRay.GetOrigin() - Point(0.f, 0.f, 0.f);   // Since the sphere is at the origin, we can use the ray's origin directly
-    float a = transformedRay.GetDirection() | transformedRay.GetDirection(); // Dot product of direction with itself
-    float b = 2.f * (transformedRay.GetDirection() | sphereToRay);           // 2 times the dot product of direction and origin
-    float c = (sphereToRay | sphereToRay) - 1.f;                             // Dot product of origin with itself minus radius squared
+    Tuple sphereToRay = ray.GetOrigin() - Point(0.f, 0.f, 0.f); // Since the sphere is at the origin, we can use the ray's origin directly
+    float a = ray.GetDirection() | ray.GetDirection();          // Dot product of direction with itself
+    float b = 2.f * (ray.GetDirection() | sphereToRay);         // 2 times the dot product of direction and origin
+    float c = (sphereToRay | sphereToRay) - 1.f;                // Dot product of origin with itself minus radius squared
 
     float discriminant = b * b - 4.f * a * c;
 

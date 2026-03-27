@@ -1,6 +1,9 @@
 #include "shape.hpp"
 #include "tuple.hpp"
 
+// TODO - remove this shit hack
+Ray gSavedRay; // Global variable to store the ray for testing purposes
+
 Tuple Shape::NormalAt(const Tuple &point) const
 {
     // To find the normal at a point on the sphere, we first need to transform the point to object space using the inverse of the sphere's transformation matrix.
@@ -14,6 +17,13 @@ Tuple Shape::NormalAt(const Tuple &point) const
 }
 
 std::vector<float> Shape::Intersect(const Ray &ray) const
+{
+    gSavedRay = ray * transform.GetInverse();
+
+    return IntersectLocal(gSavedRay);
+}
+
+std::vector<float> Shape::IntersectLocal(const Ray &ray) const
 {
     return std::vector<float>(); // Default implementation returns an empty vector (no intersections)
 }

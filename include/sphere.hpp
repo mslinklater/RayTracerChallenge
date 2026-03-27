@@ -10,7 +10,7 @@ public:
     {
     }
 
-    std::vector<float> Intersect(const Ray &ray) const override;
+    std::vector<float> IntersectLocal(const Ray &ray) const override; // intersect a ray which is in local space
 };
 
 bool operator==(const Sphere &s1, const Sphere &s2);

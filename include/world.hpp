@@ -1,8 +1,7 @@
 #pragma once
 #include "sphere.hpp"
 #include "light.hpp"
-#include "intersection.hpp"
-#include "ray.hpp"
+#include "types.hpp"
 #include <vector>
 #include <deque>
 

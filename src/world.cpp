@@ -1,8 +1,6 @@
 #include "world.hpp"
 #include "ray.hpp"
 #include "light.hpp"
-#include "intersection.hpp"
-#include <algorithm>
 
 const std::deque<Sphere> &World::GetObjects() const
 {

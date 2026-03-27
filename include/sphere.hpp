@@ -1,6 +1,4 @@
 #pragma once
-#include "matrix.hpp"
-#include "material.hpp"
 #include "shape.hpp"
 
 class Sphere : public Shape

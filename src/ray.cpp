@@ -1,5 +1,4 @@
 #include "ray.hpp"
-#include "tuple.hpp"
 #include "matrix.hpp"
 
 // Tuple Position(const Ray &ray, float t)

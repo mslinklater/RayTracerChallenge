@@ -1,7 +1,6 @@
 #pragma once
 #include "matrix.hpp"
 #include "ray.hpp"
-#include "canvas.hpp"
 
 class World;
 

@@ -1,7 +1,6 @@
 #pragma once
 #include "tuple.hpp"
 #include "color.hpp"
-#include "material.hpp"
 
 struct Light
 {

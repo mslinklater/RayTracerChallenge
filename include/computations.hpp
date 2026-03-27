@@ -1,6 +1,6 @@
 #pragma once
 #include "tuple.hpp"
-#include "intersection.hpp"
+#include "types.hpp"
 
 struct Computations
 {

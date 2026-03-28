@@ -1,13 +1,9 @@
 #include <iostream>
 
-#include "matrix.hpp"
 #include "tuple.hpp"
-#include "utils.hpp"
 #include "canvas.hpp"
-#include "intersection.hpp"
 #include "ray.hpp"
 #include "sphere.hpp"
-#include "maths.hpp"
 #include "light.hpp"
 #include "renderer.hpp"
 #include "enums.hpp"

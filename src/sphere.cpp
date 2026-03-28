@@ -33,3 +33,8 @@ std::vector<float> Sphere::IntersectLocal(const Ray &ray) const
         return intersections;
     }
 }
+
+Tuple Sphere::NormalAtLocal(const Tuple &point) const
+{
+    return point - Point(0.f, 0.f, 0.f); // Normal is the vector from the center of the sphere to the point
+}

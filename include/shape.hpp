@@ -28,9 +28,10 @@ public:
     const std::string &GetName() const { return name; }
 
     Tuple NormalAt(const Tuple &point) const;
+    virtual Tuple NormalAtLocal(const Tuple &point) const;
 
-    virtual std::vector<float> Intersect(const Ray &ray) const;      // intersect a ray which is in global space
-    virtual std::vector<float> IntersectLocal(const Ray &ray) const; // intersect a ray which is in local space
+    std::vector<float> Intersect(const Ray &ray) const;                 // intersect a ray which is in global space
+    virtual std::vector<float> IntersectLocal(const Ray &ray) const;    // intersect a ray which is in local space
 
 protected:
     std::string name;

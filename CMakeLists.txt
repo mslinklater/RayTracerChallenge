@@ -15,6 +15,7 @@ set(SRC_FILES   src/utils.cpp
                 src/camera.cpp
                 src/color.cpp
                 src/matrix.cpp
+                src/plane.cpp
                 src/shape.cpp
                 src/sphere.cpp
                 src/ray.cpp
@@ -83,6 +84,7 @@ set(TEST_SRC    tests/test_main.cpp
                 tests/test_world.cpp
                 tests/test_intersections.cpp
                 tests/test_spheres.cpp
+                tests/test_planes.cpp
                 tests/test_lights.cpp
                 tests/test_lighting.cpp
                 tests/test_shapes.cpp

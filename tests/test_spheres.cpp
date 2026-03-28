@@ -155,41 +155,20 @@ TEST_CASE("The normal is normalised", "[Spheres]")
     REQUIRE(AreEqual(normal.Magnitude(), 1.f));
 }
 
-TEST_CASE("Computing the normal on a translated sphere", "[Spheres]")
+TEST_CASE("Computing the normal on a translated shape", "[Spheres]")
 {
-    Sphere sphere("sphere");
-    sphere.SetTransform(Matrix::CreateTranslation(0.f, 1.f, 0.f));
-    Tuple normal = sphere.NormalAt(Point(0.f, 1.70711f, -0.70711f));
+    Shape shape("shape");
+    shape.SetTransform(Matrix::CreateTranslation(0.f, 1.f, 0.f));
+    Tuple normal = shape.NormalAt(Point(0.f, 1.70711f, -0.70711f));
     REQUIRE(normal == Vector(0.f, 0.70711f, -0.70711f));
 }
 
-TEST_CASE("Computing the normal on a transformed sphere", "[Spheres]")
+TEST_CASE("Computing the normal on a transformed shape", "[Spheres]")
 {
-    Sphere sphere("sphere");
+    Shape shape("shape");
     Matrix scaling = Matrix::CreateScaling(1.f, 0.5f, 1.f);
     Matrix rotation = Matrix::CreateRotationZ(M_PI / 5.f);
-    sphere.SetTransform(scaling * rotation);
-    Tuple normal = sphere.NormalAt(Point(0.f, std::sqrt(2.f) / 2.f, -std::sqrt(2.f) / 2.f));
+    shape.SetTransform(scaling * rotation);
+    Tuple normal = shape.NormalAt(Point(0.f, std::sqrt(2.f) / 2.f, -std::sqrt(2.f) / 2.f));
     REQUIRE(normal == Vector(0.f, 0.97014f, -0.24254f));
-}
-
-TEST_CASE("A sphere has a material", "[Spheres]")
-{
-    Sphere sphere("sphere");
-    Material m = sphere.GetMaterial();
-    Material expected;
-    REQUIRE(m.GetColor() == expected.GetColor());
-    REQUIRE(m.GetAmbient() == expected.GetAmbient());
-    REQUIRE(m.GetDiffuse() == expected.GetDiffuse());
-    REQUIRE(m.GetSpecular() == expected.GetSpecular());
-    REQUIRE(m.GetShininess() == expected.GetShininess());
-}
-
-TEST_CASE("A sphere may be assigned a material", "[Spheres]")
-{
-    Sphere sphere("sphere");
-    Material m;
-    m.SetColor(Color(1.f, 0.2f, 1.f));
-    sphere.SetMaterial(m);
-    REQUIRE(sphere.GetMaterial().GetColor() == Color(1.f, 0.2f, 1.f));
 }

@@ -1,10 +1,10 @@
 #pragma once
 #include "shape.hpp"
 
-class Sphere : public Shape
+class Plane : public Shape
 {
 public:
-    Sphere(const std::string &name) : Shape(name)
+    Plane(const std::string &name) : Shape(name)
     {
     }
 
@@ -12,4 +12,4 @@ public:
     Tuple NormalAtLocal(const Tuple &point) const override;
 };
 
-bool operator==(const Sphere &s1, const Sphere &s2);
+// bool operator==(const Plane &p1, const Plane &p2);

@@ -2,7 +2,6 @@
 
 #include "matrix.hpp"
 #include "tuple.hpp"
-#include "utils.hpp"
 #include "canvas.hpp"
 #include "maths.hpp"
 

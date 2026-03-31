@@ -1,9 +1,9 @@
 #include "renderer.hpp"
 #include "camera.hpp"
-#include "intersection.hpp"
-#include "world.hpp"
 #include "computations.hpp"
+#include "intersection.hpp"
 #include "maths.hpp"
+#include "world.hpp"
 #include <algorithm>
 #include <atomic>
 #include <iostream>
@@ -31,11 +31,9 @@ Canvas Renderer::Render(const Camera &camera, const World &world)
     std::vector<std::thread> workers;
     workers.reserve(threadCount);
 
-    std::cout << "Rendering using " << threadCount << " threads for " << totalRows << " rows\n"
-              << std::flush;
+    std::cout << "Rendering using " << threadCount << " threads for " << totalRows << " rows\n" << std::flush;
 
-    auto renderRows = [&]()
-    {
+    auto renderRows = [&]() {
         while (true)
         {
             const int y = nextRow.fetch_add(1);
@@ -78,8 +76,8 @@ Color Renderer::ColorAt(const World &world, const Ray &ray)
         return kBackgroundColor; // Return cyan if no intersections
     }
     // find the first intersection with a positive t value
-    auto it = std::find_if(intersections.begin(), intersections.end(), [](const Intersection &intersection)
-                           { return intersection.GetT() >= 0.f; });
+    auto it = std::find_if(intersections.begin(), intersections.end(),
+                           [](const Intersection &intersection) { return intersection.GetT() >= 0.f; });
     if (it == intersections.end())
     {
         return Color(0.f, 0.f, 0.f); // Return black if all intersections are behind the ray
@@ -103,18 +101,20 @@ std::vector<Intersection> Renderer::IntersectWorld(const World &world, const Ray
         }
     }
     // sort intersections by t value
-    std::sort(intersections.begin(), intersections.end(), [](const Intersection &a, const Intersection &b)
-              { return a.GetT() < b.GetT(); });
+    std::sort(intersections.begin(), intersections.end(),
+              [](const Intersection &a, const Intersection &b) { return a.GetT() < b.GetT(); });
     return intersections;
 }
 
 Color Renderer::ShadeHit(const World &world, const Computations &comps)
 {
     EInShadow inShadow = IsShadowed(world, comps.overPoint);
-    return Lighting(world.GetObject(comps.objectId).GetMaterial(), world.GetLight(0), comps.point, comps.eyeVector, comps.normalVector, inShadow);
+    return Lighting(world.GetObject(comps.objectId).GetMaterial(), world.GetLight(0), comps.point, comps.eyeVector,
+                    comps.normalVector, inShadow);
 }
 
-Color Renderer::Lighting(const Material &material, const Light &light, const Tuple &position, const Tuple &eyeVector, const Tuple &normalVector, EInShadow inShadow)
+Color Renderer::Lighting(const Material &material, const Light &light, const Tuple &position, const Tuple &eyeVector,
+                         const Tuple &normalVector, EInShadow inShadow)
 {
     Color effectiveColor = material.GetColor() * light.intensity;
     Tuple lightVector = (light.position - position).Normalize();
@@ -224,11 +224,10 @@ EInShadow Renderer::IsShadowed(const World &world, const Tuple &point)
     Ray shadowRay(point, lightVector.Normalize());
 
     std::vector<Intersection> intersections = IntersectWorld(world, shadowRay);
-    auto it = std::find_if(intersections.begin(), intersections.end(),
-                           [distanceToLight](const Intersection &intersection)
-                           {
-                               return intersection.GetT() >= 0.f && intersection.GetT() < distanceToLight;
-                           });
+    auto it =
+        std::find_if(intersections.begin(), intersections.end(), [distanceToLight](const Intersection &intersection) {
+            return intersection.GetT() >= 0.f && intersection.GetT() < distanceToLight;
+        });
     if (it != intersections.end())
     {
         return EInShadow::Yes; // There is an object between the point and the light

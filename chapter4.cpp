@@ -1,9 +1,9 @@
 #include <iostream>
 
-#include "matrix.hpp"
-#include "tuple.hpp"
 #include "canvas.hpp"
 #include "maths.hpp"
+#include "matrix.hpp"
+#include "tuple.hpp"
 
 static constexpr int kCanvasSize = 200;
 

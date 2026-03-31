@@ -1,6 +1,6 @@
-#include <stdexcept>
 #include "tuple.hpp"
 #include "maths.hpp"
+#include <stdexcept>
 
 Tuple Tuple::Normalize() const
 {
@@ -56,9 +56,7 @@ float Tuple::operator|(const Tuple &other) const
 Tuple Tuple::operator^(const Tuple &other) const
 {
     return Tuple{
-        y * other.z - z * other.y,
-        z * other.x - x * other.z,
-        x * other.y - y * other.x,
+        y * other.z - z * other.y, z * other.x - x * other.z, x * other.y - y * other.x,
         0.f // Cross product results in a vector, so w is 0
     };
 }

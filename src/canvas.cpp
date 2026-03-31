@@ -38,8 +38,7 @@ void Canvas::WriteToPPM(const std::string &filename) const
 
     std::string line;
 
-    auto WriteValue = [&](int value)
-    {
+    auto WriteValue = [&](int value) {
         if (line.length() + std::to_string(value).length() + 1 > 70)
         {
             ppmFile << line << "\n";

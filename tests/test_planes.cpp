@@ -1,6 +1,6 @@
-#include <catch2/catch_test_macros.hpp>
-#include "tuple.hpp"
 #include "plane.hpp"
+#include "tuple.hpp"
+#include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("The normal of a plane is constant everywhere", "[Planes]")
 {
@@ -30,4 +30,14 @@ TEST_CASE("Intersect with a coplanar ray", "[Planes]")
     auto xs = plane.IntersectLocal(ray);
 
     REQUIRE(xs.size() == 0);
+}
+
+TEST_CASE("A ray intersecting a plane from above", "[Planes]")
+{
+    Plane plane("plane");
+    Ray ray(Point(0.f, 1.f, 0.f), Vector(0.f, -1.f, 0.f));
+    auto xs = plane.IntersectLocal(ray);
+
+    REQUIRE(xs.size() == 1);
+    REQUIRE(xs[0] == 1.f);
 }

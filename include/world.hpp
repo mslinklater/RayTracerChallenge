@@ -1,37 +1,45 @@
 #pragma once
-#include "sphere.hpp"
 #include "light.hpp"
+#include "shape.hpp"
 #include "types.hpp"
-#include <vector>
 #include <deque>
+#include <memory>
+#include <type_traits>
+#include <vector>
 
 class World
 {
-public:
+  public:
     World() = default;
 
-    const std::deque<Sphere> &GetObjects() const;
+    const std::deque<std::unique_ptr<Shape>> &GetObjects() const;
     const std::vector<Light> &GetLights() const;
 
     void ReplaceLight(int index, const Light &light);
 
-    void AddLight(const Light &light) { lights.push_back(light); }
-    ObjectId AddObject(const Sphere &object)
+    void AddLight(const Light &light) // TODO: use proper generated ObjectId's
     {
-        objects.push_back(object);
-        return objects.size() - 1;
+        lights.push_back(light);
     }
 
-    const Sphere &GetObject(size_t index) const;
+    template <typename T, typename = std::enable_if_t<std::is_base_of_v<Shape, T>>> ObjectId AddObject(const T &object)
+    {
+        objects.push_back(std::make_unique<T>(object));
+        return static_cast<ObjectId>(objects.size() - 1);
+    }
+
+    const Shape &GetObject(size_t index) const;
     const Light &GetLight(size_t index) const;
 
-    Sphere &GetMutableObject(size_t index);
+    Shape &GetMutableObject(size_t index);
     Light &GetMutableLight(size_t index);
 
     bool ContainsLight(const Light &light) const;
-    bool ContainsObject(const Sphere &object) const;
+    bool ContainsObject(const Shape &object) const;
 
-private:
-    std::deque<Sphere> objects;
+  private:
+    std::deque<std::unique_ptr<Shape>> objects;
     std::vector<Light> lights;
+
+    ObjectId nextObjectId = 0;
 };

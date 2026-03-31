@@ -1,8 +1,9 @@
 #include "world.hpp"
-#include "ray.hpp"
 #include "light.hpp"
+#include "ray.hpp"
+#include <memory>
 
-const std::deque<Sphere> &World::GetObjects() const
+const std::deque<std::unique_ptr<Shape>> &World::GetObjects() const
 {
     return objects;
 }
@@ -24,11 +25,11 @@ bool World::ContainsLight(const Light &light) const
     return false;
 }
 
-bool World::ContainsObject(const Sphere &object) const
+bool World::ContainsObject(const Shape &object) const
 {
-    for (auto o : objects)
+    for (const auto &o : objects)
     {
-        if (o.GetTransform() == object.GetTransform() && o.GetMaterial() == object.GetMaterial())
+        if (o->GetTransform() == object.GetTransform() && o->GetMaterial() == object.GetMaterial())
         {
             return true;
         }
@@ -54,22 +55,22 @@ Light &World::GetMutableLight(size_t index)
     return lights[index];
 }
 
-const Sphere &World::GetObject(size_t index) const
+const Shape &World::GetObject(size_t index) const
 {
     if (index >= objects.size())
     {
         throw std::out_of_range("Object index out of range.");
     }
-    return objects[index];
+    return *objects[index];
 }
 
-Sphere &World::GetMutableObject(size_t index)
+Shape &World::GetMutableObject(size_t index)
 {
     if (index >= objects.size())
     {
         throw std::out_of_range("Object index out of range.");
     }
-    return objects[index];
+    return *objects[index];
 }
 
 void World::ReplaceLight(int index, const Light &light)

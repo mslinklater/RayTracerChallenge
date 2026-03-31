@@ -4,6 +4,7 @@
 #include "intersection.hpp"
 #include "maths.hpp"
 #include "world.hpp"
+#include "sphere.hpp"
 #include <algorithm>
 #include <atomic>
 #include <iostream>
@@ -93,7 +94,7 @@ std::vector<Intersection> Renderer::IntersectWorld(const World &world, const Ray
 
     for (ObjectId objectId = 0; objectId < world.GetObjects().size(); ++objectId)
     {
-        const Sphere &object = world.GetObject(objectId);
+        const Shape &object = world.GetObject(objectId);
         std::vector<float> objectIntersections = object.Intersect(ray);
         for (const float &distance : objectIntersections)
         {

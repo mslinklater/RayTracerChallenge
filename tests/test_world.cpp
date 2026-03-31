@@ -5,6 +5,7 @@
 #include "maths.hpp"
 #include "renderer.hpp"
 #include "computations.hpp"
+#include "sphere.hpp"
 
 TEST_CASE("Creating a world", "[world]")
 {
@@ -31,9 +32,9 @@ TEST_CASE("Test GetMutableObject changes persist in the world", "[world]")
     World world;
     Sphere s("s");
     ObjectId id = world.AddObject(s);
-    Sphere &mutableS = world.GetMutableObject(id);
+    Shape &mutableS = world.GetMutableObject(id);
     mutableS.GetMutableMaterial().SetColor(Color(0.5f, 0.5f, 0.5f));
-    const Sphere &constS = world.GetObject(id);
+    const Shape &constS = world.GetObject(id);
     REQUIRE(constS.GetMaterial().GetColor() == Color(0.5f, 0.5f, 0.5f));
 }
 
@@ -141,8 +142,8 @@ TEST_CASE("The colour when a ray hits", "[world]")
 TEST_CASE("The colour with an intersection behind the ray", "[world]")
 {
     World w = Renderer::DefaultWorld();
-    Sphere &outer = w.GetMutableObject(0);
-    Sphere &inner = w.GetMutableObject(1);
+    Shape &outer = w.GetMutableObject(0);
+    Shape &inner = w.GetMutableObject(1);
     outer.GetMutableMaterial().SetAmbient(1.f);
     inner.GetMutableMaterial().SetAmbient(1.f);
     Ray r(Point(0.f, 0.f, 0.75f), Tuple(0.f, 0.f, -1.f));

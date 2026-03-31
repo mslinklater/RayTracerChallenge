@@ -5,6 +5,7 @@
 #include "camera.hpp"
 #include "renderer.hpp"
 #include "world.hpp"
+#include "sphere.hpp"
 
 static constexpr int kCanvasSize = 400;
 

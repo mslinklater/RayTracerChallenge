@@ -22,8 +22,10 @@ class World
         lights.push_back(light);
     }
 
-    template <typename T, typename = std::enable_if_t<std::is_base_of_v<Shape, T>>> ObjectId AddObject(const T &object)
+    // nice how this template means the calling code is cleaner and doesn't have to do a make_unique at the calling site
+    template <typename T, typename = std::enable_if_t<std::is_base_of_v<Shape, T>>> ObjectId AddObject(T &object)
     {
+        object.SetWorldObjectId(nextObjectId++);
         objects.push_back(std::make_unique<T>(object));
         return static_cast<ObjectId>(objects.size() - 1);
     }

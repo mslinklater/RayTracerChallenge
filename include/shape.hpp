@@ -17,6 +17,16 @@ class Shape
     }
     virtual ~Shape() = default;
 
+    void SetWorldObjectId(ObjectId id)
+    {
+        worldObjectId = id;
+    }
+
+    ObjectId GetWorldObjectId() const
+    {
+        return worldObjectId;
+    }
+
     Material &GetMutableMaterial()
     {
         return material;

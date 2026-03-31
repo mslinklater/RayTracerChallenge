@@ -41,3 +41,13 @@ TEST_CASE("A ray intersecting a plane from above", "[Planes]")
     REQUIRE(xs.size() == 1);
     REQUIRE(xs[0] == 1.f);
 }
+
+TEST_CASE("A ray intersecting a plane from below", "[Planes]")
+{
+    Plane plane("plane");
+    Ray ray(Point(0.f, -1.f, 0.f), Vector(0.f, 1.f, 0.f));
+    auto xs = plane.IntersectLocal(ray);
+
+    REQUIRE(xs.size() == 1);
+    REQUIRE(xs[0] == 1.f);
+}

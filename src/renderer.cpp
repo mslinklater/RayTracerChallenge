@@ -90,6 +90,7 @@ Color Renderer::ColorAt(const World &world, const Ray &ray)
 std::vector<Intersection> Renderer::IntersectWorld(const World &world, const Ray &ray)
 {
     std::vector<Intersection> intersections;
+
     for (ObjectId objectId = 0; objectId < world.GetObjects().size(); ++objectId)
     {
         const Sphere &object = world.GetObject(objectId);
@@ -100,6 +101,7 @@ std::vector<Intersection> Renderer::IntersectWorld(const World &world, const Ray
             intersections.push_back(intersection);
         }
     }
+
     // sort intersections by t value
     std::sort(intersections.begin(), intersections.end(),
               [](const Intersection &a, const Intersection &b) { return a.GetT() < b.GetT(); });

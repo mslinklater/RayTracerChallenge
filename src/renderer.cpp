@@ -3,8 +3,8 @@
 #include "computations.hpp"
 #include "intersection.hpp"
 #include "maths.hpp"
-#include "world.hpp"
 #include "sphere.hpp"
+#include "world.hpp"
 #include <algorithm>
 #include <atomic>
 #include <iostream>
@@ -92,13 +92,14 @@ std::vector<Intersection> Renderer::IntersectWorld(const World &world, const Ray
 {
     std::vector<Intersection> intersections;
 
-    for (ObjectId objectId = 0; objectId < world.GetObjects().size(); ++objectId)
+    //     for (ObjectId objectId = 0; objectId < world.GetObjects().size(); ++objectId)
+    for (const ShapePtr &object : world.GetObjects())
     {
-        const Shape &object = world.GetObject(objectId);
-        std::vector<float> objectIntersections = object.Intersect(ray);
+        //   const Shape &object = world.GetObject(objectId);
+        std::vector<float> objectIntersections = object->Intersect(ray);
         for (const float &distance : objectIntersections)
         {
-            Intersection intersection(distance, objectId);
+            Intersection intersection(distance, object->GetWorldObjectId());
             intersections.push_back(intersection);
         }
     }
@@ -167,13 +168,13 @@ World Renderer::DefaultWorld()
     Light light(Point(-10.f, 10.f, -10.f), Color(1.f, 1.f, 1.f));
     w.AddLight(light);
 
-    Sphere s1("s1");
+    Sphere s1("external");
     s1.GetMutableMaterial().SetColor(Color(0.8f, 1.f, 0.6f));
     s1.GetMutableMaterial().SetDiffuse(0.7f);
     s1.GetMutableMaterial().SetSpecular(0.2f);
     w.AddObject(s1);
 
-    Sphere s2("s2");
+    Sphere s2("internal");
     s2.SetTransform(Matrix::CreateScaling(0.5f, 0.5f, 0.5f));
     w.AddObject(s2);
     return w;

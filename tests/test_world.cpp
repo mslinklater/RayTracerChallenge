@@ -1,11 +1,11 @@
-#include <catch2/catch_test_macros.hpp>
-#include "world.hpp"
-#include "ray.hpp"
+#include "computations.hpp"
 #include "intersection.hpp"
 #include "maths.hpp"
+#include "ray.hpp"
 #include "renderer.hpp"
-#include "computations.hpp"
 #include "sphere.hpp"
+#include "world.hpp"
+#include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("Creating a world", "[world]")
 {
@@ -56,7 +56,8 @@ TEST_CASE("Adding an object to the world returns a stable object ID", "[world]")
     World world;
     Sphere s("s");
     ObjectId id = world.AddObject(s);
-    REQUIRE(id == 0);
+    ObjectId expected = s.GetWorldObjectId();
+    REQUIRE(id == expected);
 }
 
 TEST_CASE("The default world", "[world]")
@@ -106,7 +107,8 @@ TEST_CASE("Shading an intersection", "[world]")
 {
     World w = Renderer::DefaultWorld();
     Ray r(Point(0.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
-    Intersection i(4.f, 0);
+    ObjectId objectId = w.GetObjectWithName("external").GetWorldObjectId();
+    Intersection i(4.f, objectId);
     auto comps = Renderer::PrepareComputations(i, r, w);
     auto color = Renderer::ShadeHit(w, comps);
     REQUIRE(color == Color(0.38066f, 0.47583f, 0.2855f));
@@ -117,7 +119,8 @@ TEST_CASE("Shading an intersection from the inside", "[world]")
     World w = Renderer::DefaultWorld();
     w.ReplaceLight(0, Light(Point(0.f, 0.25f, 0.f), Color(1.f, 1.f, 1.f)));
     Ray r(Point(0.f, 0.f, 0.f), Tuple(0.f, 0.f, 1.f));
-    Intersection i(0.5f, 1);
+    ObjectId objectId = w.GetObjectWithName("internal").GetWorldObjectId();
+    Intersection i(0.5f, objectId);
     auto comps = Renderer::PrepareComputations(i, r, w);
     auto color = Renderer::ShadeHit(w, comps);
     REQUIRE(color == Color(0.90498f, 0.90498f, 0.90498f));
@@ -142,8 +145,8 @@ TEST_CASE("The colour when a ray hits", "[world]")
 TEST_CASE("The colour with an intersection behind the ray", "[world]")
 {
     World w = Renderer::DefaultWorld();
-    Shape &outer = w.GetMutableObject(0);
-    Shape &inner = w.GetMutableObject(1);
+    Shape &outer = w.GetMutableObjectWithName("external");
+    Shape &inner = w.GetMutableObjectWithName("internal");
     outer.GetMutableMaterial().SetAmbient(1.f);
     inner.GetMutableMaterial().SetAmbient(1.f);
     Ray r(Point(0.f, 0.f, 0.75f), Tuple(0.f, 0.f, -1.f));
@@ -235,12 +238,12 @@ TEST_CASE("ShadeHit is given an intersection in shadow", "[world]")
     Light light(Point(0.f, 0.f, -10.f), Color(1.f, 1.f, 1.f));
     w.AddLight(light);
     Sphere s1("s1");
-    w.AddObject(s1);
+    ObjectId s1id = w.AddObject(s1);
     Sphere s2("s2");
     s2.SetTransform(Matrix::CreateTranslation(0.f, 0.f, 10.f));
     ObjectId s2id = w.AddObject(s2);
     Ray r(Point(0.f, 0.f, 5.f), Tuple(0.f, 0.f, 1.f));
-    Intersection i(4.f, 0);
+    Intersection i(4.f, s1id);
     Computations comps = Renderer::PrepareComputations(i, r, w);
     Color color = Renderer::ShadeHit(w, comps);
     REQUIRE(color == Color(0.1f, 0.1f, 0.1f));

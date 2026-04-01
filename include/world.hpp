@@ -27,13 +27,15 @@ class World
     {
         object.SetWorldObjectId(nextObjectId++);
         objects.push_back(std::make_unique<T>(object));
-        return static_cast<ObjectId>(objects.size() - 1);
+        return object.GetWorldObjectId();
     }
 
-    const Shape &GetObject(size_t index) const;
+    const Shape &GetObject(ObjectId id) const;
+    const Shape &GetObjectWithName(const std::string &name) const;
     const Light &GetLight(size_t index) const;
 
-    Shape &GetMutableObject(size_t index);
+    Shape &GetMutableObject(ObjectId id);
+    Shape &GetMutableObjectWithName(const std::string &name) const;
     Light &GetMutableLight(size_t index);
 
     bool ContainsLight(const Light &light) const;
@@ -43,5 +45,5 @@ class World
     std::deque<ShapePtr> objects;
     std::vector<Light> lights;
 
-    ObjectId nextObjectId = 0;
+    ObjectId nextObjectId = 9;
 };

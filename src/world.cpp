@@ -55,22 +55,52 @@ Light &World::GetMutableLight(size_t index)
     return lights[index];
 }
 
-const Shape &World::GetObject(size_t index) const
+const Shape &World::GetObject(ObjectId id) const
 {
-    if (index >= objects.size())
+    for (const auto &object : objects)
     {
-        throw std::out_of_range("Object index out of range.");
+        if (object->GetWorldObjectId() == id)
+        {
+            return *object;
+        }
     }
-    return *objects[index];
+    throw std::out_of_range("World::GetObject() Object ID not found.");
 }
 
-Shape &World::GetMutableObject(size_t index)
+const Shape &World::GetObjectWithName(const std::string &name) const
 {
-    if (index >= objects.size())
+    for (const auto &object : objects)
     {
-        throw std::out_of_range("Object index out of range.");
+        if (object->GetName() == name)
+        {
+            return *object;
+        }
     }
-    return *objects[index];
+    throw std::out_of_range("World::GetObjectWithName() Object name not found.");
+}
+
+Shape &World::GetMutableObject(ObjectId id)
+{
+    for (const auto &object : objects)
+    {
+        if (object->GetWorldObjectId() == id)
+        {
+            return *object;
+        }
+    }
+    throw std::out_of_range("World::GetMutableObject() Object ID not found.");
+}
+
+Shape &World::GetMutableObjectWithName(const std::string &name) const
+{
+    for (const auto &object : objects)
+    {
+        if (object->GetName() == name)
+        {
+            return *object;
+        }
+    }
+    throw std::out_of_range("World::GetMutableObjectWithName() Object name not found.");
 }
 
 void World::ReplaceLight(int index, const Light &light)

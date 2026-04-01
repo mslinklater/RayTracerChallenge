@@ -3,7 +3,7 @@
 #include "ray.hpp"
 #include <memory>
 
-const std::deque<std::unique_ptr<Shape>> &World::GetObjects() const
+const std::deque<ShapePtr> &World::GetObjects() const
 {
     return objects;
 }

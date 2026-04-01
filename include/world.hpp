@@ -12,7 +12,7 @@ class World
   public:
     World() = default;
 
-    const std::deque<std::unique_ptr<Shape>> &GetObjects() const;
+    const std::deque<ShapePtr> &GetObjects() const;
     const std::vector<Light> &GetLights() const;
 
     void ReplaceLight(int index, const Light &light);
@@ -40,7 +40,7 @@ class World
     bool ContainsObject(const Shape &object) const;
 
   private:
-    std::deque<std::unique_ptr<Shape>> objects;
+    std::deque<ShapePtr> objects;
     std::vector<Light> lights;
 
     ObjectId nextObjectId = 0;

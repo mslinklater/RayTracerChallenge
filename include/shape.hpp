@@ -71,3 +71,5 @@ class Shape
     Matrix transform;  // The transformation matrix for the sphere (default is identity)
     Material material; // The material properties of the sphere
 };
+
+using ShapePtr = std::unique_ptr<Shape>;

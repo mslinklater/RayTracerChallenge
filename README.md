@@ -10,5 +10,8 @@ cmake --build build
 ## Run tests
 
 ## TODO
+
+* Find out why images generated via LazyVim seem to be stored somewhere else - maybe a CMake issue?
+* Fix the speckling problem - possibly the lighting code ?
 * Move stuff around into more sensible locations - groupings could be better
 * Add output comparison tests - maybe wait until we have a scene description language

@@ -4,4 +4,4 @@ build-coverage/
 out/
 compile_commands.json
 *.log
-
+**/.DS_Store

@@ -1,6 +1,8 @@
 #include "canvas.hpp"
 #include "utils.hpp"
+#include <filesystem>
 #include <fstream>
+#include <iostream>
 
 Canvas::Canvas(int width, int height) : width(width), height(height), pixels(width * height)
 {
@@ -29,6 +31,8 @@ void Canvas::WriteToPPM(const std::string &filename) const
     std::ofstream ppmFile(filename);
     if (!ppmFile.is_open())
     {
+        std::cout << "Unable to open file " << filename << std::endl;
+        std::cout << "Current path " << std::filesystem::current_path() << std::endl;
         return;
     }
 

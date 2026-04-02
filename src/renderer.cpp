@@ -92,11 +92,11 @@ std::vector<Intersection> Renderer::IntersectWorld(const World &world, const Ray
 {
     std::vector<Intersection> intersections;
 
-    //     for (ObjectId objectId = 0; objectId < world.GetObjects().size(); ++objectId)
     for (const ShapePtr &object : world.GetObjects())
     {
         //   const Shape &object = world.GetObject(objectId);
         std::vector<float> objectIntersections = object->Intersect(ray);
+
         for (const float &distance : objectIntersections)
         {
             Intersection intersection(distance, object->GetWorldObjectId());

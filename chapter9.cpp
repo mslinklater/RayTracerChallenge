@@ -8,7 +8,7 @@
 #include "tuple.hpp"
 #include "world.hpp"
 
-static constexpr int kCanvasSize = 128;
+static constexpr int kCanvasSize = 512;
 
 int main()
 {
@@ -26,26 +26,24 @@ int main()
 
     // Floor
     Plane floor("floor");
-    floor.SetTransform(Matrix::CreateScaling(10.0f, 0.02f, 10.0f));
+    // floor.SetTransform(Matrix::CreateScaling(10.0f, 0.02f, 10.0f));
     floor.GetMutableMaterial().SetColor(Color(1.0f, 0.9f, 0.9f));
     floor.GetMutableMaterial().SetSpecular(0.0f);
     world.AddObject(floor);
 
-// Left wall
-#if 0
+    // Left wall
     Sphere leftWall("leftWall");
     leftWall.SetTransform(Matrix::CreateTranslation(0.0f, 0.0f, 5.0f) * Matrix::CreateRotationY(-M_PI / 4.0f) *
-                          Matrix::CreateRotationX(M_PI / 2.0f) * Matrix::CreateScaling(10.0f, 0.02f, 10.0f));
+                          Matrix::CreateRotationX(M_PI / 2.0f) * Matrix::CreateScaling(10.0f, 0.01f, 10.0f));
     leftWall.SetMaterial(floor.GetMaterial());
-    world.AddObject(leftWall);
+    // world.AddObject(leftWall);
 
     // Right wall
     Sphere rightWall("rightWall");
     rightWall.SetTransform(Matrix::CreateTranslation(0.0f, 0.0f, 5.0f) * Matrix::CreateRotationY(M_PI / 4.0f) *
                            Matrix::CreateRotationX(M_PI / 2.0f) * Matrix::CreateScaling(10.0f, 0.02f, 10.0f));
     rightWall.SetMaterial(floor.GetMaterial());
-    world.AddObject(rightWall);
-#endif
+    // world.AddObject(rightWall);
 
     // Middle sphere
     Sphere middle("middle");

@@ -22,9 +22,10 @@ Tuple Shape::NormalAtLocal(const Tuple &point) const
 
 std::vector<float> Shape::Intersect(const Ray &ray) const
 {
-    gSavedRay = ray * transform.GetInverse();
+    Ray localRay = ray * transform.GetInverse();
+    gSavedRay = localRay;
 
-    return IntersectLocal(gSavedRay);
+    return IntersectLocal(localRay);
 }
 
 std::vector<float> Shape::IntersectLocal(const Ray &ray) const

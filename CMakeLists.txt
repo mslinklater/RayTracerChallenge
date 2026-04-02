@@ -3,6 +3,7 @@ project(RayTracerChallenge CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 option(ENABLE_COVERAGE "Build with coverage instrumentation" OFF)
 
@@ -73,6 +74,12 @@ add_executable(Chapter8Challenge chapter8.cpp ${SRC_FILES})
 target_include_directories(Chapter8Challenge PRIVATE ${PROJECT_SOURCE_DIR}/include)
 target_compile_options(Chapter8Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
 target_link_options(Chapter8Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
+
+# Chapter 9 challenge executable
+add_executable(Chapter9Challenge chapter9.cpp ${SRC_FILES})
+target_include_directories(Chapter9Challenge PRIVATE ${PROJECT_SOURCE_DIR}/include)
+target_compile_options(Chapter9Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
+target_link_options(Chapter9Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
 
 # Test executable
 set(TEST_SRC    tests/test_main.cpp

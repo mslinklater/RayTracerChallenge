@@ -120,7 +120,19 @@ Color Renderer::ShadeHit(const World &world, const Computations &comps)
 Color Renderer::Lighting(const Material &material, const Light &light, const Tuple &position, const Tuple &eyeVector,
                          const Tuple &normalVector, EInShadow inShadow)
 {
-    Color effectiveColor = material.GetColor() * light.intensity;
+    Color color;
+
+    if (material.GetPattern() != nullptr)
+    {
+        color = material.GetPattern()->StripeAt(position);
+    }
+    else
+    {
+        color = material.GetColor();
+    }
+
+    Color effectiveColor = color * light.intensity;
+
     Tuple lightVector = (light.position - position).Normalize();
 
     // the three components of the Phong reflection model: ambient, diffuse, and specular

@@ -1,8 +1,9 @@
-#include <catch2/catch_test_macros.hpp>
-#include "material.hpp"
-#include "tuple.hpp"
 #include "light.hpp"
+#include "material.hpp"
+#include "pattern.hpp"
 #include "renderer.hpp"
+#include "tuple.hpp"
+#include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("Create a material and check default values", "[materials]")
 {
@@ -30,4 +31,21 @@ TEST_CASE("Create a material, set values and check updated values", "[materials]
     REQUIRE(m.GetDiffuse() == 0.8f);
     REQUIRE(m.GetSpecular() == 0.7f);
     REQUIRE(m.GetShininess() == 100.f);
+}
+
+TEST_CASE("Lighting with a pattern applied", "[materials]")
+{
+    Material m = Material();
+    StripePattern pattern = StripePattern(Color(1.f, 1.f, 1.f), Color(0.f, 0.f, 0.f));
+    m.SetPattern(pattern);
+    m.SetAmbient(1.f);
+    m.SetDiffuse(0.f);
+    m.SetSpecular(0.f);
+    Tuple eyeVector = Vector(0.f, 0.f, -1.f);
+    Tuple normalVector = Vector(0.f, 0.f, -1.f);
+    Light light = Light(Point(0.f, 0.f, -10.f), Color(1.f, 1.f, 1.f));
+    Color c1 = Renderer::Lighting(m, light, Point(0.9f, 0.f, 0.f), eyeVector, normalVector, EInShadow::No);
+    Color c2 = Renderer::Lighting(m, light, Point(1.1f, 0.f, 0.f), eyeVector, normalVector, EInShadow::No);
+    REQUIRE(c1 == Color(1.f, 1.f, 1.f));
+    REQUIRE(c2 == Color(0.f, 0.f, 0.f));
 }

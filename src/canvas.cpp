@@ -68,3 +68,18 @@ void Canvas::WriteToPPM(const std::string &filename) const
         line.clear();
     }
 }
+
+bool operator==(const Canvas &lhs, const Canvas &rhs)
+{
+    if (lhs.GetWidth() != rhs.GetWidth() || lhs.GetHeight() != rhs.GetHeight())
+        return false;
+    for (int y = 0; y < lhs.GetHeight(); ++y)
+    {
+        for (int x = 0; x < lhs.GetWidth(); ++x)
+        {
+            if (!(lhs.GetPixel(x, y) == rhs.GetPixel(x, y)))
+                return false;
+        }
+    }
+    return true;
+}

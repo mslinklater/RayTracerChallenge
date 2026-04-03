@@ -98,6 +98,7 @@ set(TEST_SRC    tests/test_main.cpp
                 tests/test_materials.cpp
                 tests/test_matrix.cpp
                 tests/test_transformations.cpp
+                tests/test_determinism.cpp
                 tests/test_canvas.cpp)
 
 add_executable(RayTracerChallengeTests ${TEST_SRC} ${SRC_FILES})

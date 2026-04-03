@@ -13,4 +13,15 @@ struct Color
     bool operator==(const Color &other) const;
 };
 
+// Color to represent a ray that never hits anything
 static constexpr Color kBackgroundColor(0.f, 1.f, 1.f);
+
+// color constants
+static constexpr Color kColorBlack(0.f, 0.f, 0.f);
+static constexpr Color kColorRed(1.f, 0.f, 0.f);
+static constexpr Color kColorGreen(0.f, 1.f, 0.f);
+static constexpr Color kColorBlue(0.f, 0.f, 1.f);
+static constexpr Color kColorYellow(1.f, 1.f, 0.f);
+static constexpr Color kColorMagenta(1.f, 0.f, 1.f);
+static constexpr Color kColorCyan(0.f, 1.f, 1.f);
+static constexpr Color kColorWhite(1.f, 1.f, 1.f);

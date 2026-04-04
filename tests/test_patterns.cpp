@@ -45,3 +45,22 @@ TEST_CASE("Stripes with an object transformation", "[patterns]")
     Color c = object.GetMutableMaterial().GetPattern()->StripeAtObject(object, Point(1.5f, 0.f, 0.f));
     REQUIRE(c == kColorWhite);
 }
+
+TEST_CASE("Stripes with a pattern transformation", "[patterns]")
+{
+    Sphere object = Sphere("object");
+    StripePattern pattern(kColorWhite, kColorBlack);
+    pattern.SetTransform(Matrix::CreateScaling(2.f, 2.f, 2.f));
+    Color c = pattern.StripeAtObject(object, Point(1.5f, 0.f, 0.f));
+    REQUIRE(c == kColorWhite);
+}
+
+TEST_CASE("Stripes with both an object and a pattern transformation", "[patterns]")
+{
+    Sphere object = Sphere("object");
+    object.SetTransform(Matrix::CreateScaling(2.f, 2.f, 2.f));
+    StripePattern pattern(kColorWhite, kColorBlack);
+    pattern.SetTransform(Matrix::CreateTranslation(0.5f, 0.f, 0.f));
+    Color c = pattern.StripeAtObject(object, Point(2.5f, 0.f, 0.f));
+    REQUIRE(c == kColorWhite);
+}

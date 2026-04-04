@@ -1,4 +1,5 @@
 #include "pattern.hpp"
+#include "shape.hpp"
 #include <cmath>
 
 Color StripePattern::StripeAt(const Tuple &point)
@@ -12,5 +13,7 @@ Color StripePattern::StripeAt(const Tuple &point)
 
 Color StripePattern::StripeAtObject(const Shape &object, const Tuple &point)
 {
-    return kColorWhite;
+    Tuple localPoint = object.GetTransform().GetInverse() * point;
+    Tuple patternPoint = transform.GetInverse() * localPoint;
+    return StripeAt(patternPoint);
 }

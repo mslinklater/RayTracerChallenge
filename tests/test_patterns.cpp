@@ -41,7 +41,8 @@ TEST_CASE("Stripes with an object transformation", "[patterns]")
 {
     Sphere object = Sphere("object");
     object.SetTransform(Matrix::CreateScaling(2.f, 2.f, 2.f));
-    object.GetMutableMaterial().SetPattern(StripePattern(kColorWhite, kColorBlack));
+    StripePattern pattern(kColorWhite, kColorBlack);
+    object.GetMutableMaterial().SetPattern(pattern);
     Color c = object.GetMutableMaterial().GetPattern()->ColorAtObject(object, Point(1.5f, 0.f, 0.f));
     REQUIRE(c == kColorWhite);
 }

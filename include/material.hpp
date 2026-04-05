@@ -30,7 +30,8 @@ class Material
     {
         return shininess;
     }
-    StripePattern *GetPattern() const
+
+    Pattern *GetPattern() const
     {
         return pattern.get();
     }
@@ -55,9 +56,10 @@ class Material
     {
         shininess = sh;
     }
-    void SetPattern(const StripePattern &p)
+
+    template <typename T, typename = std::enable_if_t<std::is_base_of_v<Pattern, T>>> void SetPattern(T &object)
     {
-        pattern = std::make_shared<StripePattern>(p);
+        pattern = std::make_shared<T>(object);
     }
 
     // Copy assignment operator
@@ -83,12 +85,12 @@ class Material
     }
 
   private:
-    Color color;                                      // The base color of the material
-    float ambient;                                    // The ambient reflection coefficient
-    float diffuse;                                    // The diffuse reflection coefficient
-    float specular;                                   // The specular reflection coefficient
-    float shininess;                                  // The shininess factor for specular highlights
-    std::shared_ptr<StripePattern> pattern = nullptr; // Optional pattern for the material
+    Color color;                                // The base color of the material
+    float ambient;                              // The ambient reflection coefficient
+    float diffuse;                              // The diffuse reflection coefficient
+    float specular;                             // The specular reflection coefficient
+    float shininess;                            // The shininess factor for specular highlights
+    std::shared_ptr<Pattern> pattern = nullptr; // Optional pattern for the material
 };
 
 bool operator==(const Material &lhs, const Material &rhs);

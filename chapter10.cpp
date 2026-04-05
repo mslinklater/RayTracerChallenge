@@ -29,7 +29,8 @@ int main()
     // floor.SetTransform(Matrix::CreateScaling(10.0f, 0.02f, 10.0f));
     floor.GetMutableMaterial().SetColor(Color(1.0f, 0.9f, 0.9f));
     floor.GetMutableMaterial().SetSpecular(0.0f);
-    floor.GetMutableMaterial().SetPattern(StripePattern(kColorRed, kColorBlue));
+    StripePattern pattern4 = StripePattern(kColorRed, kColorBlue);
+    floor.GetMutableMaterial().SetPattern(pattern4);
     world.AddObject(floor);
 
     // Middle sphere

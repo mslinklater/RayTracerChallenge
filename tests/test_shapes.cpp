@@ -1,10 +1,19 @@
-#include <catch2/catch_test_macros.hpp>
-#include "shape.hpp"
+#include "intersection.hpp"
 #include "matrix.hpp"
+#include "shape.hpp"
+#include <catch2/catch_test_macros.hpp>
+
+class TestShape : public Shape
+{
+  public:
+    TestShape(const std::string &name) : Shape(name)
+    {
+    }
+};
 
 TEST_CASE("The default transformation", "[shapes]")
 {
-    Shape s("shape");
+    TestShape s("shape");
     Matrix expected(4);
     expected.SetIdentity();
     REQUIRE(s.GetTransform() == expected);
@@ -12,7 +21,7 @@ TEST_CASE("The default transformation", "[shapes]")
 
 TEST_CASE("Assigning a transformation", "[shapes]")
 {
-    Shape s("shape");
+    TestShape s("shape");
     Matrix t = Matrix::CreateTranslation(2.f, 3.f, 4.f);
     s.SetTransform(t);
     Matrix expected(4);
@@ -20,16 +29,16 @@ TEST_CASE("Assigning a transformation", "[shapes]")
     REQUIRE(s.GetTransform() == expected);
 }
 
-TEST_CASE("A shape has the default material", "[shapes]")
+TEST_CASE("The default material", "[shapes]")
 {
-    Shape s("sphere");
+    TestShape s("sphere");
     Material expected;
     REQUIRE(s.GetMaterial() == expected);
 }
 
-TEST_CASE("A shape may be assigned a material", "[shapes]")
+TEST_CASE("Assigning a material", "[shapes]")
 {
-    Shape s("sphere");
+    TestShape s("sphere");
     Material m;
     m.SetAmbient(1.f);
     s.SetMaterial(m);

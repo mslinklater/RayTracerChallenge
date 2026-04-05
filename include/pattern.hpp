@@ -21,6 +21,10 @@ class Pattern
     {
         this->transform = transform;
     }
+    Matrix GetTransform() const
+    {
+        return transform;
+    }
 
     virtual ~Pattern() = default;
     virtual Color ColorAt(const Tuple &point) = 0;

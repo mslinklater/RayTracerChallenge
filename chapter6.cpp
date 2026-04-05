@@ -1,12 +1,12 @@
 #include <iostream>
 
-#include "tuple.hpp"
 #include "canvas.hpp"
-#include "ray.hpp"
-#include "sphere.hpp"
-#include "light.hpp"
-#include "renderer.hpp"
 #include "enums.hpp"
+#include "light.hpp"
+#include "ray.hpp"
+#include "renderer.hpp"
+#include "sphere.hpp"
+#include "tuple.hpp"
 
 static constexpr int kCanvasSize = 500;
 
@@ -27,14 +27,16 @@ int main()
     {
         for (int y = 0; y < kCanvasSize; y++)
         {
-            Ray ray(Point(0.f, 0.f, -3.f), Vector((x - kCanvasSize / 2.f) * invCanvas, (y - kCanvasSize / 2.f) * invCanvas, 1.f));
+            Ray ray(Point(0.f, 0.f, -3.f),
+                    Vector((x - kCanvasSize / 2.f) * invCanvas, (y - kCanvasSize / 2.f) * invCanvas, 1.f));
             auto xs = sphere.Intersect(ray);
             if (!xs.empty())
             {
                 Tuple position = ray.PositionAt(xs[0]);
                 Tuple normalVector = sphere.NormalAt(position);
                 Tuple eyeVector = -ray.GetDirection();
-                Color color = Renderer::Lighting(sphere.GetMaterial(), light, position, eyeVector, normalVector, EInShadow::No);
+                Color color = Renderer::Lighting(sphere.GetMaterial(), sphere, light, position, eyeVector, normalVector,
+                                                 EInShadow::No);
                 canvas.WritePixel(x, y, color);
             }
         }

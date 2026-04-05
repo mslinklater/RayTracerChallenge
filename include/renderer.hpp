@@ -9,6 +9,7 @@ class Ray;
 class Light;
 class Material;
 class Sphere;
+class Shape;
 struct Tuple;
 struct Computations;
 
@@ -19,8 +20,8 @@ class Renderer
     static Color ColorAt(const World &world, const Ray &ray);
     static std::vector<Intersection> IntersectWorld(const World &world, const Ray &ray);
     static Color ShadeHit(const World &world, const Computations &comps);
-    static Color Lighting(const Material &material, const Light &light, const Tuple &position, const Tuple &eyeVector,
-                          const Tuple &normalVector, EInShadow inShadow);
+    static Color Lighting(const Material &material, const Shape &object, const Light &light, const Tuple &position,
+                          const Tuple &eyeVector, const Tuple &normalVector, EInShadow inShadow);
     static World DefaultWorld();
     static std::vector<Intersection> Intersections(std::initializer_list<Intersection> list);
     static Intersection GetClosestIntersection(const std::vector<Intersection> &intersections);

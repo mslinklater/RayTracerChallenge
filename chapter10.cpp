@@ -38,7 +38,9 @@ int main()
     middle.GetMutableMaterial().SetColor(Color(0.1f, 1.0f, 0.5f));
     middle.GetMutableMaterial().SetDiffuse(0.7f);
     middle.GetMutableMaterial().SetSpecular(0.3f);
-    middle.GetMutableMaterial().SetPattern(StripePattern(kColorGreen, kColorYellow));
+    StripePattern pattern = StripePattern(kColorGreen, kColorYellow);
+    pattern.SetTransform(Matrix::CreateScaling(0.25f, 0.25f, 0.25f) * Matrix::CreateRotationY(M_PI / 4.f));
+    middle.GetMutableMaterial().SetPattern(pattern);
     world.AddObject(middle);
 
     // Right sphere
@@ -47,7 +49,9 @@ int main()
     right.GetMutableMaterial().SetColor(Color(0.5f, 1.0f, 0.1f));
     right.GetMutableMaterial().SetDiffuse(0.7f);
     right.GetMutableMaterial().SetSpecular(0.3f);
-    right.GetMutableMaterial().SetPattern(StripePattern(kColorCyan, kColorMagenta));
+    StripePattern pattern2 = StripePattern(kColorWhite, kColorBlack);
+    pattern2.SetTransform(Matrix::CreateScaling(0.05f, 0.05f, 0.05f) * Matrix::CreateRotationZ(M_PI / 7.f));
+    right.GetMutableMaterial().SetPattern(pattern2);
     world.AddObject(right);
 
     // Left sphere
@@ -56,7 +60,9 @@ int main()
     left.GetMutableMaterial().SetColor(Color(1.0f, 0.8f, 0.1f));
     left.GetMutableMaterial().SetDiffuse(0.7f);
     left.GetMutableMaterial().SetSpecular(0.3f);
-    left.GetMutableMaterial().SetPattern(StripePattern(kColorBlack, kColorWhite));
+    StripePattern pattern3 = StripePattern(kColorCyan, kColorMagenta);
+    pattern3.SetTransform(Matrix::CreateScaling(0.5f, 0.5f, 0.5f) * Matrix::CreateRotationX(M_PI / 2.f));
+    left.GetMutableMaterial().SetPattern(pattern3);
     world.AddObject(left);
 
     Canvas canvas = Renderer::Render(camera, world);

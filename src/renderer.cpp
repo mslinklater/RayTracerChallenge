@@ -113,18 +113,19 @@ std::vector<Intersection> Renderer::IntersectWorld(const World &world, const Ray
 Color Renderer::ShadeHit(const World &world, const Computations &comps)
 {
     EInShadow inShadow = IsShadowed(world, comps.overPoint);
-    return Lighting(world.GetObject(comps.objectId).GetMaterial(), world.GetLight(0), comps.point, comps.eyeVector,
-                    comps.normalVector, inShadow);
+
+    return Lighting(world.GetObject(comps.objectId).GetMaterial(), world.GetObject(comps.objectId), world.GetLight(0),
+                    comps.point, comps.eyeVector, comps.normalVector, inShadow);
 }
 
-Color Renderer::Lighting(const Material &material, const Light &light, const Tuple &position, const Tuple &eyeVector,
-                         const Tuple &normalVector, EInShadow inShadow)
+Color Renderer::Lighting(const Material &material, const Shape &object, const Light &light, const Tuple &position,
+                         const Tuple &eyeVector, const Tuple &normalVector, EInShadow inShadow)
 {
     Color color;
 
     if (material.GetPattern() != nullptr)
     {
-        color = material.GetPattern()->StripeAt(position);
+        color = material.GetPattern()->ColorAtObject(object, position);
     }
     else
     {

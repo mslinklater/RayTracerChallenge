@@ -2,6 +2,7 @@
 #include "material.hpp"
 #include "pattern.hpp"
 #include "renderer.hpp"
+#include "sphere.hpp"
 #include "tuple.hpp"
 #include <catch2/catch_test_macros.hpp>
 
@@ -44,8 +45,9 @@ TEST_CASE("Lighting with a pattern applied", "[materials]")
     Tuple eyeVector = Vector(0.f, 0.f, -1.f);
     Tuple normalVector = Vector(0.f, 0.f, -1.f);
     Light light = Light(Point(0.f, 0.f, -10.f), Color(1.f, 1.f, 1.f));
-    Color c1 = Renderer::Lighting(m, light, Point(0.9f, 0.f, 0.f), eyeVector, normalVector, EInShadow::No);
-    Color c2 = Renderer::Lighting(m, light, Point(1.1f, 0.f, 0.f), eyeVector, normalVector, EInShadow::No);
+    Sphere s("test");
+    Color c1 = Renderer::Lighting(m, s, light, Point(0.9f, 0.f, 0.f), eyeVector, normalVector, EInShadow::No);
+    Color c2 = Renderer::Lighting(m, s, light, Point(1.1f, 0.f, 0.f), eyeVector, normalVector, EInShadow::No);
     REQUIRE(c1 == Color(1.f, 1.f, 1.f));
     REQUIRE(c2 == Color(0.f, 0.f, 0.f));
 }

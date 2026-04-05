@@ -5,7 +5,16 @@
 
 class Shape;
 
-class StripePattern
+class Pattern
+{
+  public:
+    virtual ~Pattern() = default;
+    virtual Color ColorAt(const Tuple &point) = 0;
+    virtual Color ColorAtObject(const Shape &object, const Tuple &point) = 0;
+    virtual void SetTransform(const Matrix &transform) = 0;
+};
+
+class StripePattern : public Pattern
 {
   public:
     StripePattern() : a(kColorWhite), b(kColorBlack), transform(Matrix(4))
@@ -25,8 +34,8 @@ class StripePattern
     {
         return b;
     }
-    Color StripeAt(const Tuple &point);
-    Color StripeAtObject(const Shape &object, const Tuple &point);
+    Color ColorAt(const Tuple &point);
+    Color ColorAtObject(const Shape &object, const Tuple &point);
     void SetTransform(const Matrix &transform)
     {
         this->transform = transform;

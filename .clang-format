@@ -25,3 +25,5 @@ BraceWrapping:
 AllowShortFunctionsOnASingleLine: None
 AllowShortIfStatementsOnASingleLine: Never
 AllowShortLoopsOnASingleLine: false
+
+AlignAfterOpenBracket: Align

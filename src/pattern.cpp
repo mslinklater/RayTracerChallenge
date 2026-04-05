@@ -2,7 +2,7 @@
 #include "shape.hpp"
 #include <cmath>
 
-Color StripePattern::ColorAt(const Tuple &point)
+Color StripePattern::PatternAt(const Tuple &point)
 {
     if (static_cast<int>(std::floor(point.x)) % 2 == 0)
     {
@@ -11,9 +11,9 @@ Color StripePattern::ColorAt(const Tuple &point)
     return GetB();
 }
 
-Color StripePattern::ColorAtObject(const Shape &object, const Tuple &point)
+Color StripePattern::PatternAtShape(const Shape &shape, const Tuple &point)
 {
-    Tuple localPoint = object.GetTransform().GetInverse() * point;
+    Tuple localPoint = shape.GetTransform().GetInverse() * point;
     Tuple patternPoint = transform.GetInverse() * localPoint;
-    return ColorAt(patternPoint);
+    return PatternAt(patternPoint);
 }

@@ -27,8 +27,8 @@ class Pattern
     }
 
     virtual ~Pattern() = default;
-    virtual Color ColorAt(const Tuple &point) = 0;
-    virtual Color ColorAtObject(const Shape &object, const Tuple &point) = 0;
+    virtual Color PatternAt(const Tuple &point) = 0;
+    virtual Color PatternAtShape(const Shape &object, const Tuple &point) = 0;
 
     Color GetA() const
     {
@@ -55,6 +55,6 @@ class StripePattern : public Pattern
     {
     }
 
-    Color ColorAt(const Tuple &point) override;
-    Color ColorAtObject(const Shape &object, const Tuple &point) override;
+    Color PatternAt(const Tuple &point) override;
+    Color PatternAtShape(const Shape &object, const Tuple &point) override;
 };

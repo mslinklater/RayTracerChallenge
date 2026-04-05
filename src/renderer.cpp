@@ -125,7 +125,7 @@ Color Renderer::Lighting(const Material &material, const Shape &object, const Li
 
     if (material.GetPattern() != nullptr)
     {
-        color = material.GetPattern()->ColorAtObject(object, position);
+        color = material.GetPattern()->PatternAtShape(object, position);
     }
     else
     {

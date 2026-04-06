@@ -11,11 +11,6 @@ class TestPattern : public Pattern
     {
         return Color(point.x, point.y, point.z);
     }
-    Color PatternAtShape(const Shape &object, const Tuple &point) override
-    {
-        Tuple newPoint = transform.GetInverse() * point;
-        return Color(newPoint.x, newPoint.y, newPoint.z);
-    }
 };
 
 TEST_CASE("Creating a stripe pattern", "[patterns]")
@@ -106,8 +101,19 @@ TEST_CASE("A pattern with an object transformation", "[patterns]")
 
 TEST_CASE("A pattern with a pattern transformation", "[patterns]")
 {
+    Sphere shape = Sphere("shape");
+    TestPattern pattern;
+    pattern.SetTransform(Matrix::CreateScaling(2.f, 2.f, 2.f));
+    Color c = pattern.PatternAtShape(shape, Point(2.f, 3.f, 4.f));
+    REQUIRE(c == Color(1.f, 1.5f, 2.f));
 }
 
 TEST_CASE("A pattern with both an ibject and a pattern transformation", "[patterns]")
 {
+    Sphere shape = Sphere("shape");
+    shape.SetTransform(Matrix::CreateScaling(2.f, 2.f, 2.f));
+    TestPattern pattern;
+    pattern.SetTransform(Matrix::CreateTranslation(0.5f, 1.f, 1.5f));
+    Color c = pattern.PatternAtShape(shape, Point(2.5f, 3.f, 3.5f));
+    REQUIRE(c == Color(0.75f, 0.5f, 0.25f));
 }

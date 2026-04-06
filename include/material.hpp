@@ -1,7 +1,9 @@
 #pragma once
 #include "color.hpp"
-#include "pattern.hpp"
+// #include "pattern.hpp"
 #include <memory>
+
+class Pattern;
 
 class Material
 {

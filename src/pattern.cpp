@@ -11,9 +11,9 @@ Color StripePattern::PatternAt(const Tuple &point)
     return GetB();
 }
 
-Color StripePattern::PatternAtShape(const Shape &shape, const Tuple &point)
-{
-    Tuple localPoint = shape.GetTransform().GetInverse() * point;
-    Tuple patternPoint = transform.GetInverse() * localPoint;
-    return PatternAt(patternPoint);
-}
+// Color StripePattern::PatternAtShape(const Shape &shape, const Tuple &point)
+//{
+// Tuple localPoint = shape.GetTransform().GetInverse() * point;
+// Tuple patternPoint = transform.GetInverse() * localPoint;
+// return PatternAt(patternPoint);
+//}

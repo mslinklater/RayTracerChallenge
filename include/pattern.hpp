@@ -1,9 +1,8 @@
 #pragma once
 #include "color.hpp"
 #include "matrix.hpp"
+#include "shape.hpp"
 #include "tuple.hpp"
-
-class Shape;
 
 class Pattern
 {
@@ -28,7 +27,13 @@ class Pattern
 
     virtual ~Pattern() = default;
     virtual Color PatternAt(const Tuple &point) = 0;
-    virtual Color PatternAtShape(const Shape &object, const Tuple &point) = 0;
+
+    Color PatternAtShape(const Shape &shape, const Tuple &point)
+    {
+        Tuple localPoint = shape.GetTransform().GetInverse() * point;
+        Tuple patternPoint = transform.GetInverse() * localPoint;
+        return PatternAt(patternPoint);
+    }
 
     Color GetA() const
     {
@@ -56,5 +61,5 @@ class StripePattern : public Pattern
     }
 
     Color PatternAt(const Tuple &point) override;
-    Color PatternAtShape(const Shape &object, const Tuple &point) override;
+    // Color PatternAtShape(const Shape &object, const Tuple &point) override;
 };

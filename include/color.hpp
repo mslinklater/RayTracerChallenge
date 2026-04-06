@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 
 struct Color
 {
@@ -11,6 +12,11 @@ struct Color
     Color operator*(float scalar) const;
     Color operator*(const Color &other) const;
     bool operator==(const Color &other) const;
+
+    void Cout() const
+    {
+        std::cout << "Color(" << r << ", " << g << ", " << b << ")" << std::endl;
+    }
 };
 
 // Color to represent a ray that never hits anything

@@ -2,6 +2,8 @@
 
 #include "camera.hpp"
 #include "matrix.hpp"
+#include "patterns/gradient_pattern.hpp"
+#include "patterns/stripe_pattern.hpp"
 #include "plane.hpp"
 #include "renderer.hpp"
 #include "sphere.hpp"
@@ -50,8 +52,8 @@ int main()
     right.GetMutableMaterial().SetColor(Color(0.5f, 1.0f, 0.1f));
     right.GetMutableMaterial().SetDiffuse(0.7f);
     right.GetMutableMaterial().SetSpecular(0.3f);
-    StripePattern pattern2 = StripePattern(kColorWhite, kColorBlack);
-    pattern2.SetTransform(Matrix::CreateScaling(0.05f, 0.05f, 0.05f) * Matrix::CreateRotationZ(M_PI / 7.f));
+    GradientPattern pattern2 = GradientPattern(kColorWhite, kColorBlack);
+    pattern2.SetTransform(Matrix::CreateScaling(0.35f, 0.35f, 0.35f) * Matrix::CreateRotationZ(M_PI / 7.f));
     right.GetMutableMaterial().SetPattern(pattern2);
     world.AddObject(right);
 

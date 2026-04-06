@@ -1,6 +1,6 @@
 #include "light.hpp"
 #include "material.hpp"
-#include "pattern.hpp"
+#include "patterns/stripe_pattern.hpp"
 #include "renderer.hpp"
 #include "sphere.hpp"
 #include "tuple.hpp"

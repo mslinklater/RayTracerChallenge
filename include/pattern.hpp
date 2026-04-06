@@ -28,12 +28,7 @@ class Pattern
     virtual ~Pattern() = default;
     virtual Color PatternAt(const Tuple &point) = 0;
 
-    Color PatternAtShape(const Shape &shape, const Tuple &point)
-    {
-        Tuple localPoint = shape.GetTransform().GetInverse() * point;
-        Tuple patternPoint = transform.GetInverse() * localPoint;
-        return PatternAt(patternPoint);
-    }
+    Color PatternAtShape(const Shape &shape, const Tuple &point);
 
     Color GetA() const
     {
@@ -48,18 +43,4 @@ class Pattern
     Color a;
     Color b;
     Matrix transform;
-};
-
-class StripePattern : public Pattern
-{
-  public:
-    StripePattern()
-    {
-    }
-    StripePattern(const Color &_a, const Color &_b) : Pattern(_a, _b)
-    {
-    }
-
-    Color PatternAt(const Tuple &point) override;
-    // Color PatternAtShape(const Shape &object, const Tuple &point) override;
 };

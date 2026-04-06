@@ -3,6 +3,7 @@
 #include "camera.hpp"
 #include "matrix.hpp"
 #include "patterns/gradient_pattern.hpp"
+#include "patterns/ring_pattern.hpp"
 #include "patterns/stripe_pattern.hpp"
 #include "plane.hpp"
 #include "renderer.hpp"
@@ -41,8 +42,8 @@ int main()
     middle.GetMutableMaterial().SetColor(Color(0.1f, 1.0f, 0.5f));
     middle.GetMutableMaterial().SetDiffuse(0.7f);
     middle.GetMutableMaterial().SetSpecular(0.3f);
-    StripePattern pattern = StripePattern(kColorGreen, kColorYellow);
-    pattern.SetTransform(Matrix::CreateScaling(0.25f, 0.25f, 0.25f) * Matrix::CreateRotationY(M_PI / 4.f));
+    RingPattern pattern = RingPattern(kColorGreen, kColorYellow);
+    pattern.SetTransform(Matrix::CreateScaling(0.15f, 0.15f, 0.15f) * Matrix::CreateRotationZ(M_PI / 5.f));
     middle.GetMutableMaterial().SetPattern(pattern);
     world.AddObject(middle);
 

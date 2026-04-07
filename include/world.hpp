@@ -26,7 +26,10 @@ class World
     template <typename T, typename = std::enable_if_t<std::is_base_of_v<Shape, T>>> ObjectId AddObject(T &object)
     {
         object.SetWorldObjectId(nextObjectId++);
-        objects.push_back(std::make_unique<T>(object));
+        // objects.push_back(std::make_unique<T>(object));
+        ShapePtr shapePtr = std::make_unique<T>(object);
+        AddObjectImpl(std::move(shapePtr));
+        // objects.push_back(std::move(shapePtr));
         return object.GetWorldObjectId();
     }
 
@@ -42,6 +45,8 @@ class World
     bool ContainsObject(const Shape &object) const;
 
   private:
+    void AddObjectImpl(ShapePtr ptr);
+
     std::deque<ShapePtr> objects;
     std::vector<Light> lights;
 

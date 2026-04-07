@@ -13,6 +13,20 @@ const std::vector<Light> &World::GetLights() const
     return lights;
 }
 
+void World::AddObjectImpl(ShapePtr ptr)
+{
+    // if any existing objects share the same name throw an expeption
+    for (const auto &o : objects)
+    {
+        if (o->GetName() == ptr->GetName())
+        {
+            throw std::invalid_argument("World::AddObjectImpl() Object with name '" + ptr->GetName() +
+                                        "' already exists in the world.");
+        }
+    }
+    objects.push_back(std::move(ptr));
+}
+
 bool World::ContainsLight(const Light &light) const
 {
     for (auto l : lights)

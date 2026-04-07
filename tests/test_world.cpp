@@ -248,3 +248,12 @@ TEST_CASE("ShadeHit is given an intersection in shadow", "[world]")
     Color color = Renderer::ShadeHit(w, comps);
     REQUIRE(color == Color(0.1f, 0.1f, 0.1f));
 }
+
+TEST_CASE("Shapes added to a world cannot share the same name", "[shapes]")
+{
+    World w;
+    Shape s1("shape");
+    Shape s2("shape");
+    w.AddObject(s1);
+    REQUIRE_THROWS_AS(w.AddObject(s2), std::invalid_argument);
+}

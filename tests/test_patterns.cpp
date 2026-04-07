@@ -1,4 +1,5 @@
 #include "color.hpp"
+#include "patterns/checker_pattern.hpp"
 #include "patterns/gradient_pattern.hpp"
 #include "patterns/ring_pattern.hpp"
 #include "patterns/stripe_pattern.hpp"
@@ -136,4 +137,28 @@ TEST_CASE("A ring should extend in both x and y directions", "[patterns]")
     REQUIRE(pattern.PatternAt(Point(1.f, 0.f, 0.f)) == kColorBlack);
     REQUIRE(pattern.PatternAt(Point(0.f, 0.f, 1.f)) == kColorBlack);
     REQUIRE(pattern.PatternAt(Point(0.708f, 0.f, 0.708f)) == kColorBlack);
+}
+
+TEST_CASE("Checkers should repeat in x", "[patterns]")
+{
+    CheckerPattern pattern(kColorWhite, kColorBlack);
+    REQUIRE(pattern.PatternAt(Point(0.f, 0.f, 0.f)) == kColorWhite);
+    REQUIRE(pattern.PatternAt(Point(0.99f, 0.f, 0.f)) == kColorWhite);
+    REQUIRE(pattern.PatternAt(Point(1.01f, 0.f, 0.f)) == kColorBlack);
+}
+
+TEST_CASE("Checkers should repeat in y", "[patterns]")
+{
+    CheckerPattern pattern(kColorWhite, kColorBlack);
+    REQUIRE(pattern.PatternAt(Point(0.f, 0.f, 0.f)) == kColorWhite);
+    REQUIRE(pattern.PatternAt(Point(0.f, 0.99f, 0.f)) == kColorWhite);
+    REQUIRE(pattern.PatternAt(Point(0.f, 1.01f, 0.f)) == kColorBlack);
+}
+
+TEST_CASE("Checkers should repeat in z", "[patterns]")
+{
+    CheckerPattern pattern(kColorWhite, kColorBlack);
+    REQUIRE(pattern.PatternAt(Point(0.f, 0.f, 0.f)) == kColorWhite);
+    REQUIRE(pattern.PatternAt(Point(0.f, 0.f, 0.99f)) == kColorWhite);
+    REQUIRE(pattern.PatternAt(Point(0.f, 0.f, 1.01f)) == kColorBlack);
 }

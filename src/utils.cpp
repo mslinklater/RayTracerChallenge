@@ -1,6 +1,6 @@
-// #include "utils.hpp"
-#include <cmath>
+#include "utils.hpp"
 #include <algorithm>
+#include <cmath>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -29,4 +29,14 @@ std::vector<std::string> ReadLinesFromFile(const std::string &filename)
     }
 
     return lines;
+}
+
+Sphere GlassSphere(const std::string &name)
+{
+    Sphere sphere(name);
+    Material mat;
+    mat.SetTransparency(1.0f);
+    mat.SetRefractiveIndex(1.5f);
+    sphere.SetMaterial(mat);
+    return sphere;
 }

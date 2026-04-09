@@ -139,7 +139,6 @@ TEST_CASE("Precomputing the reflection vector", "[ray]")
     REQUIRE(comps.reflectv == Vector(0.f, std::sqrt(2.f) / 2.f, std::sqrt(2.f) / 2.f));
 }
 
-#if 0
 TEST_CASE("Finding n1 and n2 at various intersections")
 {
     World w;
@@ -189,4 +188,3 @@ TEST_CASE("Finding n1 and n2 at various intersections")
     REQUIRE(comps5.n1 == 1.5f);
     REQUIRE(comps5.n2 == 1.0f);
 }
-#endif

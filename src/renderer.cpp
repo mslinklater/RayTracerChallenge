@@ -90,7 +90,7 @@ Color Renderer::ColorAt(const World &world, const Ray &ray, int remaining)
     return ShadeHit(world, comps, remaining);
 }
 
-std::vector<Intersection> Renderer::IntersectWorld(const World &world, const Ray &ray)
+IntersectionVector Renderer::IntersectWorld(const World &world, const Ray &ray)
 {
     std::vector<Intersection> intersections;
 
@@ -254,6 +254,19 @@ Computations Renderer::PrepareComputations(const Intersection &intersection, con
 
     comps.reflectv = ray.GetDirection().Reflect(comps.normalVector);
     comps.overPoint = comps.point + comps.normalVector * kEpsilon * 2.f;
+
+    // now work out n1 and n2
+    if (intersectionVec != nullptr && intersectionVec->empty())
+    {
+        comps.n1 = 1.f;
+        comps.n2 = 1.f;
+    }
+    else
+    {
+        // std::vector<ObjectId> containers;
+        // for()
+    }
+
     return comps;
 }
 

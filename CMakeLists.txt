@@ -124,6 +124,23 @@ target_link_options(RayTracerChallengeTests PRIVATE ${PROJECT_COVERAGE_FLAGS})
 # Use Catch2's test discovery instead of manual add_test
 catch_discover_tests(RayTracerChallengeTests)
 
+# Doxygen documentation target
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+    set(DOXYGEN_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/docs)
+    set(DOXYGEN_GENERATE_HTML YES)
+    set(DOXYGEN_GENERATE_LATEX NO)
+    set(DOXYGEN_RECURSIVE YES)
+    set(DOXYGEN_EXTRACT_ALL YES)
+    doxygen_add_docs(doxygen
+        ${PROJECT_SOURCE_DIR}/include
+        ${PROJECT_SOURCE_DIR}/src
+        COMMENT "Generating HTML documentation in docs/"
+    )
+else()
+    message(STATUS "Doxygen not found -- 'doxygen' target will not be available.")
+endif()
+
 if(ENABLE_COVERAGE)
     find_program(LCOV_BIN lcov)
     find_program(GENHTML_BIN genhtml)

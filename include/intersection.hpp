@@ -1,18 +1,29 @@
 #pragma once
-#include <cstddef>
 #include "types.hpp"
+#include <cstddef>
+#include <vector>
 
 class Intersection
 {
-public:
-    Intersection(float t, ObjectId objectId) : t(t), objectId(objectId) {}
+  public:
+    Intersection(float t, ObjectId objectId) : t(t), objectId(objectId)
+    {
+    }
 
-    float GetT() const { return t; }
-    ObjectId GetObjectId() const { return objectId; }
+    float GetT() const
+    {
+        return t;
+    }
+    ObjectId GetObjectId() const
+    {
+        return objectId;
+    }
 
     bool operator==(const Intersection &other) const;
 
-private:
+  private:
     float t;           // The distance along the ray to the intersection point
     ObjectId objectId; // Stable id of the intersected object (invalid id means no hit)
 };
+
+typedef std::vector<Intersection> IntersectionVector;

@@ -12,4 +12,6 @@ struct Computations
     Tuple normalVector = {0.f, 0.f, 0.f, 0.f};
     Tuple reflectv = {0.f, 0.f, 0.f, 0.f};
     bool inside = false; // Indicates whether the intersection occurs on the inside of the object
+    float n1 = 0.f;
+    float n2 = 0.f;
 };

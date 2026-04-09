@@ -1,5 +1,10 @@
 # RayTracerChallenge
 
+## Introduction
+
+This is my implementation of the ray tracer described in the book "The Ray Tracer Challenge" by Jamis Buck.
+It is implemented in C++ and uses CMake as a build system. Testing is done via the Catch2 testing framework.
+
 ## Build
 
 ```bash§

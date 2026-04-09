@@ -5,6 +5,7 @@
 #include "ray.hpp"
 #include "renderer.hpp"
 #include "sphere.hpp"
+#include "utils.hpp"
 #include "world.hpp"
 #include <catch2/catch_test_macros.hpp>
 
@@ -137,3 +138,55 @@ TEST_CASE("Precomputing the reflection vector", "[ray]")
     Computations comps = Renderer::PrepareComputations(i, r, w);
     REQUIRE(comps.reflectv == Vector(0.f, std::sqrt(2.f) / 2.f, std::sqrt(2.f) / 2.f));
 }
+
+#if 0
+TEST_CASE("Finding n1 and n2 at various intersections")
+{
+    World w;
+    Sphere a = GlassSphere("a");
+    a.SetTransform(Matrix::CreateScaling(2.f, 2.f, 2.f));
+    a.GetMutableMaterial().SetRefractiveIndex(1.5f);
+    w.AddObject(a);
+
+    Sphere b = GlassSphere("b");
+    b.SetTransform(Matrix::CreateTranslation(0.f, 0.f, -.25f));
+    b.GetMutableMaterial().SetRefractiveIndex(2.0f);
+    w.AddObject(b);
+
+    Sphere c = GlassSphere("c");
+    c.SetTransform(Matrix::CreateTranslation(0.f, 0.f, 0.25f));
+    c.GetMutableMaterial().SetRefractiveIndex(2.5f);
+    w.AddObject(c);
+
+    Ray r(Point(0.f, 0.f, -4.f), Tuple(0.f, 0.f, 1.f));
+    IntersectionVector xs = {
+        Intersection(2.f, a.GetWorldObjectId()),   Intersection(2.75f, b.GetWorldObjectId()),
+        Intersection(3.25f, c.GetWorldObjectId()), Intersection(4.75f, b.GetWorldObjectId()),
+        Intersection(5.25f, c.GetWorldObjectId()), Intersection(6.f, a.GetWorldObjectId()),
+    };
+
+    Computations comps0 = Renderer::PrepareComputations(xs[0], r, w, &xs);
+    REQUIRE(comps0.n1 == 1.f);
+    REQUIRE(comps0.n2 == 1.5f);
+
+    Computations comps1 = Renderer::PrepareComputations(xs[1], r, w, &xs);
+    REQUIRE(comps1.n1 == 1.5f);
+    REQUIRE(comps1.n2 == 2.0f);
+
+    Computations comps2 = Renderer::PrepareComputations(xs[2], r, w, &xs);
+    REQUIRE(comps2.n1 == 2.0f);
+    REQUIRE(comps2.n2 == 2.5f);
+
+    Computations comps3 = Renderer::PrepareComputations(xs[3], r, w, &xs);
+    REQUIRE(comps3.n1 == 2.5f);
+    REQUIRE(comps3.n2 == 2.5f);
+
+    Computations comps4 = Renderer::PrepareComputations(xs[4], r, w, &xs);
+    REQUIRE(comps4.n1 == 2.5f);
+    REQUIRE(comps4.n2 == 1.5f);
+
+    Computations comps5 = Renderer::PrepareComputations(xs[5], r, w, &xs);
+    REQUIRE(comps5.n1 == 1.5f);
+    REQUIRE(comps5.n2 == 1.0f);
+}
+#endif

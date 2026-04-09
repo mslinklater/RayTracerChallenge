@@ -215,12 +215,12 @@ World Renderer::DefaultWorld()
     return w;
 }
 
-std::vector<Intersection> Renderer::Intersections(std::initializer_list<Intersection> list)
+IntersectionVector Renderer::Intersections(std::initializer_list<Intersection> list)
 {
-    return std::vector<Intersection>(list);
+    return IntersectionVector(list);
 }
 
-Intersection Renderer::GetClosestIntersection(const std::vector<Intersection> &intersections)
+Intersection Renderer::GetClosestIntersection(const IntersectionVector &intersections)
 {
     Intersection hit(0.f, kInvalidObjectId);
     for (const auto &intersection : intersections)
@@ -236,7 +236,8 @@ Intersection Renderer::GetClosestIntersection(const std::vector<Intersection> &i
     return hit;
 }
 
-Computations Renderer::PrepareComputations(const Intersection &intersection, const Ray &ray, const World &world)
+Computations Renderer::PrepareComputations(const Intersection &intersection, const Ray &ray, const World &world,
+                                           const IntersectionVector *intersectionVec)
 {
     Computations comps;
     comps.t = intersection.GetT();

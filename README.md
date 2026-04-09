@@ -11,6 +11,9 @@ cmake --build build
 
 ## TODO
 
-* Find out why images generated via LazyVim seem to be stored somewhere else - maybe a CMake issue?
 * Move stuff around into more sensible locations - groupings could be better
 * Add output comparison tests - maybe wait until we have a scene description language
+
+## Further Work
+
+* Add more patterns - p139-140

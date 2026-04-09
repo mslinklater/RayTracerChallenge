@@ -71,6 +71,11 @@ Light &World::GetMutableLight(size_t index)
 
 const Shape &World::GetObject(ObjectId id) const
 {
+    if (id == kInvalidObjectId)
+    {
+        throw std::invalid_argument("World::GetObject() Invalid Object ID.");
+    }
+
     for (const auto &object : objects)
     {
         if (object->GetWorldObjectId() == id)

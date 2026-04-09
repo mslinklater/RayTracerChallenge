@@ -1,13 +1,14 @@
-#include <catch2/catch_test_macros.hpp>
-#include "sphere.hpp"
-#include "intersection.hpp"
-#include "ray.hpp"
-#include "world.hpp"
-#include "renderer.hpp"
 #include "computations.hpp"
+#include "intersection.hpp"
 #include "maths.hpp"
+#include "plane.hpp"
+#include "ray.hpp"
+#include "renderer.hpp"
+#include "sphere.hpp"
+#include "world.hpp"
+#include <catch2/catch_test_macros.hpp>
 
-TEST_CASE("An intersection sets the object on the intersection", "[Ray]")
+TEST_CASE("An intersection sets the object on the intersection", "[ray]")
 {
     Intersection intersection(3.5f, 42);
     REQUIRE(intersection.GetObjectId() == 42);
@@ -27,7 +28,7 @@ TEST_CASE("Aggregating intersections", "[Ray]")
     REQUIRE(xs[1].GetObjectId() == 7);
 }
 
-TEST_CASE("The hit, when all intersections have positive t", "[Ray]")
+TEST_CASE("The hit, when all intersections have positive t", "[ray]")
 {
     Intersection i1(1.f, 1);
     Intersection i2(2.f, 1);
@@ -37,7 +38,7 @@ TEST_CASE("The hit, when all intersections have positive t", "[Ray]")
     REQUIRE(hit == i1);
 }
 
-TEST_CASE("The hit, when some intersections have negative t", "[Ray]")
+TEST_CASE("The hit, when some intersections have negative t", "[ray]")
 {
     Intersection i1(-1.f, 1);
     Intersection i2(2.f, 1);
@@ -47,7 +48,7 @@ TEST_CASE("The hit, when some intersections have negative t", "[Ray]")
     REQUIRE(hit == i2);
 }
 
-TEST_CASE("The hit, when all intersections have negative t", "[Ray]")
+TEST_CASE("The hit, when all intersections have negative t", "[ray]")
 {
     Intersection i1(-2.f, 1);
     Intersection i2(-1.f, 1);
@@ -57,7 +58,7 @@ TEST_CASE("The hit, when all intersections have negative t", "[Ray]")
     REQUIRE(hit.GetObjectId() == kInvalidObjectId);
 }
 
-TEST_CASE("The hit is always the lowest non-negative intersection", "[Ray]")
+TEST_CASE("The hit is always the lowest non-negative intersection", "[ray]")
 {
     Intersection i1(5.f, 1);
     Intersection i2(7.f, 1);
@@ -69,7 +70,7 @@ TEST_CASE("The hit is always the lowest non-negative intersection", "[Ray]")
     REQUIRE(hit == i4);
 }
 
-TEST_CASE("Precomputing the state of an intersection", "[Ray]")
+TEST_CASE("Precomputing the state of an intersection", "[ray]")
 {
     Ray r(Point(0.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
     World w;
@@ -85,7 +86,7 @@ TEST_CASE("Precomputing the state of an intersection", "[Ray]")
     REQUIRE(comps.normalVector == Tuple(0.f, 0.f, -1.f));
 }
 
-TEST_CASE("The hit, when an intersection occurs on the outside", "[Ray]")
+TEST_CASE("The hit, when an intersection occurs on the outside", "[ray]")
 {
     Ray r(Point(0.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
     World w;
@@ -97,7 +98,7 @@ TEST_CASE("The hit, when an intersection occurs on the outside", "[Ray]")
     REQUIRE(comps.inside == false);
 }
 
-TEST_CASE("The hit, when an intersection occurs on the inside", "[Ray]")
+TEST_CASE("The hit, when an intersection occurs on the inside", "[ray]")
 {
     Ray r(Point(0.f, 0.f, 0.f), Tuple(0.f, 0.f, 1.f));
     World w;
@@ -112,7 +113,7 @@ TEST_CASE("The hit, when an intersection occurs on the inside", "[Ray]")
     REQUIRE(comps.inside == true);
 }
 
-TEST_CASE("The hit should offset the point", "[Ray]")
+TEST_CASE("The hit should offset the point", "[ray]")
 {
     Ray r(Point(0.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
     World w;
@@ -124,4 +125,15 @@ TEST_CASE("The hit should offset the point", "[Ray]")
 
     REQUIRE(comps.overPoint.z < kEpsilon / 2.f);
     REQUIRE(comps.point.z > comps.overPoint.z);
+}
+
+TEST_CASE("Precomputing the reflection vector", "[ray]")
+{
+    World w;
+    Plane shape("plane");
+    w.AddObject(shape);
+    Ray r(Point(0.f, 1.f, -1.f), Tuple(0.f, -std::sqrt(2.f) / 2.f, std::sqrt(2.f) / 2.f));
+    Intersection i(std::sqrt(2.f), shape.GetWorldObjectId());
+    Computations comps = Renderer::PrepareComputations(i, r, w);
+    REQUIRE(comps.reflectv == Vector(0.f, std::sqrt(2.f) / 2.f, std::sqrt(2.f) / 2.f));
 }

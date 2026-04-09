@@ -1,5 +1,6 @@
 #include "renderer.hpp"
 #include "camera.hpp"
+#include "color.hpp"
 #include "computations.hpp"
 #include "intersection.hpp"
 #include "maths.hpp"
@@ -70,7 +71,7 @@ Canvas Renderer::Render(const Camera &camera, const World &world)
     return canvas;
 }
 
-Color Renderer::ColorAt(const World &world, const Ray &ray)
+Color Renderer::ColorAt(const World &world, const Ray &ray, int remaining)
 {
     std::vector<Intersection> intersections = IntersectWorld(world, ray);
     if (intersections.empty())
@@ -86,7 +87,7 @@ Color Renderer::ColorAt(const World &world, const Ray &ray)
     }
     const Intersection &hit = *it;
     Computations comps = PrepareComputations(hit, ray, world);
-    return ShadeHit(world, comps);
+    return ShadeHit(world, comps, remaining);
 }
 
 std::vector<Intersection> Renderer::IntersectWorld(const World &world, const Ray &ray)
@@ -111,12 +112,32 @@ std::vector<Intersection> Renderer::IntersectWorld(const World &world, const Ray
     return intersections;
 }
 
-Color Renderer::ShadeHit(const World &world, const Computations &comps)
+Color Renderer::ReflectedColor(World &world, const Computations &comps, int remaining)
+{
+    if (remaining <= 0)
+        return kColorBlack;
+
+    Shape &shape = world.GetMutableObject(comps.objectId);
+    const Material &material = shape.GetMaterial();
+    if (material.GetReflective() == 0.f)
+    {
+        return Color(0.f, 0.f, 0.f); // No reflection contribution if the material is not reflective
+    }
+    Ray reflectRay(comps.overPoint, comps.reflectv);
+    Color c = Renderer::ColorAt(world, reflectRay, --remaining);
+
+    const Shape &returnShape = world.GetObject(comps.objectId);
+    return c * returnShape.GetMaterial().GetReflective();
+}
+
+Color Renderer::ShadeHit(const World &world, const Computations &comps, int remaining)
 {
     EInShadow inShadow = IsShadowed(world, comps.overPoint);
 
-    return Lighting(world.GetObject(comps.objectId).GetMaterial(), world.GetObject(comps.objectId), world.GetLight(0),
-                    comps.point, comps.eyeVector, comps.normalVector, inShadow);
+    Color surface = Lighting(world.GetObject(comps.objectId).GetMaterial(), world.GetObject(comps.objectId),
+                             world.GetLight(0), comps.point, comps.eyeVector, comps.normalVector, inShadow);
+    Color reflected = ReflectedColor(const_cast<World &>(world), comps, remaining);
+    return surface + reflected;
 }
 
 Color Renderer::Lighting(const Material &material, const Shape &object, const Light &light, const Tuple &position,
@@ -230,6 +251,7 @@ Computations Renderer::PrepareComputations(const Intersection &intersection, con
         comps.normalVector = -comps.normalVector;
     }
 
+    comps.reflectv = ray.GetDirection().Reflect(comps.normalVector);
     comps.overPoint = comps.point + comps.normalVector * kEpsilon * 2.f;
     return comps;
 }

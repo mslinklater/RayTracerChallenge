@@ -10,11 +10,14 @@ TEST_CASE("Create a material and check default values", "[materials]")
 {
     Material m = Material();
 
-    REQUIRE(m.GetColor() == Color(1.f, 1.f, 1.f));
-    REQUIRE(m.GetAmbient() == 0.1f);
-    REQUIRE(m.GetDiffuse() == 0.9f);
-    REQUIRE(m.GetSpecular() == 0.9f);
-    REQUIRE(m.GetShininess() == 200.f);
+    REQUIRE(m.GetColor() == Material::kDefaultColor);
+    REQUIRE(m.GetAmbient() == Material::kDefaultAmbient);
+    REQUIRE(m.GetDiffuse() == Material::kDefaultDiffuse);
+    REQUIRE(m.GetSpecular() == Material::kDefaultSpecular);
+    REQUIRE(m.GetShininess() == Material::kDefaultShininess);
+    REQUIRE(m.GetReflective() == Material::kDefaultReflective);
+    REQUIRE(m.GetTransparency() == Material::kDefaultTransparency);
+    REQUIRE(m.GetRefractiveIndex() == Material::kDefaultRefractiveIndex);
 }
 
 TEST_CASE("Create a material, set values and check updated values", "[materials]")
@@ -26,12 +29,18 @@ TEST_CASE("Create a material, set values and check updated values", "[materials]
     m.SetDiffuse(0.8f);
     m.SetSpecular(0.7f);
     m.SetShininess(100.f);
+    m.SetReflective(0.5f);
+    m.SetTransparency(0.5f);
+    m.SetRefractiveIndex(1.5f);
 
     REQUIRE(m.GetColor() == Color(0.5f, 0.5f, 0.5f));
     REQUIRE(m.GetAmbient() == 0.2f);
     REQUIRE(m.GetDiffuse() == 0.8f);
     REQUIRE(m.GetSpecular() == 0.7f);
     REQUIRE(m.GetShininess() == 100.f);
+    REQUIRE(m.GetReflective() == 0.5f);
+    REQUIRE(m.GetTransparency() == 0.5f);
+    REQUIRE(m.GetRefractiveIndex() == 1.5f);
 }
 
 TEST_CASE("Lighting with a pattern applied", "[materials]")

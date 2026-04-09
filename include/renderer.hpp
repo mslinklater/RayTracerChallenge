@@ -16,10 +16,13 @@ struct Computations;
 class Renderer
 {
   public:
+    constexpr static int kDefaultRemaining = 10;
+
     static Canvas Render(const Camera &camera, const World &world);
-    static Color ColorAt(const World &world, const Ray &ray);
+    static Color ColorAt(const World &world, const Ray &ray, int remaining = 10);
     static std::vector<Intersection> IntersectWorld(const World &world, const Ray &ray);
-    static Color ShadeHit(const World &world, const Computations &comps);
+    static Color ReflectedColor(World &world, const Computations &comps, int remaining);
+    static Color ShadeHit(const World &world, const Computations &comps, int remaining);
     static Color Lighting(const Material &material, const Shape &object, const Light &light, const Tuple &position,
                           const Tuple &eyeVector, const Tuple &normalVector, EInShadow inShadow);
     static World DefaultWorld();

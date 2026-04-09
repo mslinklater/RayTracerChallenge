@@ -130,6 +130,25 @@ Color Renderer::ReflectedColor(World &world, const Computations &comps, int rema
     return c * returnShape.GetMaterial().GetReflective();
 }
 
+Color Renderer::RefractedColor(World &world, const Computations &comps, int remaining)
+{
+    if (remaining <= 0)
+        return kColorBlack;
+
+    Shape &shape = world.GetMutableObject(comps.objectId);
+    const Material &material = shape.GetMaterial();
+    if (material.GetTransparency() == 0.f)
+    {
+        return Color(0.f, 0.f, 0.f); // No reflection contribution if the material is not reflective
+    }
+    // Ray reflectRay(comps.overPoint, comps.reflectv);
+    // Color c = Renderer::ColorAt(world, reflectRay, --remaining);
+
+    // const Shape &returnShape = world.GetObject(comps.objectId);
+    // return c * returnShape.GetMaterial().GetReflective();
+    return Color(1.f, 1.f, 1.f);
+}
+
 Color Renderer::ShadeHit(const World &world, const Computations &comps, int remaining)
 {
     EInShadow inShadow = IsShadowed(world, comps.overPoint);
@@ -254,17 +273,61 @@ Computations Renderer::PrepareComputations(const Intersection &intersection, con
 
     comps.reflectv = ray.GetDirection().Reflect(comps.normalVector);
     comps.overPoint = comps.point + comps.normalVector * kEpsilon * 2.f;
+    comps.underPoint = comps.point - comps.normalVector * kEpsilon * 2.f;
 
     // now work out n1 and n2
-    if (intersectionVec != nullptr && intersectionVec->empty())
+    if (intersectionVec == nullptr || intersectionVec->empty())
     {
         comps.n1 = 1.f;
         comps.n2 = 1.f;
     }
     else
     {
-        // std::vector<ObjectId> containers;
-        // for()
+        std::vector<ObjectId> containers;
+
+        // go through the intersecions setting the prev (n1) and next (n2) refractive indices
+        for (auto &i : *intersectionVec)
+        {
+            // first, set n1
+            if (i == intersection)
+            {
+                if (containers.empty())
+                {
+                    comps.n1 = 1.f;
+                }
+                else
+                {
+                    comps.n1 = world.GetObject(containers.back()).GetMaterial().GetRefractiveIndex();
+                }
+            }
+
+            // find out if containers already contains this intersection
+            // if to does, this must be an exit, so remove it.
+            // if it doesn't, than add the intersection
+            auto it = std::find(containers.begin(), containers.end(), i.GetObjectId());
+            if (it != containers.end())
+            {
+                containers.erase(it);
+            }
+            else
+            {
+                containers.push_back(i.GetObjectId());
+            }
+
+            // now set n2
+            if (i == intersection)
+            {
+                if (containers.empty())
+                {
+                    comps.n2 = 1.f;
+                }
+                else
+                {
+                    comps.n2 = world.GetObject(containers.back()).GetMaterial().GetRefractiveIndex();
+                }
+                break;
+            }
+        }
     }
 
     return comps;

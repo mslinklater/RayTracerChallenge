@@ -188,3 +188,19 @@ TEST_CASE("Finding n1 and n2 at various intersections")
     REQUIRE(comps5.n1 == 1.5f);
     REQUIRE(comps5.n2 == 1.0f);
 }
+
+TEST_CASE("The under point is offset below the surface", "[ray]")
+{
+    World w;
+    Sphere s = GlassSphere("s");
+    s.SetTransform(Matrix::CreateTranslation(0.f, 0.f, 1.f));
+    w.AddObject(s);
+
+    Ray r(Point(0.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
+    Intersection i(5.f, s.GetWorldObjectId());
+    IntersectionVector xs = {i};
+    Computations comps = Renderer::PrepareComputations(i, r, w, &xs);
+
+    REQUIRE(comps.underPoint.z > kEpsilon / 2.f);
+    REQUIRE(comps.point.z < comps.underPoint.z);
+}

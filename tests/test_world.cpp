@@ -349,3 +349,18 @@ TEST_CASE("The reflected color at the maximum recuresive depth", "[world]")
 
     REQUIRE(c == Color(0.f, 0.f, 0.f));
 }
+
+TEST_CASE("The refracted color with an opaque surface", "[world]")
+{
+    World w = Renderer::DefaultWorld();
+    Shape s = w.GetObjectWithName("external");
+    Ray r(Point(0.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
+    IntersectionVector xs = {
+        Intersection(4.f, s.GetWorldObjectId()),
+        Intersection(6.f, s.GetWorldObjectId()),
+    };
+    Computations comps = Renderer::PrepareComputations(xs[0], r, w, &xs);
+    Color c = Renderer::RefractedColor(w, comps, Renderer::kDefaultRemaining);
+
+    REQUIRE(c == Color(0.f, 0.f, 0.f));
+}

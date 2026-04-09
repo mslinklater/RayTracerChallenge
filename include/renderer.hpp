@@ -62,6 +62,15 @@ class Renderer
     static Color ReflectedColor(World &world, const Computations &comps, int remaining);
 
     /**
+     * @brief Computes the colour contribution from refracted rays.
+     * @param world     The scene (mutable to allow recursive shading).
+     * @param comps     Pre-computed intersection data.
+     * @param remaining Maximum remaining recursion depth.
+     * @return The refracted colour, or black if the material is non-reflective or depth is exhausted.
+     */
+    static Color RefractedColor(World &world, const Computations &comps, int remaining);
+
+    /**
      * @brief Computes the final shaded colour at a surface intersection.
      *
      * Accumulates contributions from all lights and adds the reflected colour.

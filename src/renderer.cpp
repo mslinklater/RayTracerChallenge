@@ -73,7 +73,7 @@ Canvas Renderer::Render(const Camera &camera, const World &world)
 
 Color Renderer::ColorAt(const World &world, const Ray &ray, int remaining)
 {
-    std::vector<Intersection> intersections = IntersectWorld(world, ray);
+    IntersectionVector intersections = IntersectWorld(world, ray);
     if (intersections.empty())
     {
         return kBackgroundColor; // Return cyan if no intersections
@@ -86,7 +86,7 @@ Color Renderer::ColorAt(const World &world, const Ray &ray, int remaining)
         return Color(0.f, 0.f, 0.f); // Return black if all intersections are behind the ray
     }
     const Intersection &hit = *it;
-    Computations comps = PrepareComputations(hit, ray, world);
+    Computations comps = PrepareComputations(hit, ray, world, &intersections);
     return ShadeHit(world, comps, remaining);
 }
 
@@ -165,7 +165,8 @@ Color Renderer::ShadeHit(const World &world, const Computations &comps, int rema
     Color surface = Lighting(world.GetObject(comps.objectId).GetMaterial(), world.GetObject(comps.objectId),
                              world.GetLight(0), comps.point, comps.eyeVector, comps.normalVector, inShadow);
     Color reflected = ReflectedColor(const_cast<World &>(world), comps, remaining);
-    return surface + reflected;
+    Color refracted = RefractedColor(const_cast<World &>(world), comps, remaining);
+    return surface + reflected + refracted;
 }
 
 Color Renderer::Lighting(const Material &material, const Shape &object, const Light &light, const Tuple &position,
@@ -338,7 +339,6 @@ Computations Renderer::PrepareComputations(const Intersection &intersection, con
             }
         }
     }
-
     return comps;
 }
 
@@ -359,4 +359,22 @@ EInShadow Renderer::IsShadowed(const World &world, const Tuple &point)
         return EInShadow::Yes; // There is an object between the point and the light
     }
     return EInShadow::No; // No object is blocking the light
+}
+
+float Renderer::Schlick(const Computations &comps)
+{
+    float cos = comps.eyeVector | comps.normalVector;
+    if (comps.n1 > comps.n2)
+    {
+        float n = comps.n1 / comps.n2;
+        float sin2T = n * n * (1.f - cos * cos);
+        if (sin2T > 1.f)
+        {
+            return 1.f; // Total internal reflection
+        }
+        float cosT = std::sqrt(1.f - sin2T);
+        cos = cosT;
+    }
+    float r0 = std::pow((comps.n1 - comps.n2) / (comps.n1 + comps.n2), 2.f);
+    return r0 + (1.f - r0) * std::pow(1.f - cos, 5.f);
 }

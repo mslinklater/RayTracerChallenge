@@ -427,3 +427,28 @@ TEST_CASE("The refracted color with a refracted ray", "[world]")
 
     REQUIRE(c == Color(0.f, 0.99888f, 0.04725f));
 }
+
+TEST_CASE("ShadeHit() with a transparent material", "[world]")
+{
+    World w = Renderer::DefaultWorld();
+    Plane floor("floor");
+    floor.SetTransform(Matrix::CreateTranslation(0.f, -1.f, 0.f));
+    floor.GetMutableMaterial().SetTransparency(0.5f);
+    floor.GetMutableMaterial().SetRefractiveIndex(2.5f);
+    w.AddObject(floor);
+
+    Sphere ball("ball");
+    ball.SetTransform(Matrix::CreateTranslation(0.f, -3.5f, -0.5f));
+    ball.GetMutableMaterial().SetColor(Color(1.f, 0.f, 0.f));
+    ball.GetMutableMaterial().SetAmbient(0.5f);
+    w.AddObject(ball);
+
+    Ray r(Point(0.f, 0.f, -3.f), Tuple(0.f, -std::sqrt(2.f) / 2.f, std::sqrt(2.f) / 2.f));
+    IntersectionVector xs = {
+        Intersection(std::sqrt(2.f), floor.GetWorldObjectId()),
+    };
+    Computations comps = Renderer::PrepareComputations(xs[0], r, w, &xs);
+    Color c = Renderer::ShadeHit(w, comps, 5);
+
+    REQUIRE(c == Color(0.93642f, 0.68642f, 0.68642f));
+}

@@ -139,7 +139,7 @@ TEST_CASE("Precomputing the reflection vector", "[ray]")
     REQUIRE(comps.reflectv == Vector(0.f, std::sqrt(2.f) / 2.f, std::sqrt(2.f) / 2.f));
 }
 
-TEST_CASE("Finding n1 and n2 at various intersections")
+TEST_CASE("Finding n1 and n2 at various intersections", "[ray]")
 {
     World w;
     Sphere a = GlassSphere("a");
@@ -203,4 +203,51 @@ TEST_CASE("The under point is offset below the surface", "[ray]")
 
     REQUIRE(comps.underPoint.z > kEpsilon / 2.f);
     REQUIRE(comps.point.z < comps.underPoint.z);
+}
+
+TEST_CASE("The Schlick approximation under total internal reflection", "[ray]")
+{
+    World w;
+    Shape shape = GlassSphere("shape");
+    w.AddObject(shape);
+    Ray r(Point(0.f, 0.f, std::sqrt(2.f) / 2.f), Tuple(0.f, 1.f, 0.f));
+    IntersectionVector xs = {
+        Intersection(-std::sqrt(2.f) / 2.f, shape.GetWorldObjectId()),
+        Intersection(std::sqrt(2.f) / 2.f, shape.GetWorldObjectId()),
+    };
+    Computations comps = Renderer::PrepareComputations(xs[1], r, w, &xs);
+    float reflectance = Renderer::Schlick(comps);
+
+    REQUIRE(reflectance == 1.f);
+}
+
+TEST_CASE("The Schlick approximation with a perpendicular viewing angle", "[ray]")
+{
+    World w;
+    Shape shape = GlassSphere("shape");
+    w.AddObject(shape);
+    Ray r(Point(0.f, 0.f, 0.f), Tuple(0.f, 1.f, 0.f));
+    IntersectionVector xs = {
+        Intersection(-1.f, shape.GetWorldObjectId()),
+        Intersection(1.f, shape.GetWorldObjectId()),
+    };
+    Computations comps = Renderer::PrepareComputations(xs[1], r, w, &xs);
+    float reflectance = Renderer::Schlick(comps);
+
+    REQUIRE(AreEqual(reflectance, 0.04f));
+}
+
+TEST_CASE("The Schlick approximation with a small angle and n2 > n1", "[ray]")
+{
+    World w;
+    Shape shape = GlassSphere("shape");
+    w.AddObject(shape);
+    Ray r(Point(0.f, 0.99f, -2.f), Tuple(0.f, 0.f, 1.f));
+    IntersectionVector xs = {
+        Intersection(1.8589f, shape.GetWorldObjectId()),
+    };
+    Computations comps = Renderer::PrepareComputations(xs[0], r, w, &xs);
+    float reflectance = Renderer::Schlick(comps);
+
+    REQUIRE(AreEqual(reflectance, 0.48873f));
 }

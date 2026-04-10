@@ -134,6 +134,12 @@ class Renderer
      */
     static EInShadow IsShadowed(const World &world, const Tuple &point);
 
+    /**
+     * @brief Compute the Schlk approximation for reflectance at a surface intersection.
+     * @param comps The pre-computed intersection data.
+     */
+    static float Schlick(const Computations &comps);
+
   private:
     Renderer() = default; ///< Non-instantiable static class.
 };

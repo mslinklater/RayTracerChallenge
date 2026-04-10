@@ -10,9 +10,10 @@
 #include "renderer.hpp"
 #include "sphere.hpp"
 #include "tuple.hpp"
+#include "utils.hpp"
 #include "world.hpp"
 
-static constexpr int kCanvasSize = 1024;
+static constexpr int kCanvasSize = 512;
 
 int main()
 {
@@ -111,15 +112,16 @@ int main()
         world.AddObject(sphere);
     }
 
-    // Mirror sphere
+    // Glass sphere
     {
-        Sphere sphere("mirror1");
+        Sphere sphere = GlassSphere("glass");
         sphere.SetTransform(Matrix::CreateTranslation(2.5f, 1.0f, -2.5f));
         Material mat;
-        mat.SetColor(Color(0.7f, 0.7f, 0.7f));
-        mat.SetDiffuse(0.7f);
+        mat.SetColor(Color(1.0f, 1.0f, 1.0f));
+        mat.SetDiffuse(0.0f);
         mat.SetSpecular(0.3f);
-        mat.SetReflective(1.0f);
+        mat.SetTransparency(1.0f);
+        mat.SetRefractiveIndex(1.5f);
         sphere.SetMaterial(mat);
         world.AddObject(sphere);
     }

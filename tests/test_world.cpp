@@ -2,6 +2,7 @@
 #include "computations.hpp"
 #include "intersection.hpp"
 #include "maths.hpp"
+#include "patterns/test_pattern.hpp"
 #include "plane.hpp"
 #include "ray.hpp"
 #include "renderer.hpp"
@@ -369,7 +370,7 @@ TEST_CASE("The refracted color with an opaque surface", "[world]")
 TEST_CASE("The refracted color at the maximum recursive depth is black", "[world]")
 {
     World w = Renderer::DefaultWorld();
-    Shape s = w.GetObjectWithName("external");
+    Shape &s = w.GetMutableObjectWithName("external");
     s.GetMutableMaterial().SetTransparency(1.f);
     s.GetMutableMaterial().SetRefractiveIndex(1.5f);
     Ray r(Point(0.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
@@ -381,4 +382,48 @@ TEST_CASE("The refracted color at the maximum recursive depth is black", "[world
     Color c = Renderer::RefractedColor(w, comps, 0);
 
     REQUIRE(c == kColorBlack);
+}
+
+TEST_CASE("The refracted color under total internal reflection", "[world]")
+{
+    World w = Renderer::DefaultWorld();
+    Shape &s = w.GetMutableObjectWithName("external");
+    s.GetMutableMaterial().SetTransparency(1.f);
+    s.GetMutableMaterial().SetRefractiveIndex(1.5f);
+    Ray r(Point(0.f, 0.f, std::sqrt(2.f) / 2.f), Tuple(0.f, 1.f, 0.f));
+    IntersectionVector xs = {
+        Intersection(-std::sqrt(2.f) / 2.f, s.GetWorldObjectId()),
+        Intersection(std::sqrt(2.f) / 2.f, s.GetWorldObjectId()),
+    };
+    Computations comps = Renderer::PrepareComputations(xs[1], r, w, &xs);
+    Color c = Renderer::RefractedColor(w, comps, 5);
+
+    REQUIRE(c == kColorBlack);
+}
+
+TEST_CASE("The refracted color with a refracted ray", "[world]")
+{
+    World w = Renderer::DefaultWorld();
+    Shape &a = w.GetMutableObjectWithName("external");
+    Material &materiala = a.GetMutableMaterial();
+    materiala.SetAmbient(1.f);
+    TestPattern pattern;
+    materiala.SetPattern(pattern);
+
+    Shape &b = w.GetMutableObjectWithName("internal");
+    Material &materialb = b.GetMutableMaterial();
+    materialb.SetTransparency(1.f);
+    materialb.SetRefractiveIndex(1.5f);
+
+    Ray r(Point(0.f, 0.f, 0.1f), Tuple(0.f, 1.f, 0.f));
+    IntersectionVector xs = {
+        Intersection(-0.9899f, a.GetWorldObjectId()),
+        Intersection(-0.4899f, b.GetWorldObjectId()),
+        Intersection(0.4899f, b.GetWorldObjectId()),
+        Intersection(0.9899f, a.GetWorldObjectId()),
+    };
+    Computations comps = Renderer::PrepareComputations(xs[2], r, w, &xs);
+    Color c = Renderer::RefractedColor(w, comps, 5);
+
+    REQUIRE(c == Color(0.f, 0.99888f, 0.04725f));
 }

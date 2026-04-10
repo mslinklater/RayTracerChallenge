@@ -3,15 +3,12 @@
     "configurations": [
         {
             "name": "Debug RayTracerChallengeTests",
-            "type": "cppdbg",
+            "type": "codelldb",
             "request": "launch",
             "program": "${workspaceFolder}/build/RayTracerChallengeTests",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "lldb"
+            "cwd": "${workspaceFolder}"
         }
     ]
 }

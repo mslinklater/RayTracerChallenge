@@ -26,6 +26,10 @@ cmake -S . -B build-coverage -G Ninja -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE
 * Add output comparison tests - maybe wait until we have a scene description language
 * Add the concept of units to all measurements - mm, cm, m etc. Make new types and make arithmetic between them automatic, using custom operators - can we even do this reliably with C++ ?
 
+## Misc
+
+* Files is the parked/ folder are not included in the build but are interesting things I should look at
+
 ## Further Work
 
 * Add more patterns - p139-140

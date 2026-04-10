@@ -3,18 +3,9 @@
 #include "patterns/gradient_pattern.hpp"
 #include "patterns/ring_pattern.hpp"
 #include "patterns/stripe_pattern.hpp"
+#include "patterns/test_pattern.hpp"
 #include "sphere.hpp"
 #include <catch2/catch_test_macros.hpp>
-#include <sys/_types/_mbstate_t.h>
-
-class TestPattern : public Pattern
-{
-  public:
-    Color PatternAt(const Tuple &point) override
-    {
-        return Color(point.x, point.y, point.z);
-    }
-};
 
 TEST_CASE("Creating a stripe pattern", "[patterns]")
 {

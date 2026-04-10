@@ -141,12 +141,21 @@ Color Renderer::RefractedColor(World &world, const Computations &comps, int rema
     {
         return Color(0.f, 0.f, 0.f); // No reflection contribution if the material is not reflective
     }
-    // Ray reflectRay(comps.overPoint, comps.reflectv);
-    // Color c = Renderer::ColorAt(world, reflectRay, --remaining);
 
-    // const Shape &returnShape = world.GetObject(comps.objectId);
-    // return c * returnShape.GetMaterial().GetReflective();
-    return Color(1.f, 1.f, 1.f);
+    float nRatio = comps.n1 / comps.n2;
+    float cosI = comps.eyeVector | comps.normalVector;
+    float sin2T = nRatio * nRatio * (1.f - cosI * cosI);
+    if (sin2T > 1.f)
+    {
+        return kColorBlack; // Total internal reflection, no refraction contribution
+    }
+
+    float cosT = std::sqrt(1.f - sin2T);
+    Tuple direction = comps.normalVector * (nRatio * cosI - cosT) - comps.eyeVector * nRatio;
+    Ray refractRay(comps.underPoint, direction);
+    Color c = Renderer::ColorAt(world, refractRay, --remaining) * material.GetTransparency();
+
+    return c;
 }
 
 Color Renderer::ShadeHit(const World &world, const Computations &comps, int remaining)

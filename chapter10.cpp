@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "camera.hpp"
+#include "maths.hpp"
 #include "matrix.hpp"
 #include "patterns/checker_pattern.hpp"
 #include "patterns/gradient_pattern.hpp"
@@ -18,7 +19,7 @@ int main()
 {
     std::cout << "Chapter 10 challenge !!!" << std::endl;
 
-    Camera camera(kCanvasSize, kCanvasSize, M_PI / 3.0f);
+    Camera camera(kCanvasSize, kCanvasSize, kPi / 3.0f);
     camera.SetTransform(
         Matrix::ViewTransform(Point(2.0f, 5.0f, -5.0f), Point(0.0f, 1.0f, 0.0f), Vector(0.0f, 1.0f, 0.0f)));
 
@@ -60,7 +61,7 @@ int main()
         mat.SetDiffuse(0.7f);
         mat.SetSpecular(0.3f);
         StripePattern stripe = StripePattern(kColorRed, kColorBlue);
-        stripe.SetTransform(Matrix::CreateScaling(0.25f, 0.25f, 0.25f) * Matrix::CreateRotationY(M_PI / 3.f));
+        stripe.SetTransform(Matrix::CreateScaling(0.25f, 0.25f, 0.25f) * Matrix::CreateRotationY(kPi / 3.f));
         mat.SetPattern(stripe);
         sphere.SetMaterial(mat);
         world.AddObject(sphere);
@@ -75,7 +76,7 @@ int main()
         mat.SetDiffuse(0.7f);
         mat.SetSpecular(0.3f);
         CheckerPattern pattern = CheckerPattern(kColorCyan, kColorMagenta);
-        pattern.SetTransform(Matrix::CreateScaling(0.2f, 0.2f, 0.2f) * Matrix::CreateRotationY(M_PI / 3.f));
+        pattern.SetTransform(Matrix::CreateScaling(0.2f, 0.2f, 0.2f) * Matrix::CreateRotationY(kPi / 3.f));
         mat.SetPattern(pattern);
         sphere.SetMaterial(mat);
         world.AddObject(sphere);
@@ -90,7 +91,7 @@ int main()
         mat.SetDiffuse(0.7f);
         mat.SetSpecular(0.3f);
         RingPattern pattern = RingPattern(kColorBlack, kColorWhite);
-        pattern.SetTransform(Matrix::CreateScaling(0.21f, 0.21f, 0.21f) * Matrix::CreateRotationZ(M_PI / 5.f));
+        pattern.SetTransform(Matrix::CreateScaling(0.21f, 0.21f, 0.21f) * Matrix::CreateRotationZ(kPi / 5.f));
         mat.SetPattern(pattern);
         sphere.SetMaterial(mat);
         world.AddObject(sphere);
@@ -105,7 +106,7 @@ int main()
         mat.SetDiffuse(0.7f);
         mat.SetSpecular(0.3f);
         GradientPattern pattern = GradientPattern(kColorYellow, kColorRed);
-        pattern.SetTransform(Matrix::CreateScaling(0.5f, 0.5f, 0.5f) * Matrix::CreateRotationX(M_PI / 3.f));
+        pattern.SetTransform(Matrix::CreateScaling(0.5f, 0.5f, 0.5f) * Matrix::CreateRotationX(kPi / 3.f));
         mat.SetPattern(pattern);
         sphere.SetMaterial(mat);
         world.AddObject(sphere);
@@ -118,7 +119,7 @@ int main()
     middle2.GetMutableMaterial().SetDiffuse(0.7f);
     middle2.GetMutableMaterial().SetSpecular(0.3f);
     CheckerPattern checkpattern = CheckerPattern(kColorBlack, kColorRed);
-    checkpattern.SetTransform(Matrix::CreateScaling(0.15f, 0.15f, 0.15f) * Matrix::CreateRotationZ(M_PI / 5.f));
+    checkpattern.SetTransform(Matrix::CreateScaling(0.15f, 0.15f, 0.15f) * Matrix::CreateRotationZ(kPi / 5.f));
     middle2.GetMutableMaterial().SetPattern(checkpattern);
     world.AddObject(middle2);
 
@@ -129,7 +130,7 @@ int main()
     right.GetMutableMaterial().SetDiffuse(0.7f);
     right.GetMutableMaterial().SetSpecular(0.3f);
     GradientPattern pattern2 = GradientPattern(kColorWhite, kColorBlack);
-    pattern2.SetTransform(Matrix::CreateScaling(0.35f, 0.35f, 0.35f) * Matrix::CreateRotationZ(M_PI / 7.f));
+    pattern2.SetTransform(Matrix::CreateScaling(0.35f, 0.35f, 0.35f) * Matrix::CreateRotationZ(kPi / 7.f));
     right.GetMutableMaterial().SetPattern(pattern2);
     world.AddObject(right);
 
@@ -140,7 +141,7 @@ int main()
     left.GetMutableMaterial().SetDiffuse(0.7f);
     left.GetMutableMaterial().SetSpecular(0.3f);
     StripePattern pattern3 = StripePattern(kColorCyan, kColorMagenta);
-    pattern3.SetTransform(Matrix::CreateScaling(0.5f, 0.5f, 0.5f) * Matrix::CreateRotationX(M_PI / 2.f));
+    pattern3.SetTransform(Matrix::CreateScaling(0.5f, 0.5f, 0.5f) * Matrix::CreateRotationX(kPi / 2.f));
     left.GetMutableMaterial().SetPattern(pattern3);
     world.AddObject(left);
 #endif

@@ -1,5 +1,6 @@
 #include "matrix.hpp"
 #include "maths.hpp"
+#include <stdexcept>
 
 Matrix::Matrix(int size) : size(size), values(size * size, 0.f)
 {

@@ -1,6 +1,7 @@
-#include <catch2/catch_test_macros.hpp>
+#include "maths.hpp"
 #include "matrix.hpp"
 #include "tuple.hpp"
+#include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("Multiplying a point by a translation matrix", "[transformations]")
 {
@@ -62,8 +63,8 @@ TEST_CASE("Reflection is scaling by a negative value", "[transformations]")
 
 TEST_CASE("Rotating a point around the x axis", "[transformations]")
 {
-    Matrix eighthRotation = Matrix::CreateRotationX(M_PI / 4.f);
-    Matrix quarterRotation = Matrix::CreateRotationX(M_PI / 2.f);
+    Matrix eighthRotation = Matrix::CreateRotationX(kPi / 4.f);
+    Matrix quarterRotation = Matrix::CreateRotationX(kPi / 2.f);
     Tuple point = Point(0.f, 1.f, 0.f);
     Tuple eighthResult = eighthRotation * point;
     Tuple quarterResult = quarterRotation * point;
@@ -74,8 +75,8 @@ TEST_CASE("Rotating a point around the x axis", "[transformations]")
 
 TEST_CASE("Rotating a point around the y axis", "[transformations]")
 {
-    Matrix eighthRotation = Matrix::CreateRotationY(M_PI / 4.f);
-    Matrix quarterRotation = Matrix::CreateRotationY(M_PI / 2.f);
+    Matrix eighthRotation = Matrix::CreateRotationY(kPi / 4.f);
+    Matrix quarterRotation = Matrix::CreateRotationY(kPi / 2.f);
     Tuple point = Point(0.f, 0.f, 1.f);
     Tuple eighthResult = eighthRotation * point;
     Tuple quarterResult = quarterRotation * point;
@@ -86,8 +87,8 @@ TEST_CASE("Rotating a point around the y axis", "[transformations]")
 
 TEST_CASE("Rotating a point around the z axis", "[transformations]")
 {
-    Matrix eighthRotation = Matrix::CreateRotationZ(M_PI / 4.f);
-    Matrix quarterRotation = Matrix::CreateRotationZ(M_PI / 2.f);
+    Matrix eighthRotation = Matrix::CreateRotationZ(kPi / 4.f);
+    Matrix quarterRotation = Matrix::CreateRotationZ(kPi / 2.f);
     Tuple point = Point(0.f, 1.f, 0.f);
     Tuple eighthResult = eighthRotation * point;
     Tuple quarterResult = quarterRotation * point;
@@ -147,7 +148,7 @@ TEST_CASE("Shearing transformation moves z in proportion to y", "[transformation
 TEST_CASE("Individual transformations are applied in sequence", "[transformations]")
 {
     Tuple point = Point(1.f, 0.f, 1.f);
-    Matrix rotation = Matrix::CreateRotationX(M_PI / 2.f);
+    Matrix rotation = Matrix::CreateRotationX(kPi / 2.f);
     Matrix scaling = Matrix::CreateScaling(5.f, 5.f, 5.f);
     Matrix translation = Matrix::CreateTranslation(10.f, 5.f, 7.f);
 
@@ -196,9 +197,6 @@ TEST_CASE("An arbitrary view transformation", "[transformations]")
     Tuple to = Point(4.f, -2.f, 8.f);
     Tuple up = Tuple(1.f, 1.f, 0.f);
     Matrix t = Matrix::ViewTransform(from, to, up);
-    REQUIRE(t == Matrix(
-                     {-0.50709f, 0.50709f, 0.67612f, -2.36643f,
-                      0.76772f, 0.60609f, 0.12122f, -2.82843f,
-                      -0.35857f, 0.59761f, -0.71714f, 0.f,
-                      0.f, 0.f, 0.f, 1.f}));
+    REQUIRE(t == Matrix({-0.50709f, 0.50709f, 0.67612f, -2.36643f, 0.76772f, 0.60609f, 0.12122f, -2.82843f, -0.35857f,
+                         0.59761f, -0.71714f, 0.f, 0.f, 0.f, 0.f, 1.f}));
 }

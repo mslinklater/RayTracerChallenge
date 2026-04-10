@@ -9,7 +9,6 @@
 #include "sphere.hpp"
 #include "world.hpp"
 #include <catch2/catch_test_macros.hpp>
-#include <sys/_types/_mbstate_t.h>
 
 TEST_CASE("Creating a world", "[world]")
 {

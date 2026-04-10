@@ -1,5 +1,6 @@
 #pragma once
 #include "pattern.hpp"
+#include <cmath>
 
 /**
  * @brief A pattern of alternating colour stripes along the X axis.

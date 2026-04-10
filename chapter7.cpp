@@ -1,11 +1,11 @@
-#include <iostream>
-
 #include "camera.hpp"
+#include "maths.hpp"
 #include "matrix.hpp"
 #include "renderer.hpp"
 #include "sphere.hpp"
 #include "tuple.hpp"
 #include "world.hpp"
+#include <iostream>
 
 static constexpr int kCanvasSize = 400;
 
@@ -13,7 +13,7 @@ int main()
 {
     std::cout << "Chapter 7 challenge !!!" << std::endl;
 
-    Camera camera(kCanvasSize, kCanvasSize, M_PI / 3.0f);
+    Camera camera(kCanvasSize, kCanvasSize, kPi / 3.0f);
     camera.SetTransform(
         Matrix::ViewTransform(Point(0.0f, 1.5f, -5.0f), Point(0.0f, 0.0f, 0.0f), Vector(0.0f, 1.0f, 0.0f)));
 
@@ -32,7 +32,7 @@ int main()
 
     // Left wall
     Sphere leftWall("leftWall");
-    leftWall.SetTransform(Matrix::CreateTranslation(0.0f, 0.0f, 5.0f) * Matrix::CreateRotationY(-M_PI / 4.0f) *
+    leftWall.SetTransform(Matrix::CreateTranslation(0.0f, 0.0f, 5.0f) * Matrix::CreateRotationY(-kPi / 4.0f) *
                           Matrix::CreateRotationX(M_PI / 2.0f) * Matrix::CreateScaling(10.0f, 0.05f, 10.0f));
     leftWall.SetMaterial(floor.GetMaterial());
     world.AddObject(leftWall);

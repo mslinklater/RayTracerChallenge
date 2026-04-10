@@ -14,6 +14,12 @@ cmake --build build
 
 ## Run tests
 
+For a full test coverage report in HTML format run the following
+
+```
+cmake -S . -B build-coverage -G Ninja -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON && cmake --build build-coverage && cmake --build build-coverage --target coverage-html
+```
+
 ## TODO
 
 * Move stuff around into more sensible locations - groupings could be better

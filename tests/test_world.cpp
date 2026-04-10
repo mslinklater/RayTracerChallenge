@@ -8,6 +8,7 @@
 #include "sphere.hpp"
 #include "world.hpp"
 #include <catch2/catch_test_macros.hpp>
+#include <sys/_types/_mbstate_t.h>
 
 TEST_CASE("Creating a world", "[world]")
 {
@@ -363,4 +364,21 @@ TEST_CASE("The refracted color with an opaque surface", "[world]")
     Color c = Renderer::RefractedColor(w, comps, Renderer::kDefaultRemaining);
 
     REQUIRE(c == Color(0.f, 0.f, 0.f));
+}
+
+TEST_CASE("The refracted color at the maximum recursive depth is black", "[world]")
+{
+    World w = Renderer::DefaultWorld();
+    Shape s = w.GetObjectWithName("external");
+    s.GetMutableMaterial().SetTransparency(1.f);
+    s.GetMutableMaterial().SetRefractiveIndex(1.5f);
+    Ray r(Point(0.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
+    IntersectionVector xs = {
+        Intersection(4.f, s.GetWorldObjectId()),
+        Intersection(6.f, s.GetWorldObjectId()),
+    };
+    Computations comps = Renderer::PrepareComputations(xs[0], r, w, &xs);
+    Color c = Renderer::RefractedColor(w, comps, 0);
+
+    REQUIRE(c == kColorBlack);
 }

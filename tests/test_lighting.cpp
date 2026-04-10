@@ -4,6 +4,7 @@
 #include "sphere.hpp"
 #include "tuple.hpp"
 #include <catch2/catch_test_macros.hpp>
+#include <cmath>
 
 struct LightingFixture
 {

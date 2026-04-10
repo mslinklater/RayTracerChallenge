@@ -1,5 +1,6 @@
 #include "camera.hpp"
 #include "ray.hpp"
+#include <cmath>
 
 Camera::Camera(int hsize, int vsize, float fieldOfView)
     : hsize(hsize), vsize(vsize), fieldOfView(fieldOfView), transform(Matrix(4))

@@ -1,5 +1,6 @@
 #pragma once
 #include "pattern.hpp"
+#include <cmath>
 
 /**
  * @brief A 3D checkerboard pattern that alternates colours in all three axes.

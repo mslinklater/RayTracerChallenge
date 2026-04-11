@@ -451,3 +451,34 @@ TEST_CASE("ShadeHit() with a transparent material", "[world]")
 
     REQUIRE(c == Color(0.93642f, 0.68642f, 0.68642f));
 }
+
+TEST_CASE("ShadeHit() with a reflective, transparent material", "[world]")
+{
+    World w = Renderer::DefaultWorld();
+    Ray r(Point(0.f, 0.f, -3.f), Tuple(0.f, -std::sqrt(2.f) / 2.f, std::sqrt(2.f) / 2.f));
+
+    Plane floor("floor");
+    floor.SetTransform(Matrix::CreateTranslation(0.f, -1.f, 0.f));
+    Material floorMaterial;
+    floorMaterial.SetReflective(0.5f);
+    floorMaterial.SetTransparency(0.5f);
+    floorMaterial.SetRefractiveIndex(1.5f);
+    floor.SetMaterial(floorMaterial);
+    w.AddObject(floor);
+
+    Sphere ball = Sphere("ball");
+    Material ballMaterial;
+    ballMaterial.SetColor(Color(1.f, 0.f, 0.f));
+    ballMaterial.SetAmbient(0.5f);
+    ball.SetMaterial(ballMaterial);
+    ball.SetTransform(Matrix::CreateTranslation(0.f, -3.5f, -0.5f));
+    w.AddObject(ball);
+
+    IntersectionVector xs = {
+        Intersection(std::sqrt(2.f), floor.GetWorldObjectId()),
+    };
+    Computations comps = Renderer::PrepareComputations(xs[0], r, w, &xs);
+    Color c = Renderer::ShadeHit(w, comps, 5);
+
+    REQUIRE(c == Color(0.93391f, 0.69643f, 0.69243f));
+}

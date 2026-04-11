@@ -166,6 +166,14 @@ Color Renderer::ShadeHit(const World &world, const Computations &comps, int rema
                              world.GetLight(0), comps.point, comps.eyeVector, comps.normalVector, inShadow);
     Color reflected = ReflectedColor(const_cast<World &>(world), comps, remaining);
     Color refracted = RefractedColor(const_cast<World &>(world), comps, remaining);
+
+    const Material &material = world.GetObject(comps.objectId).GetMaterial();
+    if (material.GetReflective() > 0.f && material.GetTransparency() > 0.f)
+    {
+        float reflectance = Schlick(comps);
+        reflected = reflected * reflectance;
+        refracted = refracted * (1.f - reflectance);
+    }
     return surface + reflected + refracted;
 }
 

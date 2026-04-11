@@ -24,7 +24,7 @@ cmake -S . -B build-coverage -G Ninja -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE
 
 * Move stuff around into more sensible locations - groupings could be better
 * Add output comparison tests - maybe wait until we have a scene description language
-* Add the concept of units to all measurements - mm, cm, m etc. Make new types and make arithmetic between them automatic, using custom operators - can we even do this reliably with C++ ?
+* Add chaining setters to the structure based classes like Material
 
 ## Misc
 

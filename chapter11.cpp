@@ -13,7 +13,7 @@
 #include "utils.hpp"
 #include "world.hpp"
 
-static constexpr int kCanvasSize = 512;
+static constexpr int kCanvasSize = 1024;
 
 int main()
 {
@@ -115,11 +115,12 @@ int main()
     // Glass sphere
     {
         Sphere sphere = GlassSphere("glass");
-        sphere.SetTransform(Matrix::CreateTranslation(2.5f, 1.0f, -2.5f));
+        sphere.SetTransform(Matrix::CreateTranslation(2.5f, 2.0f, -2.5f));
         Material mat;
-        mat.SetColor(Color(1.0f, 1.0f, 1.0f));
+        mat.SetColor(Color(0.0f, 0.0f, 0.0f));
         mat.SetDiffuse(0.0f);
         mat.SetSpecular(0.3f);
+        mat.SetReflective(1.f);
         mat.SetTransparency(1.0f);
         mat.SetRefractiveIndex(1.5f);
         sphere.SetMaterial(mat);

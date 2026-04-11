@@ -15,14 +15,14 @@ class Material
   public:
     /// @name Default shading parameter values
     /// @{
-    constexpr static Color kDefaultColor = kColorWhite;           ///< Default surface colour (white).
-    constexpr static float kDefaultAmbient = 0.1f;               ///< Default ambient coefficient.
-    constexpr static float kDefaultDiffuse = 0.9f;               ///< Default diffuse coefficient.
-    constexpr static float kDefaultSpecular = 0.9f;              ///< Default specular coefficient.
-    constexpr static float kDefaultShininess = 200.f;            ///< Default specular shininess exponent.
-    constexpr static float kDefaultReflective = 0.f;             ///< Default reflectivity (0 = non-reflective).
-    constexpr static float kDefaultTransparency = 0.f;           ///< Default transparency (0 = opaque).
-    constexpr static float kDefaultRefractiveIndex = 1.f;        ///< Default refractive index (vacuum).
+    constexpr static Color kDefaultColor = kColorWhite;   ///< Default surface colour (white).
+    constexpr static float kDefaultAmbient = 0.1f;        ///< Default ambient coefficient.
+    constexpr static float kDefaultDiffuse = 0.9f;        ///< Default diffuse coefficient.
+    constexpr static float kDefaultSpecular = 0.9f;       ///< Default specular coefficient.
+    constexpr static float kDefaultShininess = 200.f;     ///< Default specular shininess exponent.
+    constexpr static float kDefaultReflective = 0.f;      ///< Default reflectivity (0 = non-reflective).
+    constexpr static float kDefaultTransparency = 0.f;    ///< Default transparency (0 = opaque).
+    constexpr static float kDefaultRefractiveIndex = 1.f; ///< Default refractive index (vacuum).
     /// @}
 
     /** @brief Constructs a material with all default shading parameters. */
@@ -86,36 +86,43 @@ class Material
     {
         color = c;
     }
+
     /** @brief Sets the ambient reflection coefficient. */
     void SetAmbient(float a)
     {
         ambient = a;
     }
+
     /** @brief Sets the diffuse reflection coefficient. */
     void SetDiffuse(float d)
     {
         diffuse = d;
     }
+
     /** @brief Sets the specular reflection coefficient. */
     void SetSpecular(float s)
     {
         specular = s;
     }
+
     /** @brief Sets the shininess exponent used for specular highlights. */
     void SetShininess(float sh)
     {
         shininess = sh;
     }
+
     /** @brief Sets the reflectivity (0 = non-reflective, 1 = mirror). */
     void SetReflective(float r)
     {
         reflective = r;
     }
+
     /** @brief Sets the transparency (0 = opaque, 1 = fully transparent). */
     void SetTransparency(float t)
     {
         transparency = t;
     }
+
     /** @brief Sets the refractive index (1.0 for vacuum/air). */
     void SetRefractiveIndex(float ri)
     {

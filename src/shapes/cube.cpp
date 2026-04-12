@@ -1,8 +1,22 @@
 #include "shapes/cube.hpp"
 
+#include <algorithm>
+#include <cmath>
+#include <limits>
+
 Tuple Cube::NormalAtLocal(const Tuple &point) const
 {
-    return Vector(0.f, 1.f, 0.f); // The normal of a plane is constant everywhere and points up the y-axis
+    float maxComponent = std::max({std::abs(point.x), std::abs(point.y), std::abs(point.z)});
+
+    if (maxComponent == std::abs(point.x))
+    {
+        return Vector(point.x, 0.f, 0.f);
+    }
+    if (maxComponent == std::abs(point.y))
+    {
+        return Vector(0.f, point.y, 0.f);
+    }
+    return Vector(0.f, 0.f, point.z);
 }
 
 std::vector<float> Cube::IntersectLocal(const Ray &ray) const

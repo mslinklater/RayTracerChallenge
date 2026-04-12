@@ -7,12 +7,40 @@ Tuple Cube::NormalAtLocal(const Tuple &point) const
 
 std::vector<float> Cube::IntersectLocal(const Ray &ray) const
 {
-    // A plane is infinite, so it only intersects with a ray if the ray is not parallel to the plane
-    if (std::abs(ray.GetDirection().y) < 1e-6)
-    {
-        return {};
-    }
+    float xtmin, xtmax, ytmin, ytmax, ztmin, ztmax;
+    CheckAxis(ray.GetOrigin().x, ray.GetDirection().x, xtmin, xtmax);
+    CheckAxis(ray.GetOrigin().y, ray.GetDirection().y, ytmin, ytmax);
+    CheckAxis(ray.GetOrigin().z, ray.GetDirection().z, ztmin, ztmax);
 
-    float t = -ray.GetOrigin().y / ray.GetDirection().y;
-    return {t};
+    float tmin = std::max({xtmin, ytmin, ztmin});
+    float tmax = std::min({xtmax, ytmax, ztmax});
+
+    std::vector<float> intersections;
+    if (tmax > tmin)
+    {
+        intersections.reserve(2);
+        intersections.push_back(tmin);
+        intersections.push_back(tmax);
+    }
+    return intersections;
+}
+
+void Cube::CheckAxis(float origin, float direction, float &tmin, float &tmax) const
+{
+    float tminNumerator = (-1.f - origin);
+    float tmaxNumerator = (1.f - origin);
+    if (std::abs(direction) >= 1e-6f)
+    {
+        tmin = tminNumerator / direction;
+        tmax = tmaxNumerator / direction;
+    }
+    else
+    {
+        tmin = tminNumerator * std::numeric_limits<float>::infinity();
+        tmax = tmaxNumerator * std::numeric_limits<float>::infinity();
+    }
+    if (tmin > tmax)
+    {
+        std::swap(tmin, tmax);
+    }
 }

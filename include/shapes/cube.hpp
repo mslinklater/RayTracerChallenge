@@ -32,4 +32,7 @@ class Cube : public Shape
      * @return The plane's upward-facing normal vector.
      */
     Tuple NormalAtLocal(const Tuple &point) const override;
+
+  private:
+    void CheckAxis(float origin, float direction, float &tmin, float &tmax) const;
 };

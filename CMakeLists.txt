@@ -19,6 +19,7 @@ set(SRC_FILES   src/utils.cpp
                 src/shapes/plane.cpp
                 src/shapes/shape.cpp
                 src/shapes/sphere.cpp
+                src/shapes/cube.cpp
                 src/pattern.cpp
                 src/ray.cpp
                 src/light.cpp

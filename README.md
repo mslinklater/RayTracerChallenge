@@ -33,3 +33,10 @@ cmake -S . -B build-coverage -G Ninja -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE
 ## Further Work
 
 * Add more patterns - p139-140
+* Make it work with more than one light source
+* Currently transparent objects create solid shadows - this needs fixing
+* Add a spacial partition system to accelerate ray/object intersections - p145-146
+* Once the book is complete do a refactor and rename of everything - not a fan of current naming
+* Add the ray tracer code from 'Ray Tracing in One Weekend' - find areas of overlap and contrast
+* Add scene description language - probably JSON based - and a parser for it
+* Add ImGUI support for real time rendering and scene editing

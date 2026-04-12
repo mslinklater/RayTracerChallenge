@@ -82,51 +82,59 @@ class Material
     }
 
     /** @brief Sets the base surface colour. */
-    void SetColor(const Color &c)
+    Material &SetColor(const Color &c)
     {
         color = c;
+        return *this;
     }
 
     /** @brief Sets the ambient reflection coefficient. */
-    void SetAmbient(float a)
+    Material &SetAmbient(float a)
     {
         ambient = a;
+        return *this;
     }
 
     /** @brief Sets the diffuse reflection coefficient. */
-    void SetDiffuse(float d)
+    Material &SetDiffuse(float d)
     {
         diffuse = d;
+        return *this;
     }
 
     /** @brief Sets the specular reflection coefficient. */
-    void SetSpecular(float s)
+    Material &SetSpecular(float s)
     {
         specular = s;
+        return *this;
     }
 
     /** @brief Sets the shininess exponent used for specular highlights. */
-    void SetShininess(float sh)
+    Material &SetShininess(float sh)
     {
         shininess = sh;
+        return *this;
     }
 
     /** @brief Sets the reflectivity (0 = non-reflective, 1 = mirror). */
-    void SetReflective(float r)
+    Material &SetReflective(float r)
     {
         reflective = r;
+        return *this;
     }
 
     /** @brief Sets the transparency (0 = opaque, 1 = fully transparent). */
-    void SetTransparency(float t)
+    Material &SetTransparency(float t)
     {
         transparency = t;
+        return *this;
     }
 
     /** @brief Sets the refractive index (1.0 for vacuum/air). */
-    void SetRefractiveIndex(float ri)
+    Material &SetRefractiveIndex(float ri)
     {
         refractiveIndex = ri;
+        return *this;
     }
 
     /**

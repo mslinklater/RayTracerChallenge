@@ -1,6 +1,6 @@
 #pragma once
 
-#include "sphere.hpp"
+#include "shapes/sphere.hpp"
 #include <string>
 #include <vector>
 

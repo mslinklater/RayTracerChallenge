@@ -2,7 +2,7 @@
 #include "material.hpp"
 #include "patterns/stripe_pattern.hpp"
 #include "renderer.hpp"
-#include "sphere.hpp"
+#include "shapes/sphere.hpp"
 #include "tuple.hpp"
 #include <catch2/catch_test_macros.hpp>
 

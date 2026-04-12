@@ -1,4 +1,4 @@
-#include "sphere.hpp"
+#include "shapes/sphere.hpp"
 #include "ray.hpp"
 #include <cmath>
 

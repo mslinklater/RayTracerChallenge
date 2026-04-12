@@ -1,4 +1,4 @@
-#include "plane.hpp"
+#include "shapes/plane.hpp"
 
 Tuple Plane::NormalAtLocal(const Tuple &point) const
 {

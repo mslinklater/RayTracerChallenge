@@ -4,7 +4,7 @@
 #include "patterns/ring_pattern.hpp"
 #include "patterns/stripe_pattern.hpp"
 #include "patterns/test_pattern.hpp"
-#include "sphere.hpp"
+#include "shapes/sphere.hpp"
 #include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("Creating a stripe pattern", "[patterns]")

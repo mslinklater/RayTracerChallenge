@@ -1,6 +1,6 @@
 #pragma once
 #include "light.hpp"
-#include "shape.hpp"
+#include "shapes/shape.hpp"
 #include "types.hpp"
 #include <deque>
 #include <memory>
@@ -115,5 +115,5 @@ class World
     std::deque<ShapePtr> objects; ///< Owning storage for all shapes in the scene.
     std::vector<Light> lights;    ///< All lights in the scene.
 
-    ObjectId nextObjectId = 9;    ///< Monotonically increasing ID counter.
+    ObjectId nextObjectId = 9; ///< Monotonically increasing ID counter.
 };

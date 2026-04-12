@@ -4,7 +4,7 @@
 #include "maths.hpp"
 #include "matrix.hpp"
 #include "renderer.hpp"
-#include "sphere.hpp"
+#include "shapes/sphere.hpp"
 #include "tuple.hpp"
 #include "world.hpp"
 

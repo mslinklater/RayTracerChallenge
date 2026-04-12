@@ -16,9 +16,9 @@ set(SRC_FILES   src/utils.cpp
                 src/camera.cpp
                 src/color.cpp
                 src/matrix.cpp
-                src/plane.cpp
-                src/shape.cpp
-                src/sphere.cpp
+                src/shapes/plane.cpp
+                src/shapes/shape.cpp
+                src/shapes/sphere.cpp
                 src/pattern.cpp
                 src/ray.cpp
                 src/light.cpp
@@ -110,6 +110,7 @@ set(TEST_SRC    tests/test_main.cpp
                 tests/test_shapes.cpp
                 tests/test_materials.cpp
                 tests/test_matrix.cpp
+                tests/test_cubes.cpp
                 tests/test_patterns.cpp
                 tests/test_transformations.cpp
                 tests/test_determinism.cpp

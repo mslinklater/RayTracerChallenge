@@ -1,10 +1,10 @@
 #include <iostream>
 
-#include "tuple.hpp"
 #include "canvas.hpp"
 #include "ray.hpp"
-#include "sphere.hpp"
 #include "renderer.hpp"
+#include "shapes/sphere.hpp"
+#include "tuple.hpp"
 
 static constexpr int kCanvasSize = 200;
 
@@ -22,7 +22,8 @@ int main()
     {
         for (int y = 0; y < kCanvasSize; y++)
         {
-            Ray ray(Point(0.f, 0.f, -3.f), Vector((x - kCanvasSize / 2.f) * invCanvas, (y - kCanvasSize / 2.f) * invCanvas, 1.f));
+            Ray ray(Point(0.f, 0.f, -3.f),
+                    Vector((x - kCanvasSize / 2.f) * invCanvas, (y - kCanvasSize / 2.f) * invCanvas, 1.f));
             auto xs = sphere.Intersect(ray);
             if (!xs.empty())
             {

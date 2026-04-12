@@ -1,7 +1,7 @@
 #pragma once
 #include "color.hpp"
 #include "matrix.hpp"
-#include "shape.hpp"
+#include "shapes/shape.hpp"
 #include "tuple.hpp"
 
 /**
@@ -74,7 +74,7 @@ class Pattern
     }
 
   protected:
-    Color a;      ///< Primary colour.
-    Color b;      ///< Secondary colour.
+    Color a;          ///< Primary colour.
+    Color b;          ///< Secondary colour.
     Matrix transform; ///< Pattern-space transform (default: identity).
 };

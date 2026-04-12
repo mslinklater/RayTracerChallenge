@@ -3,8 +3,8 @@
 #include "matrix.hpp"
 #include "ray.hpp"
 #include "renderer.hpp"
-#include "shape.hpp"
-#include "sphere.hpp"
+#include "shapes/shape.hpp"
+#include "shapes/sphere.hpp"
 #include "utils.hpp"
 #include <catch2/catch_test_macros.hpp>
 

@@ -5,7 +5,7 @@
 #include "light.hpp"
 #include "ray.hpp"
 #include "renderer.hpp"
-#include "sphere.hpp"
+#include "shapes/sphere.hpp"
 #include "tuple.hpp"
 
 static constexpr int kCanvasSize = 500;

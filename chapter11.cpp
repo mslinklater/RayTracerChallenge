@@ -6,9 +6,9 @@
 #include "patterns/gradient_pattern.hpp"
 #include "patterns/ring_pattern.hpp"
 #include "patterns/stripe_pattern.hpp"
-#include "plane.hpp"
 #include "renderer.hpp"
-#include "sphere.hpp"
+#include "shapes/plane.hpp"
+#include "shapes/sphere.hpp"
 #include "tuple.hpp"
 #include "utils.hpp"
 #include "world.hpp"
@@ -32,11 +32,9 @@ int main()
     // Floor
     {
         Plane floor("floor");
-        floor.GetMutableMaterial().SetColor(Color(1.0f, 0.9f, 0.9f));
-        floor.GetMutableMaterial().SetSpecular(0.0f);
         CheckerPattern check = CheckerPattern(kColorYellow, kColorGreen);
         check.SetTransform(Matrix::CreateTranslation(0.f, 0.5f, 0.f));
-        floor.GetMutableMaterial().SetPattern(check);
+        floor.GetMutableMaterial().SetColor(Color(1.0f, 0.9f, 0.9f)).SetSpecular(0.0f).SetPattern(check);
         world.AddObject(floor);
     }
 
@@ -45,9 +43,7 @@ int main()
         Sphere sphere("plain");
         sphere.SetTransform(Matrix::CreateTranslation(0.f, 1.0f, 0.f));
         Material mat;
-        mat.SetColor(Color(0.7f, 0.7f, 0.7f));
-        mat.SetDiffuse(0.7f);
-        mat.SetSpecular(0.3f);
+        mat.SetColor(Color(0.7f, 0.7f, 0.7f)).SetDiffuse(0.7f).SetSpecular(0.3f);
         sphere.SetMaterial(mat);
         world.AddObject(sphere);
     }
@@ -56,13 +52,10 @@ int main()
     {
         Sphere sphere("striped");
         sphere.SetTransform(Matrix::CreateTranslation(2.5f, 1.0f, 0.f));
-        Material mat;
-        mat.SetColor(Color(0.7f, 0.7f, 0.7f));
-        mat.SetDiffuse(0.7f);
-        mat.SetSpecular(0.3f);
         StripePattern stripe = StripePattern(kColorRed, kColorBlue);
         stripe.SetTransform(Matrix::CreateScaling(0.25f, 0.25f, 0.25f) * Matrix::CreateRotationY(M_PI / 3.f));
-        mat.SetPattern(stripe);
+        Material mat;
+        mat.SetColor(Color(0.7f, 0.7f, 0.7f)).SetDiffuse(0.7f).SetSpecular(0.3f).SetPattern(stripe);
         sphere.SetMaterial(mat);
         world.AddObject(sphere);
     }
@@ -71,13 +64,10 @@ int main()
     {
         Sphere sphere("checker");
         sphere.SetTransform(Matrix::CreateTranslation(-2.5f, 1.0f, 0.f));
-        Material mat;
-        mat.SetColor(Color(0.7f, 0.7f, 0.7f));
-        mat.SetDiffuse(0.7f);
-        mat.SetSpecular(0.3f);
         CheckerPattern pattern = CheckerPattern(kColorCyan, kColorMagenta);
         pattern.SetTransform(Matrix::CreateScaling(0.2f, 0.2f, 0.2f) * Matrix::CreateRotationY(M_PI / 3.f));
-        mat.SetPattern(pattern);
+        Material mat;
+        mat.SetColor(Color(0.7f, 0.7f, 0.7f)).SetDiffuse(0.7f).SetSpecular(0.3f).SetPattern(pattern);
         sphere.SetMaterial(mat);
         world.AddObject(sphere);
     }
@@ -86,13 +76,10 @@ int main()
     {
         Sphere sphere("ring");
         sphere.SetTransform(Matrix::CreateTranslation(0.f, 1.0f, 2.5f));
-        Material mat;
-        mat.SetColor(Color(0.7f, 0.7f, 0.7f));
-        mat.SetDiffuse(0.7f);
-        mat.SetSpecular(0.3f);
         RingPattern pattern = RingPattern(kColorBlack, kColorWhite);
         pattern.SetTransform(Matrix::CreateScaling(0.21f, 0.21f, 0.21f) * Matrix::CreateRotationZ(M_PI / 5.f));
-        mat.SetPattern(pattern);
+        Material mat;
+        mat.SetColor(Color(0.7f, 0.7f, 0.7f)).SetDiffuse(0.7f).SetSpecular(0.3f).SetPattern(pattern);
         sphere.SetMaterial(mat);
         world.AddObject(sphere);
     }
@@ -101,13 +88,10 @@ int main()
     {
         Sphere sphere("gradient");
         sphere.SetTransform(Matrix::CreateTranslation(0.f, 1.0f, -2.5f));
-        Material mat;
-        mat.SetColor(Color(0.7f, 0.7f, 0.7f));
-        mat.SetDiffuse(0.7f);
-        mat.SetSpecular(0.3f);
         GradientPattern pattern = GradientPattern(kColorYellow, kColorRed);
         pattern.SetTransform(Matrix::CreateScaling(0.5f, 0.5f, 0.5f) * Matrix::CreateRotationX(M_PI / 3.f));
-        mat.SetPattern(pattern);
+        Material mat;
+        mat.SetColor(Color(0.7f, 0.7f, 0.7f)).SetDiffuse(0.7f).SetSpecular(0.3f).SetPattern(pattern);
         sphere.SetMaterial(mat);
         world.AddObject(sphere);
     }
@@ -117,12 +101,12 @@ int main()
         Sphere sphere = GlassSphere("glass");
         sphere.SetTransform(Matrix::CreateTranslation(2.5f, 2.0f, -2.5f));
         Material mat;
-        mat.SetColor(Color(0.0f, 0.0f, 0.0f));
-        mat.SetDiffuse(0.0f);
-        mat.SetSpecular(0.3f);
-        mat.SetReflective(1.f);
-        mat.SetTransparency(1.0f);
-        mat.SetRefractiveIndex(1.5f);
+        mat.SetColor(Color(0.0f, 0.0f, 0.0f))
+            .SetDiffuse(0.0f)
+            .SetSpecular(0.3f)
+            .SetReflective(1.f)
+            .SetTransparency(1.0f)
+            .SetRefractiveIndex(1.5f);
         sphere.SetMaterial(mat);
         world.AddObject(sphere);
     }
@@ -132,10 +116,7 @@ int main()
         Sphere sphere("mirror2");
         sphere.SetTransform(Matrix::CreateTranslation(2.5f, 1.0f, 2.5f));
         Material mat;
-        mat.SetColor(Color(0.7f, 0.7f, 0.7f));
-        mat.SetDiffuse(0.7f);
-        mat.SetSpecular(0.3f);
-        mat.SetReflective(1.0f);
+        mat.SetColor(Color(0.7f, 0.7f, 0.7f)).SetDiffuse(0.7f).SetSpecular(0.3f).SetReflective(1.0f);
         sphere.SetMaterial(mat);
         world.AddObject(sphere);
     }
@@ -145,10 +126,7 @@ int main()
         Sphere sphere("Mirror3");
         sphere.SetTransform(Matrix::CreateTranslation(-2.5f, 1.0f, 2.5f));
         Material mat;
-        mat.SetColor(Color(0.7f, 0.7f, 0.7f));
-        mat.SetDiffuse(0.7f);
-        mat.SetSpecular(0.3f);
-        mat.SetReflective(1.0f);
+        mat.SetColor(Color(0.7f, 0.7f, 0.7f)).SetDiffuse(0.7f).SetSpecular(0.3f).SetReflective(1.0f);
         sphere.SetMaterial(mat);
         world.AddObject(sphere);
     }
@@ -158,10 +136,7 @@ int main()
         Sphere sphere("mirror4");
         sphere.SetTransform(Matrix::CreateTranslation(-2.5f, 1.0f, -2.5f));
         Material mat;
-        mat.SetColor(Color(0.7f, 0.7f, 0.7f));
-        mat.SetDiffuse(0.7f);
-        mat.SetSpecular(0.3f);
-        mat.SetReflective(1.0f);
+        mat.SetColor(Color(0.7f, 0.7f, 0.7f)).SetDiffuse(0.7f).SetSpecular(0.3f).SetReflective(1.0f);
         sphere.SetMaterial(mat);
         world.AddObject(sphere);
     }

@@ -1,10 +1,10 @@
 #include "computations.hpp"
 #include "intersection.hpp"
 #include "maths.hpp"
-#include "plane.hpp"
 #include "ray.hpp"
 #include "renderer.hpp"
-#include "sphere.hpp"
+#include "shapes/plane.hpp"
+#include "shapes/sphere.hpp"
 #include "utils.hpp"
 #include "world.hpp"
 #include <catch2/catch_test_macros.hpp>

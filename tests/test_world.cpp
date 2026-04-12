@@ -3,10 +3,10 @@
 #include "intersection.hpp"
 #include "maths.hpp"
 #include "patterns/test_pattern.hpp"
-#include "plane.hpp"
 #include "ray.hpp"
 #include "renderer.hpp"
-#include "sphere.hpp"
+#include "shapes/plane.hpp"
+#include "shapes/sphere.hpp"
 #include "world.hpp"
 #include <catch2/catch_test_macros.hpp>
 

@@ -5,7 +5,7 @@
 #include "intersection.hpp"
 #include "maths.hpp"
 #include "pattern.hpp"
-#include "sphere.hpp"
+#include "shapes/sphere.hpp"
 #include "world.hpp"
 #include <algorithm>
 #include <atomic>

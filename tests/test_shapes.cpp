@@ -1,6 +1,6 @@
 #include "intersection.hpp"
 #include "matrix.hpp"
-#include "shape.hpp"
+#include "shapes/shape.hpp"
 #include <catch2/catch_test_macros.hpp>
 
 class TestShape : public Shape

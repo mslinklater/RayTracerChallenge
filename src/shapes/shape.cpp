@@ -1,9 +1,9 @@
-#include "shape.hpp"
+#include "shapes/shape.hpp"
 #include "tuple.hpp"
 
 // TODO - remove these shit hacks
 Ray gSavedRay; // Global variable to store the ray for testing purposes
-    
+
 Tuple Shape::NormalAt(const Tuple &point) const
 {
     Tuple objectPoint = transform.GetInverse() * point;

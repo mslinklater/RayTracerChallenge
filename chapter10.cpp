@@ -7,9 +7,9 @@
 #include "patterns/gradient_pattern.hpp"
 #include "patterns/ring_pattern.hpp"
 #include "patterns/stripe_pattern.hpp"
-#include "plane.hpp"
 #include "renderer.hpp"
-#include "sphere.hpp"
+#include "shapes/plane.hpp"
+#include "shapes/sphere.hpp"
 #include "tuple.hpp"
 #include "world.hpp"
 

@@ -49,6 +49,16 @@ int main()
         cube.SetMaterial(mat);
         world.AddObject(cube);
     }
+    {
+        Cube cube("cube_bottom");
+        cube.SetTransform(Matrix::CreateTranslation(0.0f, 1.0f, -3.0f) * Matrix::CreateRotationZ(M_PI / 3.0f));
+        CheckerPattern check = CheckerPattern(kColorBlue, kColorWhite);
+        check.SetTransform(Matrix::CreateScaling(0.2f, 0.2f, 0.2f) * Matrix::CreateTranslation(0.5f, 0.5f, 0.5f));
+        Material mat;
+        mat.SetPattern(check);
+        cube.SetMaterial(mat);
+        world.AddObject(cube);
+    }
 
     Canvas canvas = Renderer::Render(camera, world);
     canvas.WriteToPPM("../images/chapter12.ppm");

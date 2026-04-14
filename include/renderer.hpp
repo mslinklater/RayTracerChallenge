@@ -25,7 +25,7 @@ class Renderer
 {
   public:
     /// @brief Default maximum recursion depth for reflected/refracted rays.
-    constexpr static int kDefaultRemaining = 10;
+    constexpr static int kMaxRecursionDepth = 10;
 
     /**
      * @brief Renders the entire scene and returns the resulting image.

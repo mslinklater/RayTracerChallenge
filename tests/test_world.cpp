@@ -113,7 +113,7 @@ TEST_CASE("Shading an intersection", "[world]")
     ObjectId objectId = w.GetObjectWithName("external").GetWorldObjectId();
     Intersection i(4.f, objectId);
     auto comps = Renderer::PrepareComputations(i, r, w);
-    auto color = Renderer::ShadeHit(w, comps, Renderer::kDefaultRemaining);
+    auto color = Renderer::ShadeHit(w, comps, Renderer::kMaxRecursionDepth);
     REQUIRE(color == Color(0.38066f, 0.47583f, 0.2855f));
 }
 
@@ -125,7 +125,7 @@ TEST_CASE("Shading an intersection from the inside", "[world]")
     ObjectId objectId = w.GetObjectWithName("internal").GetWorldObjectId();
     Intersection i(0.5f, objectId);
     auto comps = Renderer::PrepareComputations(i, r, w);
-    auto color = Renderer::ShadeHit(w, comps, Renderer::kDefaultRemaining);
+    auto color = Renderer::ShadeHit(w, comps, Renderer::kMaxRecursionDepth);
     REQUIRE(color == Color(0.90498f, 0.90498f, 0.90498f));
 }
 
@@ -248,7 +248,7 @@ TEST_CASE("ShadeHit is given an intersection in shadow", "[world]")
     Ray r(Point(0.f, 0.f, 5.f), Tuple(0.f, 0.f, 1.f));
     Intersection i(4.f, s1id);
     Computations comps = Renderer::PrepareComputations(i, r, w);
-    Color color = Renderer::ShadeHit(w, comps, Renderer::kDefaultRemaining);
+    Color color = Renderer::ShadeHit(w, comps, Renderer::kMaxRecursionDepth);
     REQUIRE(color == Color(0.1f, 0.1f, 0.1f));
 }
 
@@ -269,7 +269,7 @@ TEST_CASE("The reflected color for a nonreflective material", "[world]")
     inner.GetMutableMaterial().SetAmbient(1.f);
     Intersection i(1.f, inner.GetWorldObjectId());
     Computations comps = Renderer::PrepareComputations(i, r, w);
-    Color result = Renderer::ReflectedColor(w, comps, Renderer::kDefaultRemaining);
+    Color result = Renderer::ReflectedColor(w, comps, Renderer::kMaxRecursionDepth);
 
     REQUIRE(result == kColorBlack);
 }
@@ -285,7 +285,7 @@ TEST_CASE("The reflected color for a reflective material", "[world]")
     Ray r(Point(0.f, 0.f, -3.f), Tuple(0.f, -std::sqrt(2.f) / 2.f, std::sqrt(2.f) / 2.f));
     Intersection i(std::sqrt(2.f), shape.GetWorldObjectId());
     Computations comps = Renderer::PrepareComputations(i, r, w);
-    Color result = Renderer::ReflectedColor(w, comps, Renderer::kDefaultRemaining);
+    Color result = Renderer::ReflectedColor(w, comps, Renderer::kMaxRecursionDepth);
 
     REQUIRE(result == Color(0.19032f, 0.2379f, 0.14274f));
 }
@@ -301,7 +301,7 @@ TEST_CASE("ShadeHit() with a reflected material", "[world]")
     Ray r(Point(0.f, 0.f, -3.f), Tuple(0.f, -std::sqrt(2.f) / 2.f, std::sqrt(2.f) / 2.f));
     Intersection i(std::sqrt(2.f), shape.GetWorldObjectId());
     Computations comps = Renderer::PrepareComputations(i, r, w);
-    Color result = Renderer::ShadeHit(w, comps, Renderer::kDefaultRemaining);
+    Color result = Renderer::ShadeHit(w, comps, Renderer::kMaxRecursionDepth);
 
     REQUIRE(result == Color(0.87677f, 0.92436f, 0.82918f));
 }
@@ -361,7 +361,7 @@ TEST_CASE("The refracted color with an opaque surface", "[world]")
         Intersection(6.f, s.GetWorldObjectId()),
     };
     Computations comps = Renderer::PrepareComputations(xs[0], r, w, &xs);
-    Color c = Renderer::RefractedColor(w, comps, Renderer::kDefaultRemaining);
+    Color c = Renderer::RefractedColor(w, comps, Renderer::kMaxRecursionDepth);
 
     REQUIRE(c == Color(0.f, 0.f, 0.f));
 }

@@ -6,3 +6,5 @@ compile_commands.json
 *.log
 **/.DS_Store
 docs/
+build-review/
+

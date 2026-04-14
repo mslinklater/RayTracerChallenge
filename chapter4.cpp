@@ -26,5 +26,6 @@ int main()
     }
 
     canvas.WriteToPPM("../images/chapter4.ppm");
+    std::cout << "Done!" << std::endl;
     return 0;
 }

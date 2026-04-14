@@ -41,65 +41,45 @@ if(ENABLE_COVERAGE)
     endif()
 endif()
 
+add_library(RayTracerChallengeLib STATIC ${SRC_FILES})
+target_include_directories(RayTracerChallengeLib PUBLIC ${PROJECT_SOURCE_DIR}/include)
+target_compile_options(RayTracerChallengeLib PRIVATE ${PROJECT_COVERAGE_FLAGS})
+
+function(add_raytracer_executable target_name source_file)
+    add_executable(${target_name} ${source_file})
+    target_link_libraries(${target_name} PRIVATE RayTracerChallengeLib)
+    target_link_options(${target_name} PRIVATE ${PROJECT_COVERAGE_FLAGS})
+endfunction()
+
 # Main executable
-add_executable(RayTracerChallenge   main.cpp ${SRC_FILES})
-target_include_directories(RayTracerChallenge PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_compile_options(RayTracerChallenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
-target_link_options(RayTracerChallenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
+add_raytracer_executable(RayTracerChallenge main.cpp)
 
 # Chapter 4 challenge executable
-add_executable(Chapter4Challenge chapter4.cpp ${SRC_FILES})
-target_include_directories(Chapter4Challenge PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_compile_options(Chapter4Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
-target_link_options(Chapter4Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
+add_raytracer_executable(Chapter4Challenge chapter4.cpp)
 
 # Chapter 5 challenge executable
-add_executable(Chapter5Challenge chapter5.cpp ${SRC_FILES})
-target_include_directories(Chapter5Challenge PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_compile_options(Chapter5Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
-target_link_options(Chapter5Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
+add_raytracer_executable(Chapter5Challenge chapter5.cpp)
 
 # Chapter 6 challenge executable
-add_executable(Chapter6Challenge chapter6.cpp ${SRC_FILES})
-target_include_directories(Chapter6Challenge PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_compile_options(Chapter6Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
-target_link_options(Chapter6Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
+add_raytracer_executable(Chapter6Challenge chapter6.cpp)
 
 # Chapter 7 challenge executable
-add_executable(Chapter7Challenge chapter7.cpp ${SRC_FILES})
-target_include_directories(Chapter7Challenge PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_compile_options(Chapter7Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
-target_link_options(Chapter7Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
+add_raytracer_executable(Chapter7Challenge chapter7.cpp)
 
 # Chapter 8 challenge executable
-add_executable(Chapter8Challenge chapter8.cpp ${SRC_FILES})
-target_include_directories(Chapter8Challenge PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_compile_options(Chapter8Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
-target_link_options(Chapter8Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
+add_raytracer_executable(Chapter8Challenge chapter8.cpp)
 
 # Chapter 9 challenge executable
-add_executable(Chapter9Challenge chapter9.cpp ${SRC_FILES})
-target_include_directories(Chapter9Challenge PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_compile_options(Chapter9Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
-target_link_options(Chapter9Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
+add_raytracer_executable(Chapter9Challenge chapter9.cpp)
 
 # Chapter 10 challenge executable
-add_executable(Chapter10Challenge chapter10.cpp ${SRC_FILES})
-target_include_directories(Chapter10Challenge PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_compile_options(Chapter10Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
-target_link_options(Chapter10Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
+add_raytracer_executable(Chapter10Challenge chapter10.cpp)
 
 # Chapter 11 challenge executable
-add_executable(Chapter11Challenge chapter11.cpp ${SRC_FILES})
-target_include_directories(Chapter11Challenge PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_compile_options(Chapter11Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
-target_link_options(Chapter11Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
+add_raytracer_executable(Chapter11Challenge chapter11.cpp)
 
 # Chapter 12 challenge executable
-add_executable(Chapter12Challenge chapter12.cpp ${SRC_FILES})
-target_include_directories(Chapter12Challenge PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_compile_options(Chapter12Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
-target_link_options(Chapter12Challenge PRIVATE ${PROJECT_COVERAGE_FLAGS})
+add_raytracer_executable(Chapter12Challenge chapter12.cpp)
 
 # Test executable
 set(TEST_SRC    tests/test_main.cpp
@@ -123,10 +103,8 @@ set(TEST_SRC    tests/test_main.cpp
                 tests/test_determinism.cpp
                 tests/test_canvas.cpp)
 
-add_executable(RayTracerChallengeTests ${TEST_SRC} ${SRC_FILES})
-target_include_directories(RayTracerChallengeTests PRIVATE ${PROJECT_SOURCE_DIR}/include)
-target_link_libraries(RayTracerChallengeTests PRIVATE Catch2::Catch2WithMain)
-target_compile_options(RayTracerChallengeTests PRIVATE ${PROJECT_COVERAGE_FLAGS})
+add_executable(RayTracerChallengeTests ${TEST_SRC})
+target_link_libraries(RayTracerChallengeTests PRIVATE RayTracerChallengeLib Catch2::Catch2WithMain)
 target_link_options(RayTracerChallengeTests PRIVATE ${PROJECT_COVERAGE_FLAGS})
 
 # Use Catch2's test discovery instead of manual add_test

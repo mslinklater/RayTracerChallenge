@@ -7,10 +7,12 @@ It is implemented in C++ and uses CMake as a build system. Testing is done via t
 
 ## Build
 
-```bash§
+```bash
 cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=TRUE
 cmake --build build
 ```
+
+The configure step will also fetch and build a compiled copy of **JsonCpp**. It is a small JSON library with a normal compiled target, so it avoids the compile-time cost of a header-only dependency.
 
 ## Run tests
 
@@ -18,6 +20,62 @@ For a full test coverage report in HTML format run the following
 
 ```
 cmake -S . -B build-coverage -G Ninja -DCMAKE_BUILD_TYPE=Debug -DENABLE_COVERAGE=ON && cmake --build build-coverage && cmake --build build-coverage --target coverage-html
+```
+
+## JSON syntax examples
+
+The project now pulls in **JsonCpp** automatically through CMake. Include it like this:
+
+```cpp
+#include <json/json.h>
+```
+
+### Serialize to JSON
+
+```cpp
+Json::Value root;
+root["camera"]["width"] = 160;
+root["camera"]["height"] = 90;
+root["camera"]["fieldOfView"] = 1.0472f;
+root["objects"][0]["type"] = "sphere";
+root["objects"][0]["material"]["reflective"] = 0.5f;
+
+Json::StreamWriterBuilder writerBuilder;
+writerBuilder["indentation"] = "  ";
+std::string json = Json::writeString(writerBuilder, root);
+```
+
+### Deserialize from JSON
+
+```cpp
+std::string json = R"json(
+{
+  "camera": {
+    "width": 200,
+    "height": 100,
+    "fieldOfView": 0.785398
+  },
+  "material": {
+    "pattern": "stripe",
+    "reflective": 0.25
+  }
+}
+)json";
+
+Json::CharReaderBuilder readerBuilder;
+Json::Value root;
+std::string errors;
+std::istringstream input(json);
+
+bool ok = Json::parseFromStream(readerBuilder, input, &root, &errors);
+```
+
+Useful accessors:
+
+```cpp
+int width = root["camera"]["width"].asInt();
+float fieldOfView = root["camera"]["fieldOfView"].asFloat();
+std::string pattern = root["material"]["pattern"].asString();
 ```
 
 ## TODO

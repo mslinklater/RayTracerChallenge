@@ -3,6 +3,8 @@
 #include "matrix.hpp"
 #include "ray.hpp"
 #include "types.hpp"
+#include <atomic>
+#include <mutex>
 #include <string>
 
 /**
@@ -24,6 +26,8 @@ class Shape
     {
         transform.SetIdentity();
     }
+    Shape(const Shape &other);
+    Shape &operator=(const Shape &other);
     virtual ~Shape() = default;
 
     /**
@@ -130,7 +134,8 @@ class Shape
     Material material;              ///< Surface material properties.
     mutable Matrix inverseTransform{4}; ///< Cached inverse transform.
     mutable Matrix inverseTransposeTransform{4}; ///< Cached inverse-transpose transform.
-    mutable bool transformCacheValid = false; ///< Whether the cached transform matrices are current.
+    mutable std::mutex transformCacheMutex; ///< Guards lazy cache refresh after direct transform mutation.
+    mutable std::atomic<bool> transformCacheValid{false}; ///< Whether the cached transform matrices are current.
 };
 
 /// @brief Owning pointer to a heap-allocated @c Shape.

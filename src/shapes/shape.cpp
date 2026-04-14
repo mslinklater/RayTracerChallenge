@@ -1,18 +1,42 @@
 #include "shapes/shape.hpp"
 #include "tuple.hpp"
 
+Shape::Shape(const Shape &other)
+    : worldObjectId(other.worldObjectId), name(other.name), transform(other.transform), material(other.material),
+      inverseTransform(4), inverseTransposeTransform(4)
+{
+    UpdateTransformCache();
+}
+
+Shape &Shape::operator=(const Shape &other)
+{
+    if (this != &other)
+    {
+        worldObjectId = other.worldObjectId;
+        name = other.name;
+        transform = other.transform;
+        material = other.material;
+        UpdateTransformCache();
+    }
+    return *this;
+}
+
 void Shape::UpdateTransformCache() const
 {
     inverseTransform = transform.GetInverse();
     inverseTransposeTransform = inverseTransform.Transpose();
-    transformCacheValid = true;
+    transformCacheValid.store(true, std::memory_order_release);
 }
 
 void Shape::EnsureTransformCache() const
 {
-    if (!transformCacheValid)
+    if (!transformCacheValid.load(std::memory_order_acquire))
     {
-        UpdateTransformCache();
+        std::lock_guard<std::mutex> lock(transformCacheMutex);
+        if (!transformCacheValid.load(std::memory_order_relaxed))
+        {
+            UpdateTransformCache();
+        }
     }
 }
 

@@ -7,7 +7,28 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 option(ENABLE_COVERAGE "Build with coverage instrumentation" OFF)
 
+include(FetchContent)
+
 find_package(Catch2 3 REQUIRED)
+
+set(JSONCPP_WITH_TESTS OFF CACHE BOOL "" FORCE)
+set(JSONCPP_WITH_POST_BUILD_UNITTEST OFF CACHE BOOL "" FORCE)
+set(JSONCPP_WITH_WARNING_AS_ERROR OFF CACHE BOOL "" FORCE)
+set(JSONCPP_WITH_EXAMPLE OFF CACHE BOOL "" FORCE)
+set(JSONCPP_WITH_CMAKE_PACKAGE OFF CACHE BOOL "" FORCE)
+set(JSONCPP_WITH_PKGCONFIG_SUPPORT OFF CACHE BOOL "" FORCE)
+set(JSONCPP_WITH_INSTALL OFF CACHE BOOL "" FORCE)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+set(BUILD_STATIC_LIBS ON CACHE BOOL "" FORCE)
+set(BUILD_OBJECT_LIBS OFF CACHE BOOL "" FORCE)
+
+FetchContent_Declare(
+    jsoncpp
+    GIT_REPOSITORY https://github.com/open-source-parsers/jsoncpp.git
+    GIT_TAG 1.9.7
+    GIT_SHALLOW TRUE
+)
+FetchContent_MakeAvailable(jsoncpp)
 
 include(Catch)  # This provides catch_discover_tests()
 enable_testing()
@@ -44,6 +65,7 @@ endif()
 add_library(RayTracerChallengeLib STATIC ${SRC_FILES})
 target_include_directories(RayTracerChallengeLib PUBLIC ${PROJECT_SOURCE_DIR}/include)
 target_compile_options(RayTracerChallengeLib PRIVATE ${PROJECT_COVERAGE_FLAGS})
+target_link_libraries(RayTracerChallengeLib PUBLIC jsoncpp_static)
 
 function(add_raytracer_executable target_name source_file)
     add_executable(${target_name} ${source_file})
@@ -98,6 +120,7 @@ set(TEST_SRC    tests/test_main.cpp
                 tests/test_materials.cpp
                 tests/test_matrix.cpp
                 tests/test_cubes.cpp
+                tests/test_json.cpp
                 tests/test_patterns.cpp
                 tests/test_transformations.cpp
                 tests/test_determinism.cpp

@@ -9,8 +9,6 @@
 #include "world.hpp"
 #include <algorithm>
 #include <atomic>
-#include <iostream>
-#include <mutex>
 #include <thread>
 #include <vector>
 
@@ -29,12 +27,8 @@ Canvas Renderer::Render(const Camera &camera, const World &world)
     const unsigned int threadCount = std::min(maxThreads, static_cast<unsigned int>(totalRows));
 
     std::atomic<int> nextRow{0};
-    std::atomic<int> completedRows{0};
-    std::mutex outputMutex;
     std::vector<std::thread> workers;
     workers.reserve(threadCount);
-
-    std::cout << "Rendering using " << threadCount << " threads for " << totalRows << " rows\n" << std::flush;
 
     auto renderRows = [&]() {
         while (true)
@@ -51,10 +45,6 @@ Canvas Renderer::Render(const Camera &camera, const World &world)
                 Color color = ColorAt(world, ray);
                 canvas.WritePixel(x, y, color);
             }
-
-            const int done = completedRows.fetch_add(1) + 1;
-            std::lock_guard<std::mutex> lock(outputMutex);
-            std::cout << "Rendering row " << done << " of " << totalRows << "\r" << std::flush;
         }
     };
 
@@ -73,19 +63,16 @@ Canvas Renderer::Render(const Camera &camera, const World &world)
 
 Color Renderer::ColorAt(const World &world, const Ray &ray, int remaining)
 {
-    IntersectionVector intersections = IntersectWorld(world, ray);
+    const IntersectionVector intersections = IntersectWorld(world, ray);
     if (intersections.empty())
     {
         return kBackgroundColor; // Return cyan if no intersections
     }
-    // find the first intersection with a positive t value
-    auto it = std::find_if(intersections.begin(), intersections.end(),
-                           [](const Intersection &intersection) { return intersection.GetT() >= 0.f; });
-    if (it == intersections.end())
+    const Intersection hit = GetClosestIntersection(intersections);
+    if (hit.GetObjectId() == kInvalidObjectId)
     {
         return Color(0.f, 0.f, 0.f); // Return black if all intersections are behind the ray
     }
-    const Intersection &hit = *it;
     Computations comps = PrepareComputations(hit, ray, world, &intersections);
     return ShadeHit(world, comps, remaining);
 }
@@ -93,11 +80,11 @@ Color Renderer::ColorAt(const World &world, const Ray &ray, int remaining)
 IntersectionVector Renderer::IntersectWorld(const World &world, const Ray &ray)
 {
     std::vector<Intersection> intersections;
+    intersections.reserve(world.GetObjects().size() * 2);
 
     for (const ShapePtr &object : world.GetObjects())
     {
-        //   const Shape &object = world.GetObject(objectId);
-        std::vector<float> objectIntersections = object->Intersect(ray);
+        const std::vector<float> objectIntersections = object->Intersect(ray);
 
         for (const float &distance : objectIntersections)
         {
@@ -112,31 +99,35 @@ IntersectionVector Renderer::IntersectWorld(const World &world, const Ray &ray)
     return intersections;
 }
 
-Color Renderer::ReflectedColor(World &world, const Computations &comps, int remaining)
+Color Renderer::ReflectedColor(const World &world, const Computations &comps, int remaining)
+{
+    return ReflectedColor(world, world.GetObject(comps.objectId).GetMaterial(), comps, remaining);
+}
+
+Color Renderer::ReflectedColor(const World &world, const Material &material, const Computations &comps, int remaining)
 {
     if (remaining <= 0)
         return kColorBlack;
 
-    Shape &shape = world.GetMutableObject(comps.objectId);
-    const Material &material = shape.GetMaterial();
     if (material.GetReflective() == 0.f)
     {
         return Color(0.f, 0.f, 0.f); // No reflection contribution if the material is not reflective
     }
     Ray reflectRay(comps.overPoint, comps.reflectv);
-    Color c = Renderer::ColorAt(world, reflectRay, --remaining);
-
-    const Shape &returnShape = world.GetObject(comps.objectId);
-    return c * returnShape.GetMaterial().GetReflective();
+    const Color c = Renderer::ColorAt(world, reflectRay, --remaining);
+    return c * material.GetReflective();
 }
 
-Color Renderer::RefractedColor(World &world, const Computations &comps, int remaining)
+Color Renderer::RefractedColor(const World &world, const Computations &comps, int remaining)
+{
+    return RefractedColor(world, world.GetObject(comps.objectId).GetMaterial(), comps, remaining);
+}
+
+Color Renderer::RefractedColor(const World &world, const Material &material, const Computations &comps, int remaining)
 {
     if (remaining <= 0)
         return kColorBlack;
 
-    Shape &shape = world.GetMutableObject(comps.objectId);
-    const Material &material = shape.GetMaterial();
     if (material.GetTransparency() == 0.f)
     {
         return Color(0.f, 0.f, 0.f); // No reflection contribution if the material is not reflective
@@ -160,14 +151,20 @@ Color Renderer::RefractedColor(World &world, const Computations &comps, int rema
 
 Color Renderer::ShadeHit(const World &world, const Computations &comps, int remaining)
 {
-    EInShadow inShadow = IsShadowed(world, comps.overPoint);
+    const Shape &object = world.GetObject(comps.objectId);
+    const Material &material = object.GetMaterial();
+    Color surface = kColorBlack;
 
-    Color surface = Lighting(world.GetObject(comps.objectId).GetMaterial(), world.GetObject(comps.objectId),
-                             world.GetLight(0), comps.point, comps.eyeVector, comps.normalVector, inShadow);
-    Color reflected = ReflectedColor(const_cast<World &>(world), comps, remaining);
-    Color refracted = RefractedColor(const_cast<World &>(world), comps, remaining);
+    for (const Light &light : world.GetLights())
+    {
+        const EInShadow inShadow = IsShadowed(world, comps.overPoint, light);
+        surface = surface +
+                  Lighting(material, object, light, comps.point, comps.eyeVector, comps.normalVector, inShadow);
+    }
 
-    const Material &material = world.GetObject(comps.objectId).GetMaterial();
+    Color reflected = ReflectedColor(world, material, comps, remaining);
+    Color refracted = RefractedColor(world, material, comps, remaining);
+
     if (material.GetReflective() > 0.f && material.GetTransparency() > 0.f)
     {
         float reflectance = Schlick(comps);
@@ -254,23 +251,23 @@ World Renderer::DefaultWorld()
 
 IntersectionVector Renderer::Intersections(std::initializer_list<Intersection> list)
 {
-    return IntersectionVector(list);
+    IntersectionVector intersections(list);
+    std::sort(intersections.begin(), intersections.end(),
+              [](const Intersection &lhs, const Intersection &rhs) { return lhs.GetT() < rhs.GetT(); });
+    return intersections;
 }
 
 Intersection Renderer::GetClosestIntersection(const IntersectionVector &intersections)
 {
-    Intersection hit(0.f, kInvalidObjectId);
-    for (const auto &intersection : intersections)
+    const auto it = std::lower_bound(intersections.begin(), intersections.end(), 0.f,
+                                     [](const Intersection &intersection, float t) {
+                                         return intersection.GetT() < t;
+                                     });
+    if (it == intersections.end())
     {
-        if (intersection.GetT() >= 0.f)
-        {
-            if (hit.GetObjectId() == kInvalidObjectId || intersection.GetT() < hit.GetT())
-            {
-                hit = intersection;
-            }
-        }
+        return Intersection(0.f, kInvalidObjectId);
     }
-    return hit;
+    return *it;
 }
 
 Computations Renderer::PrepareComputations(const Intersection &intersection, const Ray &ray, const World &world,
@@ -352,17 +349,22 @@ Computations Renderer::PrepareComputations(const Intersection &intersection, con
 
 EInShadow Renderer::IsShadowed(const World &world, const Tuple &point)
 {
-    const Light &light = world.GetLight(0); // Assuming only one light for now
+    if (world.GetLights().empty())
+    {
+        return EInShadow::No;
+    }
+    return IsShadowed(world, point, world.GetLight(0));
+}
+
+EInShadow Renderer::IsShadowed(const World &world, const Tuple &point, const Light &light)
+{
     Tuple lightVector = light.position - point;
     float distanceToLight = lightVector.Magnitude();
     Ray shadowRay(point, lightVector.Normalize());
 
-    std::vector<Intersection> intersections = IntersectWorld(world, shadowRay);
-    auto it =
-        std::find_if(intersections.begin(), intersections.end(), [distanceToLight](const Intersection &intersection) {
-            return intersection.GetT() >= 0.f && intersection.GetT() < distanceToLight;
-        });
-    if (it != intersections.end())
+    const IntersectionVector intersections = IntersectWorld(world, shadowRay);
+    const Intersection hit = GetClosestIntersection(intersections);
+    if (hit.GetObjectId() != kInvalidObjectId && hit.GetT() < distanceToLight)
     {
         return EInShadow::Yes; // There is an object between the point and the light
     }

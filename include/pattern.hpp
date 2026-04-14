@@ -3,6 +3,7 @@
 #include "matrix.hpp"
 #include "shapes/shape.hpp"
 #include "tuple.hpp"
+#include <memory>
 
 /**
  * @brief Abstract base class for 2-colour surface patterns.
@@ -15,29 +16,28 @@ class Pattern
 {
   public:
     /** @brief Constructs a default white-on-black pattern with an identity transform. */
-    Pattern() : transform(Matrix(4)), a(kColorWhite), b(kColorBlack)
-    {
-        transform.SetIdentity();
-    }
+    Pattern() : Pattern(kColorWhite, kColorBlack) {}
 
     /**
      * @brief Constructs a pattern with explicit colours and an identity transform.
      * @param _a Primary colour.
      * @param _b Secondary colour.
      */
-    Pattern(const Color &_a, const Color &_b) : transform(Matrix(4)), a(_a), b(_b)
+    Pattern(const Color &_a, const Color &_b) : transform(Matrix(4)), inverseTransform(Matrix(4)), a(_a), b(_b)
     {
         transform.SetIdentity();
+        inverseTransform.SetIdentity();
     }
 
     /** @brief Sets the pattern-space transform. */
     void SetTransform(const Matrix &transform)
     {
         this->transform = transform;
+        inverseTransform = transform.GetInverse();
     }
 
     /** @brief Returns the pattern-space transform. */
-    Matrix GetTransform() const
+    const Matrix &GetTransform() const
     {
         return transform;
     }
@@ -49,7 +49,7 @@ class Pattern
      * @param point A point already transformed into pattern space.
      * @return The colour at that point.
      */
-    virtual Color PatternAt(const Tuple &point) = 0;
+    virtual Color PatternAt(const Tuple &point) const = 0;
 
     /**
      * @brief Returns the pattern colour at a world-space @p point on @p shape.
@@ -59,7 +59,13 @@ class Pattern
      * @param shape The shape being shaded.
      * @param point The world-space point on the shape's surface.
      */
-    Color PatternAtShape(const Shape &shape, const Tuple &point);
+    Color PatternAtShape(const Shape &shape, const Tuple &point) const;
+
+    /** @brief Creates a copy of this concrete pattern. */
+    virtual std::shared_ptr<Pattern> Clone() const = 0;
+
+    /** @brief Equality comparison that includes the concrete pattern type and shared base state. */
+    virtual bool Equals(const Pattern &other) const;
 
     /** @brief Returns the primary colour. */
     Color GetA() const
@@ -74,7 +80,11 @@ class Pattern
     }
 
   protected:
-    Color a;          ///< Primary colour.
-    Color b;          ///< Secondary colour.
-    Matrix transform; ///< Pattern-space transform (default: identity).
+    Color a;                ///< Primary colour.
+    Color b;                ///< Secondary colour.
+    Matrix transform;       ///< Pattern-space transform (default: identity).
+    Matrix inverseTransform; ///< Cached inverse of @c transform.
 };
+
+/** @brief Equality comparison for patterns, including concrete type and transform/colour state. */
+bool operator==(const Pattern &lhs, const Pattern &rhs);

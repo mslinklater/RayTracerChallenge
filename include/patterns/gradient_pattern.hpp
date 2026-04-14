@@ -24,10 +24,15 @@ class GradientPattern : public Pattern
      * @param point A point in pattern space; only the X component is used.
      * @return A linearly interpolated colour between @c a and @c b.
      */
-    Color PatternAt(const Tuple &point)
+    Color PatternAt(const Tuple &point) const override
     {
         Color distance = GetB() - GetA();
         float fraction = point.x - std::floor(point.x);
         return GetA() + distance * fraction;
+    }
+
+    std::shared_ptr<Pattern> Clone() const override
+    {
+        return std::make_shared<GradientPattern>(*this);
     }
 };

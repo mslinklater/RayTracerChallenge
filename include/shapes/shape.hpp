@@ -5,11 +5,6 @@
 #include "types.hpp"
 #include <string>
 
-/// @brief Global that records the last ray passed to a shape's local intersection (used in tests).
-extern Ray gSavedRay;
-/// @brief Global that records the last normal computed by a shape's local normal function (used in tests).
-extern Tuple gSavedNormal;
-
 /**
  * @brief Abstract base class for all renderable geometric shapes.
  *
@@ -70,12 +65,14 @@ class Shape
     /** @brief Returns a mutable reference to the object-to-world transform. */
     Matrix &GetMutableTransform()
     {
+        transformCacheValid = false;
         return transform;
     }
     /** @brief Replaces the object-to-world transform. */
     void SetTransform(const Matrix &t)
     {
         transform = t;
+        UpdateTransformCache();
     }
 
     /** @brief Returns the human-readable name of the shape. */
@@ -92,6 +89,9 @@ class Shape
      * @param point A world-space point on the surface of the shape.
      */
     Tuple NormalAt(const Tuple &point) const;
+
+    /** @brief Converts a world-space point into this shape's object space. */
+    Tuple WorldToObject(const Tuple &point) const;
 
     /**
      * @brief Returns the object-space surface normal at a local-space @p point.
@@ -120,11 +120,17 @@ class Shape
     virtual std::vector<float> IntersectLocal(const Ray &ray) const;
 
   protected:
+    void UpdateTransformCache() const;
+    void EnsureTransformCache() const;
+
     ObjectId worldObjectId = kInvalidObjectId; ///< Unique world ID assigned by @c World.
 
-    std::string name;  ///< Human-readable identifier.
-    Matrix transform;  ///< Object-to-world transformation matrix (default: identity).
-    Material material; ///< Surface material properties.
+    std::string name;               ///< Human-readable identifier.
+    Matrix transform;               ///< Object-to-world transformation matrix (default: identity).
+    Material material;              ///< Surface material properties.
+    mutable Matrix inverseTransform{4}; ///< Cached inverse transform.
+    mutable Matrix inverseTransposeTransform{4}; ///< Cached inverse-transpose transform.
+    mutable bool transformCacheValid = false; ///< Whether the cached transform matrices are current.
 };
 
 /// @brief Owning pointer to a heap-allocated @c Shape.

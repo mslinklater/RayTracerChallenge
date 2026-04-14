@@ -408,6 +408,18 @@ TEST_CASE("Testing a non-invertible matrix for invertibility", "[matrix]")
     REQUIRE(m.GetDeterminant() == 0.f);
 }
 
+TEST_CASE("Calculating the inverse of a non-invertible matrix throws", "[matrix]")
+{
+    std::vector<float> values = {
+        -4.f, 2.f, -2.f, -3.f,
+        9.f, 6.f, 2.f, 6.f,
+        0.f, -5.f, 1.f, -5.f,
+        0.f, 0.f, 0.f, 0.f};
+    Matrix m = Matrix(values);
+
+    REQUIRE_THROWS_AS(m.GetInverse(), std::runtime_error);
+}
+
 TEST_CASE("Calculating the inverse of a matrix", "[matrix]")
 {
     std::vector<float> values = {

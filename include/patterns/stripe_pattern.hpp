@@ -30,12 +30,17 @@ class StripePattern : public Pattern
      * @param point A point in pattern space.
      * @return @c a for even stripe indices, @c b for odd.
      */
-    Color PatternAt(const Tuple &point) override
+    Color PatternAt(const Tuple &point) const override
     {
         if (static_cast<int>(std::floor(point.x)) % 2 == 0)
         {
             return GetA();
         }
         return GetB();
+    }
+
+    std::shared_ptr<Pattern> Clone() const override
+    {
+        return std::make_shared<StripePattern>(*this);
     }
 };

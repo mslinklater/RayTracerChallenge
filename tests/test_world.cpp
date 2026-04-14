@@ -63,6 +63,20 @@ TEST_CASE("Adding an object to the world returns a stable object ID", "[world]")
     REQUIRE(id == expected);
 }
 
+TEST_CASE("Getting an invalid object ID throws", "[world]")
+{
+    World world;
+    REQUIRE_THROWS_AS(world.GetObject(kInvalidObjectId), std::invalid_argument);
+    REQUIRE_THROWS_AS(world.GetObject(99), std::out_of_range);
+}
+
+TEST_CASE("Getting an invalid light index throws", "[world]")
+{
+    World world;
+    REQUIRE_THROWS_AS(world.GetLight(0), std::out_of_range);
+    REQUIRE_THROWS_AS(world.GetMutableLight(0), std::out_of_range);
+}
+
 TEST_CASE("The default world", "[world]")
 {
     World w = Renderer::DefaultWorld();
@@ -127,6 +141,21 @@ TEST_CASE("Shading an intersection from the inside", "[world]")
     auto comps = Renderer::PrepareComputations(i, r, w);
     auto color = Renderer::ShadeHit(w, comps, Renderer::kMaxRecursionDepth);
     REQUIRE(color == Color(0.90498f, 0.90498f, 0.90498f));
+}
+
+TEST_CASE("Shading an intersection accumulates contributions from multiple lights", "[world]")
+{
+    World world;
+    Sphere sphere("sphere");
+    ObjectId objectId = world.AddObject(sphere);
+    world.AddLight(Light(Point(0.f, 0.f, -10.f), Color(1.f, 1.f, 1.f)));
+    world.AddLight(Light(Point(0.f, 0.f, -10.f), Color(1.f, 1.f, 1.f)));
+
+    Ray ray(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
+    Intersection intersection(4.f, objectId);
+    Computations comps = Renderer::PrepareComputations(intersection, ray, world);
+
+    REQUIRE(Renderer::ShadeHit(world, comps, Renderer::kMaxRecursionDepth) == Color(3.8f, 3.8f, 3.8f));
 }
 
 TEST_CASE("The colour when a ray misses", "[world]")
@@ -219,6 +248,21 @@ TEST_CASE("The shadow when an object is between the point and the light", "[worl
     World w = Renderer::DefaultWorld();
     Tuple point = Point(10.f, -10.f, 10.f);
     REQUIRE(Renderer::IsShadowed(w, point) == EInShadow::Yes);
+}
+
+TEST_CASE("Shadows are evaluated per light", "[world]")
+{
+    World world;
+    world.AddLight(Light(Point(0.f, 0.f, -10.f), Color(1.f, 1.f, 1.f)));
+    world.AddLight(Light(Point(0.f, 10.f, -10.f), Color(1.f, 1.f, 1.f)));
+
+    Sphere blocker("blocker");
+    blocker.SetTransform(Matrix::CreateTranslation(0.f, 0.f, -5.f));
+    world.AddObject(blocker);
+
+    const Tuple point = Point(0.f, 0.f, 0.f);
+    REQUIRE(Renderer::IsShadowed(world, point, world.GetLight(0)) == EInShadow::Yes);
+    REQUIRE(Renderer::IsShadowed(world, point, world.GetLight(1)) == EInShadow::No);
 }
 
 TEST_CASE("There is no shadow when an object is behind the light", "[world]")

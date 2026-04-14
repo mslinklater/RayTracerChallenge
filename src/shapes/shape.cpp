@@ -1,18 +1,36 @@
 #include "shapes/shape.hpp"
 #include "tuple.hpp"
 
-// TODO - remove these shit hacks
-Ray gSavedRay; // Global variable to store the ray for testing purposes
+void Shape::UpdateTransformCache() const
+{
+    inverseTransform = transform.GetInverse();
+    inverseTransposeTransform = inverseTransform.Transpose();
+    transformCacheValid = true;
+}
+
+void Shape::EnsureTransformCache() const
+{
+    if (!transformCacheValid)
+    {
+        UpdateTransformCache();
+    }
+}
 
 Tuple Shape::NormalAt(const Tuple &point) const
 {
-    Tuple objectPoint = transform.GetInverse() * point;
+    Tuple objectPoint = WorldToObject(point);
 
     Tuple objectNormal = NormalAtLocal(objectPoint);
 
-    Tuple worldNormal = transform.GetInverse().Transpose() * objectNormal;
+    Tuple worldNormal = inverseTransposeTransform * objectNormal;
     worldNormal.w = 0.f; // Ensure it's a vector
     return worldNormal.Normalize();
+}
+
+Tuple Shape::WorldToObject(const Tuple &point) const
+{
+    EnsureTransformCache();
+    return inverseTransform * point;
 }
 
 Tuple Shape::NormalAtLocal(const Tuple &point) const
@@ -22,9 +40,8 @@ Tuple Shape::NormalAtLocal(const Tuple &point) const
 
 std::vector<float> Shape::Intersect(const Ray &ray) const
 {
-    Ray localRay = ray * transform.GetInverse();
-    gSavedRay = localRay;
-
+    EnsureTransformCache();
+    Ray localRay = ray * inverseTransform;
     return IntersectLocal(localRay);
 }
 

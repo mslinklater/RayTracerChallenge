@@ -1,6 +1,7 @@
 #pragma once
 #include "color.hpp"
 #include <memory>
+#include <type_traits>
 
 class Pattern;
 
@@ -29,6 +30,8 @@ class Material
     Material()
     {
     }
+
+    Material(const Material &other);
 
     /** @brief Returns the base surface colour. */
     Color GetColor() const
@@ -76,7 +79,13 @@ class Material
      *
      * The pattern, when present, replaces the base colour at each surface point.
      */
-    Pattern *GetPattern() const
+    const Pattern *GetPattern() const
+    {
+        return pattern.get();
+    }
+
+    /** @brief Returns a mutable pointer to the optional surface pattern, or nullptr. */
+    Pattern *GetMutablePattern()
     {
         return pattern.get();
     }
@@ -142,35 +151,13 @@ class Material
      * @tparam T A concrete subclass of @c Pattern.
      * @param object The pattern instance to store.
      */
-    template <typename T, typename = std::enable_if_t<std::is_base_of_v<Pattern, T>>> void SetPattern(T &object)
+    template <typename T, typename = std::enable_if_t<std::is_base_of_v<Pattern, T>>> void SetPattern(const T &object)
     {
         pattern = std::make_shared<T>(object);
     }
 
     /** @brief Copy-assigns all shading parameters and the optional pattern. */
-    Material &operator=(const Material &other)
-    {
-        if (this != &other)
-        {
-            ambient = other.ambient;
-            diffuse = other.diffuse;
-            specular = other.specular;
-            shininess = other.shininess;
-            color = other.color;
-            reflective = other.reflective;
-            transparency = other.transparency;
-            refractiveIndex = other.refractiveIndex;
-            if (other.pattern)
-            {
-                pattern = other.pattern; //->Clone();
-            }
-            else
-            {
-                pattern = nullptr;
-            }
-        }
-        return *this;
-    }
+    Material &operator=(const Material &other);
 
   private:
     Color color = kDefaultColor;                     ///< The base color of the material.

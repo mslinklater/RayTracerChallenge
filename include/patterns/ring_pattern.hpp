@@ -29,12 +29,17 @@ class RingPattern : public Pattern
      * @param point A point in pattern space.
      * @return @c a for even ring indices, @c b for odd.
      */
-    Color PatternAt(const Tuple &point) override
+    Color PatternAt(const Tuple &point) const override
     {
         if (static_cast<int>(std::floor(sqrt(point.x * point.x + point.z * point.z))) % 2 == 0)
         {
             return GetA();
         }
         return GetB();
+    }
+
+    std::shared_ptr<Pattern> Clone() const override
+    {
+        return std::make_shared<RingPattern>(*this);
     }
 };

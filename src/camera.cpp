@@ -3,9 +3,10 @@
 #include <cmath>
 
 Camera::Camera(int hsize, int vsize, float fieldOfView)
-    : hsize(hsize), vsize(vsize), fieldOfView(fieldOfView), transform(Matrix(4))
+    : hsize(hsize), vsize(vsize), fieldOfView(fieldOfView), transform(Matrix(4)), inverseTransform(Matrix(4))
 {
     transform.SetIdentity();
+    inverseTransform.SetIdentity();
 
     float halfView = std::tan(fieldOfView / 2.f);
     float aspect = static_cast<float>(hsize) / static_cast<float>(vsize);
@@ -38,9 +39,15 @@ float Camera::GetFieldOfView() const
     return fieldOfView;
 }
 
-Matrix Camera::GetTransform() const
+const Matrix &Camera::GetTransform() const
 {
     return transform;
+}
+
+void Camera::SetTransform(const Matrix &transform)
+{
+    this->transform = transform;
+    inverseTransform = transform.GetInverse();
 }
 
 float Camera::GetPixelSize() const
@@ -56,9 +63,8 @@ Ray Camera::RayForPixel(int px, int py) const
     float worldX = halfWidth - xoffset;
     float worldY = halfHeight - yoffset;
 
-    Matrix invTransform = transform.GetInverse();
-    Tuple pixel = invTransform * Point(worldX, worldY, -1.f);
-    Tuple origin = invTransform * Point(0.f, 0.f, 0.f);
+    Tuple pixel = inverseTransform * Point(worldX, worldY, -1.f);
+    Tuple origin = inverseTransform * Point(0.f, 0.f, 0.f);
     Tuple direction = (pixel - origin).Normalize();
 
     return Ray(origin, direction);

@@ -30,12 +30,17 @@ class CheckerPattern : public Pattern
      * @param point A point in pattern space.
      * @return @c a when floor(x)+floor(y)+floor(z) is even, @c b otherwise.
      */
-    Color PatternAt(const Tuple &point) override
+    Color PatternAt(const Tuple &point) const override
     {
         if (static_cast<int>(std::floor(point.x) + std::floor(point.y) + std::floor(point.z)) % 2 == 0)
         {
             return GetA();
         }
         return GetB();
+    }
+
+    std::shared_ptr<Pattern> Clone() const override
+    {
+        return std::make_shared<CheckerPattern>(*this);
     }
 };

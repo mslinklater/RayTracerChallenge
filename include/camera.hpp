@@ -32,10 +32,10 @@ public:
     float GetFieldOfView() const;
 
     /** @brief Returns the camera-to-world (view) transform matrix. */
-    Matrix GetTransform() const;
+    const Matrix &GetTransform() const;
 
     /** @brief Replaces the camera-to-world (view) transform matrix. */
-    void SetTransform(const Matrix &transform) { this->transform = transform; }
+    void SetTransform(const Matrix &transform);
 
     /** @brief Returns the world-space width of a single pixel. */
     float GetPixelSize() const;
@@ -53,6 +53,7 @@ private:
     int vsize;          ///< Vertical resolution in pixels.
     float fieldOfView;  ///< Horizontal field of view in radians.
     Matrix transform;   ///< Camera-to-world transform (view matrix).
+    Matrix inverseTransform; ///< Cached inverse of @c transform for ray generation.
     float pixelSize;    ///< World-space width of a single pixel.
     float halfWidth;    ///< Half the world-space width of the image plane.
     float halfHeight;   ///< Half the world-space height of the image plane.

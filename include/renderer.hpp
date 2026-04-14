@@ -54,21 +54,42 @@ class Renderer
 
     /**
      * @brief Computes the colour contribution from reflected rays.
-     * @param world     The scene (mutable to allow recursive shading).
+     * @param world     The scene.
      * @param comps     Pre-computed intersection data.
      * @param remaining Maximum remaining recursion depth.
      * @return The reflected colour, or black if the material is non-reflective or depth is exhausted.
      */
-    static Color ReflectedColor(World &world, const Computations &comps, int remaining);
+    static Color ReflectedColor(const World &world, const Computations &comps, int remaining);
+
+    /**
+     * @brief Computes the colour contribution from reflected rays.
+     * @param world     The scene.
+     * @param material  The material on the intersected object.
+     * @param comps     Pre-computed intersection data.
+     * @param remaining Maximum remaining recursion depth.
+     * @return The reflected colour, or black if the material is non-reflective or depth is exhausted.
+     */
+    static Color ReflectedColor(const World &world, const Material &material, const Computations &comps, int remaining);
 
     /**
      * @brief Computes the colour contribution from refracted rays.
-     * @param world     The scene (mutable to allow recursive shading).
+     * @param world     The scene.
      * @param comps     Pre-computed intersection data.
      * @param remaining Maximum remaining recursion depth.
      * @return The refracted colour, or black if the material is non-reflective or depth is exhausted.
      */
-    static Color RefractedColor(World &world, const Computations &comps, int remaining);
+    static Color RefractedColor(const World &world, const Computations &comps, int remaining);
+
+    /**
+     * @brief Computes the colour contribution from refracted rays.
+     * @param world     The scene.
+     * @param material  The material on the intersected object.
+     * @param comps     Pre-computed intersection data.
+     * @param remaining Maximum remaining recursion depth.
+     * @return The refracted colour, or black if the material is non-reflective or depth is exhausted.
+     */
+    static Color RefractedColor(const World &world, const Material &material, const Computations &comps,
+                                int remaining);
 
     /**
      * @brief Computes the final shaded colour at a surface intersection.
@@ -133,6 +154,15 @@ class Renderer
      * @return @c EInShadow::Yes if the point is in shadow, @c EInShadow::No otherwise.
      */
     static EInShadow IsShadowed(const World &world, const Tuple &point);
+
+    /**
+     * @brief Determines whether @p point is in shadow with respect to @p light.
+     * @param world The scene.
+     * @param point The world-space point to test.
+     * @param light The specific light to test against.
+     * @return @c EInShadow::Yes if the point is shadowed from @p light, @c EInShadow::No otherwise.
+     */
+    static EInShadow IsShadowed(const World &world, const Tuple &point, const Light &light);
 
     /**
      * @brief Compute the Schlk approximation for reflectance at a surface intersection.

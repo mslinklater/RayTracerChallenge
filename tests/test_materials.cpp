@@ -60,3 +60,56 @@ TEST_CASE("Lighting with a pattern applied", "[materials]")
     REQUIRE(c1 == Color(1.f, 1.f, 1.f));
     REQUIRE(c2 == Color(0.f, 0.f, 0.f));
 }
+
+TEST_CASE("Materials compare all scalar properties", "[materials]")
+{
+    Material lhs;
+    Material rhs;
+
+    rhs.SetReflective(0.25f);
+    REQUIRE_FALSE(lhs == rhs);
+
+    rhs.SetReflective(lhs.GetReflective());
+    rhs.SetTransparency(0.75f);
+    REQUIRE_FALSE(lhs == rhs);
+
+    rhs.SetTransparency(lhs.GetTransparency());
+    rhs.SetRefractiveIndex(1.25f);
+    REQUIRE_FALSE(lhs == rhs);
+}
+
+TEST_CASE("Materials compare patterns by value", "[materials]")
+{
+    Material lhs;
+    Material rhs;
+    StripePattern lhsPattern(kColorWhite, kColorBlack);
+    StripePattern rhsPattern(kColorWhite, kColorBlack);
+
+    lhsPattern.SetTransform(Matrix::CreateScaling(2.f, 2.f, 2.f));
+    rhsPattern.SetTransform(Matrix::CreateScaling(2.f, 2.f, 2.f));
+    lhs.SetPattern(lhsPattern);
+    rhs.SetPattern(rhsPattern);
+
+    REQUIRE(lhs == rhs);
+
+    rhsPattern.SetTransform(Matrix::CreateTranslation(1.f, 0.f, 0.f));
+    rhs.SetPattern(rhsPattern);
+    REQUIRE_FALSE(lhs == rhs);
+}
+
+TEST_CASE("Copying a material clones its pattern", "[materials]")
+{
+    Material original;
+    StripePattern pattern(kColorWhite, kColorBlack);
+    original.SetPattern(pattern);
+
+    Material copy = original;
+    original.GetMutablePattern()->SetTransform(Matrix::CreateScaling(2.f, 2.f, 2.f));
+
+    REQUIRE(original.GetPattern() != nullptr);
+    REQUIRE(copy.GetPattern() != nullptr);
+    REQUIRE_FALSE(original == copy);
+    Matrix expected(4);
+    expected.SetIdentity();
+    REQUIRE(copy.GetPattern()->GetTransform() == expected);
+}

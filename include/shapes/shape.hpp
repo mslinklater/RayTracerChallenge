@@ -69,7 +69,7 @@ class Shape
     /** @brief Returns a mutable reference to the object-to-world transform. */
     Matrix &GetMutableTransform()
     {
-        transformCacheValid = false;
+        transformCacheValidAtomic = false;
         return transform;
     }
     /** @brief Replaces the object-to-world transform. */
@@ -129,13 +129,13 @@ class Shape
 
     ObjectId worldObjectId = kInvalidObjectId; ///< Unique world ID assigned by @c World.
 
-    std::string name;               ///< Human-readable identifier.
-    Matrix transform;               ///< Object-to-world transformation matrix (default: identity).
-    Material material;              ///< Surface material properties.
-    mutable Matrix inverseTransform{4}; ///< Cached inverse transform.
+    std::string name;                            ///< Human-readable identifier.
+    Matrix transform;                            ///< Object-to-world transformation matrix (default: identity).
+    Material material;                           ///< Surface material properties.
+    mutable Matrix inverseTransform{4};          ///< Cached inverse transform.
     mutable Matrix inverseTransposeTransform{4}; ///< Cached inverse-transpose transform.
-    mutable std::mutex transformCacheMutex; ///< Guards lazy cache refresh after direct transform mutation.
-    mutable std::atomic<bool> transformCacheValid{false}; ///< Whether the cached transform matrices are current.
+    mutable std::mutex transformCacheMutex;      ///< Guards lazy cache refresh after direct transform mutation.
+    mutable std::atomic<bool> transformCacheValidAtomic{false}; ///< Whether the cached transform matrices are current.
 };
 
 /// @brief Owning pointer to a heap-allocated @c Shape.

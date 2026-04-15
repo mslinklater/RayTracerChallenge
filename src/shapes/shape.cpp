@@ -25,15 +25,15 @@ void Shape::UpdateTransformCache() const
 {
     inverseTransform = transform.GetInverse();
     inverseTransposeTransform = inverseTransform.Transpose();
-    transformCacheValid.store(true, std::memory_order_release);
+    transformCacheValidAtomic.store(true, std::memory_order_release);
 }
 
 void Shape::EnsureTransformCache() const
 {
-    if (!transformCacheValid.load(std::memory_order_acquire))
+    if (!transformCacheValidAtomic.load(std::memory_order_acquire))
     {
         std::lock_guard<std::mutex> lock(transformCacheMutex);
-        if (!transformCacheValid.load(std::memory_order_relaxed))
+        if (!transformCacheValidAtomic.load(std::memory_order_relaxed))
         {
             UpdateTransformCache();
         }

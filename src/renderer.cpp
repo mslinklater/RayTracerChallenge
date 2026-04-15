@@ -26,14 +26,16 @@ Canvas Renderer::Render(const Camera &camera, const World &world)
     const unsigned int maxThreads = hardwareThreads == 0 ? 1u : hardwareThreads;
     const unsigned int threadCount = std::min(maxThreads, static_cast<unsigned int>(totalRows));
 
-    std::atomic<int> nextRow{0};
+    // Used to store the row number being worked on by the worker lambda
+    std::atomic<int> nextRowAtomic{0};
     std::vector<std::thread> workers;
     workers.reserve(threadCount);
 
-    auto renderRows = [&]() {
+    // Each worker thread will loop and continue to take unprocessed rows until the row count is reached
+    auto renderRow = [&]() {
         while (true)
         {
-            const int y = nextRow.fetch_add(1);
+            const int y = nextRowAtomic.fetch_add(1);
             if (y >= totalRows)
             {
                 return;
@@ -48,11 +50,13 @@ Canvas Renderer::Render(const Camera &camera, const World &world)
         }
     };
 
+    // Create the worker threads
     for (unsigned int i = 0; i < threadCount; ++i)
     {
-        workers.emplace_back(renderRows);
+        workers.emplace_back(renderRow);
     }
 
+    // Wait for all worker threads to complete
     for (std::thread &worker : workers)
     {
         worker.join();
@@ -158,8 +162,8 @@ Color Renderer::ShadeHit(const World &world, const Computations &comps, int rema
     for (const Light &light : world.GetLights())
     {
         const EInShadow inShadow = IsShadowed(world, comps.overPoint, light);
-        surface = surface +
-                  Lighting(material, object, light, comps.point, comps.eyeVector, comps.normalVector, inShadow);
+        surface =
+            surface + Lighting(material, object, light, comps.point, comps.eyeVector, comps.normalVector, inShadow);
     }
 
     Color reflected = ReflectedColor(world, material, comps, remaining);
@@ -260,9 +264,7 @@ IntersectionVector Renderer::Intersections(std::initializer_list<Intersection> l
 Intersection Renderer::GetClosestIntersection(const IntersectionVector &intersections)
 {
     const auto it = std::lower_bound(intersections.begin(), intersections.end(), 0.f,
-                                     [](const Intersection &intersection, float t) {
-                                         return intersection.GetT() < t;
-                                     });
+                                     [](const Intersection &intersection, float t) { return intersection.GetT() < t; });
     if (it == intersections.end())
     {
         return Intersection(0.f, kInvalidObjectId);

@@ -80,7 +80,7 @@ std::string pattern = root["material"]["pattern"].asString();
 
 ## TODO
 
-* Move stuff around into more sensible locations - groupings could be better
+* Test multiple lights - AI added this so needs testing
 * Add output comparison tests - maybe wait until we have a scene description language
 * Add chaining setters to the structure based classes like Material
 
@@ -96,5 +96,5 @@ std::string pattern = root["material"]["pattern"].asString();
 * Add a spacial partition system to accelerate ray/object intersections - p145-146
 * Once the book is complete do a refactor and rename of everything - not a fan of current naming
 * Add the ray tracer code from 'Ray Tracing in One Weekend' - find areas of overlap and contrast
-* Add scene description language - probably JSON based - and a parser for it
+* Add scene description language - JSON
 * Add ImGUI support for real time rendering and scene editing

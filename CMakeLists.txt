@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 option(ENABLE_COVERAGE "Build with coverage instrumentation" OFF)
+option(BUILD_BENCHMARKS "Build nanobench benchmark executable" ON)
 
 include(FetchContent)
 
@@ -29,6 +30,26 @@ FetchContent_Declare(
     GIT_SHALLOW TRUE
 )
 FetchContent_MakeAvailable(jsoncpp)
+
+if(BUILD_BENCHMARKS)
+    FetchContent_Declare(
+        nanobench
+        GIT_REPOSITORY https://github.com/martinus/nanobench.git
+        GIT_TAG v4.3.11
+        GIT_SHALLOW TRUE
+    )
+    FetchContent_GetProperties(nanobench)
+    if(NOT nanobench_POPULATED)
+        if(POLICY CMP0169)
+            cmake_policy(PUSH)
+            cmake_policy(SET CMP0169 OLD)
+        endif()
+        FetchContent_Populate(nanobench)
+        if(POLICY CMP0169)
+            cmake_policy(POP)
+        endif()
+    endif()
+endif()
 
 include(Catch)  # This provides catch_discover_tests()
 enable_testing()
@@ -132,6 +153,21 @@ target_link_options(RayTracerChallengeTests PRIVATE ${PROJECT_COVERAGE_FLAGS})
 
 # Use Catch2's test discovery instead of manual add_test
 catch_discover_tests(RayTracerChallengeTests)
+
+if(BUILD_BENCHMARKS)
+    add_executable(RayTracerChallengeBenchmarks benchmarks/benchmark_renderer.cpp)
+    target_include_directories(RayTracerChallengeBenchmarks PRIVATE ${nanobench_SOURCE_DIR}/src/include)
+    target_link_libraries(RayTracerChallengeBenchmarks PRIVATE RayTracerChallengeLib)
+    target_link_options(RayTracerChallengeBenchmarks PRIVATE ${PROJECT_COVERAGE_FLAGS})
+
+    add_custom_target(benchmark-report
+        COMMAND $<TARGET_FILE:RayTracerChallengeBenchmarks> ${CMAKE_BINARY_DIR}/benchmarks
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        DEPENDS RayTracerChallengeBenchmarks
+        COMMENT "Running benchmarks and generating reports in ${CMAKE_BINARY_DIR}/benchmarks"
+        VERBATIM
+    )
+endif()
 
 # Doxygen documentation target
 find_package(Doxygen)

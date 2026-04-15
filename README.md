@@ -12,7 +12,16 @@ cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COM
 cmake --build build
 ```
 
-The configure step will also fetch and build a compiled copy of **JsonCpp**. It is a small JSON library with a normal compiled target, so it avoids the compile-time cost of a header-only dependency.
+The configure step will also fetch **JsonCpp** and, unless `-DBUILD_BENCHMARKS=OFF` is set, **nanobench** for the benchmark executable.
+
+## Run benchmarks
+
+```bash
+cmake --build build --target RayTracerChallengeBenchmarks
+cmake --build build --target benchmark-report
+```
+
+This writes terminal output plus CSV, JSON, and HTML benchmark reports to `build/benchmarks/`.
 
 ## Run tests
 

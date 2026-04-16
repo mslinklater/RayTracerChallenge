@@ -1,5 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 #include "tuple.hpp"
+#include <limits>
 #include "maths.hpp"
 
 TEST_CASE("Create tuple", "[basic]")
@@ -33,6 +34,24 @@ TEST_CASE("Test for tuple is not vector", "[tuple]")
 {
     Tuple t{4.f, -4.f, 3.f, 1.f};
     REQUIRE(t.IsVector() == false);
+}
+
+TEST_CASE("Tuple with finite values is valid", "[tuple]")
+{
+    Tuple tuple{1.f, -2.f, 3.5f, 0.f};
+    REQUIRE(tuple.IsValid());
+}
+
+TEST_CASE("Tuple with infinite values is invalid", "[tuple]")
+{
+    Tuple tuple{std::numeric_limits<float>::infinity(), 0.f, 0.f, 1.f};
+    REQUIRE(!tuple.IsValid());
+}
+
+TEST_CASE("Tuple with NaN values is invalid", "[tuple]")
+{
+    Tuple tuple{std::numeric_limits<float>::quiet_NaN(), 0.f, 0.f, 1.f};
+    REQUIRE(!tuple.IsValid());
 }
 
 TEST_CASE("Test for Point creating Point", "[tuple]")

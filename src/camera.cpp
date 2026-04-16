@@ -1,10 +1,16 @@
 #include "camera.hpp"
+#include "maths.hpp"
 #include "ray.hpp"
+#include <cassert>
 #include <cmath>
 
 Camera::Camera(int hsize, int vsize, float fieldOfView)
     : hsize(hsize), vsize(vsize), fieldOfView(fieldOfView), transform(Matrix(4)), inverseTransform(Matrix(4))
 {
+    assert(hsize > 0);
+    assert(vsize > 0);
+    assert(fieldOfView > 0.f && fieldOfView < kPi);
+
     transform.SetIdentity();
     inverseTransform.SetIdentity();
 
@@ -57,6 +63,9 @@ float Camera::GetPixelSize() const
 
 Ray Camera::RayForPixel(int px, int py) const
 {
+    assert(px >= 0 && px < hsize);
+    assert(py >= 0 && py < vsize);
+
     float xoffset = (static_cast<float>(px) + 0.5f) * pixelSize;
     float yoffset = (static_cast<float>(py) + 0.5f) * pixelSize;
 

@@ -1,5 +1,6 @@
 #include "tuple.hpp"
 #include "maths.hpp"
+#include <cmath>
 #include <stdexcept>
 
 Tuple Tuple::Normalize() const
@@ -74,6 +75,11 @@ bool Tuple::IsPoint() const
 bool Tuple::IsVector() const
 {
     return w == 0.f;
+}
+
+bool Tuple::IsValid() const
+{
+    return std::isfinite(x) && std::isfinite(y) && std::isfinite(z) && std::isfinite(w);
 }
 
 bool Tuple::IsEqual(const Tuple &other) const

@@ -42,6 +42,8 @@ struct Tuple
     bool IsPoint() const;
     /** @brief Returns true if this tuple represents a vector (w == 0). */
     bool IsVector() const;
+    /** @brief Returns true when all components are finite values. */
+    bool IsValid() const;
     /**
      * @brief Compares two tuples using floating-point tolerance.
      * @return true if all components are within epsilon of each other.

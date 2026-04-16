@@ -42,6 +42,18 @@ void Matrix::Set(int row, int col, float value)
     values[row * size + col] = value;
 }
 
+bool Matrix::IsValid() const
+{
+    for (float value : values)
+    {
+        if (!std::isfinite(value))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 bool Matrix::operator==(const Matrix &other) const
 {
     if (size != other.size)

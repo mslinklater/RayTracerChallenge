@@ -1,6 +1,6 @@
 #pragma once
-#include <vector>
 #include "tuple.hpp"
+#include <vector>
 
 /**
  * @brief A square NxN matrix supporting common linear-algebra operations.
@@ -10,7 +10,7 @@
  */
 class Matrix
 {
-public:
+  public:
     /**
      * @brief Constructs an uninitialised matrix of the given side length.
      * @param size Side length (e.g., 4 for a 4×4 matrix).
@@ -74,6 +74,8 @@ public:
 
     /** @brief Returns the inverse of this matrix. */
     Matrix GetInverse() const;
+    /** @bried Returns true if all the matrix elements are finite values. */
+    bool IsValid() const;
 
     /** @brief Equality comparison using floating-point tolerance. */
     bool operator==(const Matrix &other) const;
@@ -138,7 +140,7 @@ public:
      */
     static Matrix ViewTransform(const Tuple &from, const Tuple &to, const Tuple &up);
 
-private:
-    int size; ///< Side length of the matrix (e.g., 4 for a 4×4 matrix).
+  private:
+    int size;                  ///< Side length of the matrix (e.g., 4 for a 4×4 matrix).
     std::vector<float> values; ///< Flat row-major storage of matrix elements.
 };

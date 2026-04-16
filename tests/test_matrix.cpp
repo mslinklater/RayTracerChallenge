@@ -2,6 +2,7 @@
 #include "matrix.hpp"
 #include "tuple.hpp"
 #include "maths.hpp"
+#include <limits>
 
 TEST_CASE("Create matrix and check size", "[matrix]")
 {
@@ -19,6 +20,27 @@ TEST_CASE("Create empty matrix and check default values", "[matrix]")
             REQUIRE(m.Get(col, row) == 0.f);
         }
     }
+}
+
+TEST_CASE("Matrix with finite values is valid", "[matrix]")
+{
+    Matrix matrix({1.f, 2.f, 3.f, 4.f});
+
+    REQUIRE(matrix.IsValid());
+}
+
+TEST_CASE("Matrix with infinite values is invalid", "[matrix]")
+{
+    Matrix matrix({1.f, std::numeric_limits<float>::infinity(), 3.f, 4.f});
+
+    REQUIRE(!matrix.IsValid());
+}
+
+TEST_CASE("Matrix with NaN values is invalid", "[matrix]")
+{
+    Matrix matrix({1.f, std::numeric_limits<float>::quiet_NaN(), 3.f, 4.f});
+
+    REQUIRE(!matrix.IsValid());
 }
 
 TEST_CASE("Get and set matrix values", "[matrix]")

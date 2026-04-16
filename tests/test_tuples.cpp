@@ -1,7 +1,7 @@
-#include <catch2/catch_test_macros.hpp>
-#include "tuple.hpp"
-#include <limits>
 #include "maths.hpp"
+#include "tuple.hpp"
+#include <catch2/catch_test_macros.hpp>
+#include <limits>
 
 TEST_CASE("Create tuple", "[basic]")
 {

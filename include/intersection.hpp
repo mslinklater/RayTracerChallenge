@@ -1,4 +1,6 @@
 #pragma once
+#include <cassert>
+#include <cmath>
 #include "types.hpp"
 #include <cstddef>
 #include <vector>
@@ -19,6 +21,7 @@ class Intersection
      */
     Intersection(float t, ObjectId objectId) : t(t), objectId(objectId)
     {
+        assert(std::isfinite(t));
     }
 
     /** @brief Returns the ray parameter at the intersection point. */

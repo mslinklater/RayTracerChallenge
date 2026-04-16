@@ -1,5 +1,6 @@
 #include "utils.hpp"
 #include <algorithm>
+#include <cassert>
 #include <cmath>
 #include <fstream>
 #include <string>
@@ -7,12 +8,14 @@
 
 int ToPPMChannel(float value)
 {
+    assert(std::isfinite(value));
     const float clamped = std::clamp(value, 0.0f, 1.0f);
     return static_cast<int>(std::round(clamped * 255.0f));
 }
 
 std::vector<std::string> ReadLinesFromFile(const std::string &filename)
 {
+    assert(!filename.empty());
     // load 'test.ppm' as a text file
     std::ifstream ppmFile(filename);
     if (!ppmFile.is_open())
@@ -33,6 +36,7 @@ std::vector<std::string> ReadLinesFromFile(const std::string &filename)
 
 Sphere GlassSphere(const std::string &name)
 {
+    assert(!name.empty());
     Sphere sphere(name);
     Material mat;
     mat.SetTransparency(1.0f);

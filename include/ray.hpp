@@ -1,5 +1,7 @@
 #pragma once
 #include "tuple.hpp"
+#include <cassert>
+#include <cmath>
 
 struct Matrix;
 
@@ -20,7 +22,11 @@ public:
      * @param direction The direction of the ray (vector tuple, w=0).
      */
     Ray(const Tuple &origin, const Tuple &direction)
-        : origin(origin), direction(direction) {}
+        : origin(origin), direction(direction)
+    {
+        assert(origin.IsValid());
+        assert(direction.IsValid());
+    }
 
     /** @brief Returns the origin point of the ray. */
     Tuple GetOrigin() const { return origin; }
@@ -33,7 +39,13 @@ public:
      * @param t The ray parameter (distance along the direction vector).
      * @return The point @c origin + @c direction * t.
      */
-    Tuple PositionAt(float t) const { return origin + direction * t; }
+    Tuple PositionAt(float t) const
+    {
+        assert(origin.IsValid());
+        assert(direction.IsValid());
+        assert(std::isfinite(t));
+        return origin + direction * t;
+    }
 
 private:
     Tuple origin;    ///< The starting point of the ray.

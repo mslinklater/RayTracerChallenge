@@ -1,7 +1,22 @@
 #include "world.hpp"
 #include "light.hpp"
 #include "ray.hpp"
+#include <cassert>
+#include <cmath>
 #include <memory>
+
+namespace
+{
+bool IsFiniteColor(const Color &color)
+{
+    return std::isfinite(color.r) && std::isfinite(color.g) && std::isfinite(color.b);
+}
+
+bool IsValidLight(const Light &light)
+{
+    return light.position.IsValid() && light.position.IsPoint() && IsFiniteColor(light.intensity);
+}
+}
 
 const std::deque<ShapePtr> &World::GetObjects() const
 {
@@ -15,6 +30,8 @@ const std::vector<Light> &World::GetLights() const
 
 void World::AddObjectImpl(ShapePtr ptr)
 {
+    assert(ptr != nullptr);
+    assert(!ptr->GetName().empty());
     // if any existing objects share the same name throw an expeption
     for (const auto &o : objects)
     {
@@ -29,6 +46,7 @@ void World::AddObjectImpl(ShapePtr ptr)
 
 bool World::ContainsLight(const Light &light) const
 {
+    assert(IsValidLight(light));
     for (auto l : lights)
     {
         if (l == light)
@@ -41,6 +59,7 @@ bool World::ContainsLight(const Light &light) const
 
 bool World::ContainsObject(const Shape &object) const
 {
+    assert(!object.GetName().empty());
     for (const auto &o : objects)
     {
         if (o->GetTransform() == object.GetTransform() && o->GetMaterial() == object.GetMaterial())
@@ -88,6 +107,7 @@ const Shape &World::GetObject(ObjectId id) const
 
 const Shape &World::GetObjectWithName(const std::string &name) const
 {
+    assert(!name.empty());
     for (const auto &object : objects)
     {
         if (object->GetName() == name)
@@ -112,6 +132,7 @@ Shape &World::GetMutableObject(ObjectId id)
 
 Shape &World::GetMutableObjectWithName(const std::string &name) const
 {
+    assert(!name.empty());
     for (const auto &object : objects)
     {
         if (object->GetName() == name)
@@ -124,6 +145,7 @@ Shape &World::GetMutableObjectWithName(const std::string &name) const
 
 void World::ReplaceLight(int index, const Light &light)
 {
+    assert(IsValidLight(light));
     if (index < 0 || static_cast<size_t>(index) >= lights.size())
     {
         throw std::out_of_range("Light index out of range.");

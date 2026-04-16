@@ -2,6 +2,7 @@
 #include "light.hpp"
 #include "shapes/shape.hpp"
 #include "types.hpp"
+#include <cassert>
 #include <deque>
 #include <memory>
 #include <type_traits>
@@ -39,6 +40,11 @@ class World
      */
     void AddLight(const Light &light)
     {
+        assert(light.position.IsValid());
+        assert(light.position.IsPoint());
+        assert(std::isfinite(light.intensity.r));
+        assert(std::isfinite(light.intensity.g));
+        assert(std::isfinite(light.intensity.b));
         lights.push_back(light);
     }
 
@@ -54,6 +60,7 @@ class World
      */
     template <typename T, typename = std::enable_if_t<std::is_base_of_v<Shape, T>>> ObjectId AddObject(T &object)
     {
+        assert(!object.GetName().empty());
         object.SetWorldObjectId(nextObjectId++);
         ShapePtr shapePtr = std::make_unique<T>(object);
         AddObjectImpl(std::move(shapePtr));

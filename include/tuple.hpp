@@ -1,4 +1,6 @@
 #pragma once
+#include <cassert>
+#include <cmath>
 
 /**
  * @brief A 4D homogeneous coordinate used to represent both points and vectors.
@@ -71,6 +73,9 @@ struct Tuple
  */
 inline Tuple Point(float x, float y, float z)
 {
+    assert(std::isfinite(x));
+    assert(std::isfinite(y));
+    assert(std::isfinite(z));
     return Tuple{x, y, z, 1.f};
 }
 

@@ -3,6 +3,7 @@
 #include "matrix.hpp"
 #include "ray.hpp"
 #include "types.hpp"
+#include <cassert>
 #include <atomic>
 #include <mutex>
 #include <string>
@@ -24,6 +25,7 @@ class Shape
      */
     Shape(const std::string &name) : name(name), worldObjectId(kInvalidObjectId), transform(4)
     {
+        assert(!name.empty());
         transform.SetIdentity();
     }
     Shape(const Shape &other);
@@ -36,6 +38,7 @@ class Shape
      */
     void SetWorldObjectId(ObjectId id)
     {
+        assert(id != kInvalidObjectId);
         worldObjectId = id;
     }
 
@@ -75,6 +78,8 @@ class Shape
     /** @brief Replaces the object-to-world transform. */
     void SetTransform(const Matrix &t)
     {
+        assert(t.GetSize() == 4);
+        assert(t.IsValid());
         transform = t;
         UpdateTransformCache();
     }

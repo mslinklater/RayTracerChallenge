@@ -1,5 +1,7 @@
 #pragma once
 #include "color.hpp"
+#include <cassert>
+#include <cmath>
 #include <memory>
 #include <type_traits>
 
@@ -93,6 +95,9 @@ class Material
     /** @brief Sets the base surface colour. */
     Material &SetColor(const Color &c)
     {
+        assert(std::isfinite(c.r));
+        assert(std::isfinite(c.g));
+        assert(std::isfinite(c.b));
         color = c;
         return *this;
     }
@@ -100,6 +105,8 @@ class Material
     /** @brief Sets the ambient reflection coefficient. */
     Material &SetAmbient(float a)
     {
+        assert(std::isfinite(a));
+        assert(a >= 0.f && a <= 1.f);
         ambient = a;
         return *this;
     }
@@ -107,6 +114,8 @@ class Material
     /** @brief Sets the diffuse reflection coefficient. */
     Material &SetDiffuse(float d)
     {
+        assert(std::isfinite(d));
+        assert(d >= 0.f && d <= 1.f);
         diffuse = d;
         return *this;
     }
@@ -114,6 +123,8 @@ class Material
     /** @brief Sets the specular reflection coefficient. */
     Material &SetSpecular(float s)
     {
+        assert(std::isfinite(s));
+        assert(s >= 0.f && s <= 1.f);
         specular = s;
         return *this;
     }
@@ -121,6 +132,8 @@ class Material
     /** @brief Sets the shininess exponent used for specular highlights. */
     Material &SetShininess(float sh)
     {
+        assert(std::isfinite(sh));
+        assert(sh >= 0.f);
         shininess = sh;
         return *this;
     }
@@ -128,6 +141,8 @@ class Material
     /** @brief Sets the reflectivity (0 = non-reflective, 1 = mirror). */
     Material &SetReflective(float r)
     {
+        assert(std::isfinite(r));
+        assert(r >= 0.f && r <= 1.f);
         reflective = r;
         return *this;
     }
@@ -135,6 +150,8 @@ class Material
     /** @brief Sets the transparency (0 = opaque, 1 = fully transparent). */
     Material &SetTransparency(float t)
     {
+        assert(std::isfinite(t));
+        assert(t >= 0.f && t <= 1.f);
         transparency = t;
         return *this;
     }
@@ -142,6 +159,8 @@ class Material
     /** @brief Sets the refractive index (1.0 for vacuum/air). */
     Material &SetRefractiveIndex(float ri)
     {
+        assert(std::isfinite(ri));
+        assert(ri > 0.f);
         refractiveIndex = ri;
         return *this;
     }
@@ -153,6 +172,8 @@ class Material
      */
     template <typename T, typename = std::enable_if_t<std::is_base_of_v<Pattern, T>>> void SetPattern(const T &object)
     {
+        assert(object.GetTransform().GetSize() == 4);
+        assert(object.GetTransform().IsValid());
         pattern = std::make_shared<T>(object);
     }
 

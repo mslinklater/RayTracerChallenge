@@ -1,14 +1,17 @@
 #include "matrix.hpp"
 #include "maths.hpp"
+#include <cassert>
 #include <stdexcept>
 
 Matrix::Matrix(int size) : size(size), values(size * size, 0.f)
 {
+    assert(size > 0);
 }
 
 Matrix::Matrix(const std::vector<float> &values)
 {
     int vectorSize = static_cast<int>(values.size());
+    assert(vectorSize > 0);
     float sqrtSize = std::sqrt(vectorSize);
     if (sqrtSize != static_cast<int>(sqrtSize))
     {
@@ -35,6 +38,7 @@ float Matrix::Get(int row, int col) const
 
 void Matrix::Set(int row, int col, float value)
 {
+    assert(std::isfinite(value));
     if (col < 0 || col >= size || row < 0 || row >= size)
     {
         throw std::out_of_range("Column and row indices must be within the bounds of the matrix.");
@@ -56,6 +60,8 @@ bool Matrix::IsValid() const
 
 bool Matrix::operator==(const Matrix &other) const
 {
+    assert(IsValid());
+    assert(other.IsValid());
     if (size != other.size)
     {
         return false;
@@ -78,6 +84,8 @@ bool Matrix::operator!=(const Matrix &other) const
 
 Matrix Matrix::operator*(const Matrix &other) const
 {
+    assert(IsValid());
+    assert(other.IsValid());
     if (size != other.size)
     {
         throw std::invalid_argument("Matrices must be of the same size for multiplication.");
@@ -100,6 +108,7 @@ Matrix Matrix::operator*(const Matrix &other) const
 
 void Matrix::SetIdentity()
 {
+    assert(size > 0);
     for (int row = 0; row < size; ++row)
     {
         for (int col = 0; col < size; ++col)
@@ -111,6 +120,8 @@ void Matrix::SetIdentity()
 
 Tuple Matrix::operator*(const Tuple &tuple) const
 {
+    assert(IsValid());
+    assert(tuple.IsValid());
     if (size != 4)
     {
         throw std::invalid_argument("Matrix must be 4x4 to multiply with a tuple.");
@@ -124,6 +135,7 @@ Tuple Matrix::operator*(const Tuple &tuple) const
 
 Matrix Matrix::Transpose() const
 {
+    assert(IsValid());
     Matrix result(size);
     for (int row = 0; row < size; ++row)
     {
@@ -137,6 +149,7 @@ Matrix Matrix::Transpose() const
 
 float Matrix::GetDeterminant() const
 {
+    assert(IsValid());
     float determinant = 0.f;
     if (size == 2)
     {
@@ -154,6 +167,8 @@ float Matrix::GetDeterminant() const
 
 Matrix Matrix::GetSubmatrix(int excludeRow, int excludeCol) const
 {
+    assert(IsValid());
+    assert(size > 1);
     if (excludeRow < 0 || excludeRow >= size || excludeCol < 0 || excludeCol >= size)
     {
         throw std::out_of_range("excludedRow and excludedColumn indices must be within the bounds of the matrix.");
@@ -185,18 +200,21 @@ Matrix Matrix::GetSubmatrix(int excludeRow, int excludeCol) const
 
 float Matrix::GetMinor(int row, int col) const
 {
+    assert(IsValid());
     Matrix sub = GetSubmatrix(row, col);
     return sub.GetDeterminant();
 }
 
 float Matrix::GetCofactor(int row, int col) const
 {
+    assert(IsValid());
     float minor = GetMinor(row, col);
     return ((row + col) % 2 == 0) ? minor : -minor;
 }
 
 Matrix Matrix::GetInverse() const
 {
+    assert(IsValid());
     float determinant = GetDeterminant();
     if (AreEqual(determinant, 0.f))
     {
@@ -217,6 +235,9 @@ Matrix Matrix::GetInverse() const
 
 Matrix Matrix::CreateTranslation(float x, float y, float z)
 {
+    assert(std::isfinite(x));
+    assert(std::isfinite(y));
+    assert(std::isfinite(z));
     Matrix translation(4);
     translation.SetIdentity();
     translation.Set(0, 3, x);
@@ -227,6 +248,9 @@ Matrix Matrix::CreateTranslation(float x, float y, float z)
 
 Matrix Matrix::CreateScaling(float x, float y, float z)
 {
+    assert(std::isfinite(x));
+    assert(std::isfinite(y));
+    assert(std::isfinite(z));
     Matrix scaling(4);
     scaling.SetIdentity();
     scaling.Set(0, 0, x);
@@ -237,6 +261,7 @@ Matrix Matrix::CreateScaling(float x, float y, float z)
 
 Matrix Matrix::CreateRotationX(float angle)
 {
+    assert(std::isfinite(angle));
     Matrix rotation(4);
     rotation.SetIdentity();
     float cosA = std::cos(angle);
@@ -250,6 +275,7 @@ Matrix Matrix::CreateRotationX(float angle)
 
 Matrix Matrix::CreateRotationY(float angle)
 {
+    assert(std::isfinite(angle));
     Matrix rotation(4);
     rotation.SetIdentity();
     float cosA = std::cos(angle);
@@ -263,6 +289,7 @@ Matrix Matrix::CreateRotationY(float angle)
 
 Matrix Matrix::CreateRotationZ(float angle)
 {
+    assert(std::isfinite(angle));
     Matrix rotation(4);
     rotation.SetIdentity();
     float cosA = std::cos(angle);
@@ -276,6 +303,12 @@ Matrix Matrix::CreateRotationZ(float angle)
 
 Matrix Matrix::CreateShearing(float xy, float xz, float yx, float yz, float zx, float zy)
 {
+    assert(std::isfinite(xy));
+    assert(std::isfinite(xz));
+    assert(std::isfinite(yx));
+    assert(std::isfinite(yz));
+    assert(std::isfinite(zx));
+    assert(std::isfinite(zy));
     Matrix shearing(4);
     shearing.SetIdentity();
     shearing.Set(0, 1, xy);
@@ -289,9 +322,18 @@ Matrix Matrix::CreateShearing(float xy, float xz, float yx, float yz, float zx, 
 
 Matrix Matrix::ViewTransform(const Tuple &from, const Tuple &to, const Tuple &up)
 {
+    assert(from.IsValid());
+    assert(from.IsPoint());
+    assert(to.IsValid());
+    assert(to.IsPoint());
+    assert(up.IsValid());
+    assert(up.IsVector());
+    assert(!AreEqual((to - from).Magnitude(), 0.f));
+    assert(!AreEqual(up.Magnitude(), 0.f));
     Tuple forward = (to - from).Normalize();
     Tuple upNormalized = up.Normalize();
     Tuple left = forward ^ upNormalized;
+    assert(!AreEqual(left.Magnitude(), 0.f));
     Tuple trueUp = left ^ forward;
 
     Matrix orientation(4);

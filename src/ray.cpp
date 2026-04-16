@@ -2,11 +2,6 @@
 #include "matrix.hpp"
 #include <cassert>
 
-// Tuple Position(const Ray &ray, float t)
-//{
-//     return ray.GetOrigin() + ray.GetDirection() * t;
-// }
-
 Ray operator*(const Ray &ray, const Matrix &matrix)
 {
     assert(ray.GetOrigin().IsValid());

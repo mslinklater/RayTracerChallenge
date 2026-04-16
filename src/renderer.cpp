@@ -14,41 +14,6 @@
 #include <thread>
 #include <vector>
 
-namespace
-{
-bool IsFiniteColor(const Color &color)
-{
-    return std::isfinite(color.r) && std::isfinite(color.g) && std::isfinite(color.b);
-}
-
-bool IsValidLight(const Light &light)
-{
-    return light.position.IsValid() && IsFiniteColor(light.intensity);
-}
-
-bool IsValidRay(const Ray &ray)
-{
-    return ray.GetOrigin().IsValid() && ray.GetDirection().IsValid();
-}
-
-bool IsValidMaterial(const Material &material)
-{
-    return IsFiniteColor(material.GetColor()) && std::isfinite(material.GetAmbient()) && std::isfinite(material.GetDiffuse()) &&
-           std::isfinite(material.GetSpecular()) && std::isfinite(material.GetShininess()) &&
-           std::isfinite(material.GetReflective()) && std::isfinite(material.GetTransparency()) &&
-           std::isfinite(material.GetRefractiveIndex()) && material.GetShininess() >= 0.f &&
-           material.GetReflective() >= 0.f && material.GetReflective() <= 1.f &&
-           material.GetTransparency() >= 0.f && material.GetTransparency() <= 1.f && material.GetRefractiveIndex() > 0.f;
-}
-
-bool IsValidComputations(const Computations &comps)
-{
-    return std::isfinite(comps.t) && comps.objectId != kInvalidObjectId && comps.point.IsValid() && comps.overPoint.IsValid() &&
-           comps.underPoint.IsValid() && comps.eyeVector.IsValid() && comps.normalVector.IsValid() && comps.reflectv.IsValid() &&
-           std::isfinite(comps.n1) && comps.n1 > 0.f && std::isfinite(comps.n2) && comps.n2 > 0.f;
-}
-}
-
 Canvas Renderer::Render(const Camera &camera, const World &world)
 {
     assert(camera.GetHSize() > 0);
@@ -107,7 +72,7 @@ Canvas Renderer::Render(const Camera &camera, const World &world)
 Color Renderer::ColorAt(const World &world, const Ray &ray, int remaining)
 {
     assert(remaining >= 0);
-    assert(IsValidRay(ray));
+    assert(ray.IsValid());
     const IntersectionVector intersections = IntersectWorld(world, ray);
     if (intersections.empty())
     {
@@ -124,7 +89,7 @@ Color Renderer::ColorAt(const World &world, const Ray &ray, int remaining)
 
 IntersectionVector Renderer::IntersectWorld(const World &world, const Ray &ray)
 {
-    assert(IsValidRay(ray));
+    assert(ray.IsValid());
     std::vector<Intersection> intersections;
     intersections.reserve(world.GetObjects().size() * 2);
 
@@ -148,15 +113,15 @@ IntersectionVector Renderer::IntersectWorld(const World &world, const Ray &ray)
 Color Renderer::ReflectedColor(const World &world, const Computations &comps, int remaining)
 {
     assert(remaining >= 0);
-    assert(IsValidComputations(comps));
+    assert(comps.IsValid());
     return ReflectedColor(world, world.GetObject(comps.objectId).GetMaterial(), comps, remaining);
 }
 
 Color Renderer::ReflectedColor(const World &world, const Material &material, const Computations &comps, int remaining)
 {
     assert(remaining >= 0);
-    assert(IsValidMaterial(material));
-    assert(IsValidComputations(comps));
+    assert(material.IsValid());
+    assert(comps.IsValid());
     if (remaining <= 0)
         return kColorBlack;
 
@@ -172,15 +137,15 @@ Color Renderer::ReflectedColor(const World &world, const Material &material, con
 Color Renderer::RefractedColor(const World &world, const Computations &comps, int remaining)
 {
     assert(remaining >= 0);
-    assert(IsValidComputations(comps));
+    assert(comps.IsValid());
     return RefractedColor(world, world.GetObject(comps.objectId).GetMaterial(), comps, remaining);
 }
 
 Color Renderer::RefractedColor(const World &world, const Material &material, const Computations &comps, int remaining)
 {
     assert(remaining >= 0);
-    assert(IsValidMaterial(material));
-    assert(IsValidComputations(comps));
+    assert(material.IsValid());
+    assert(comps.IsValid());
     if (remaining <= 0)
         return kColorBlack;
 
@@ -208,7 +173,7 @@ Color Renderer::RefractedColor(const World &world, const Material &material, con
 Color Renderer::ShadeHit(const World &world, const Computations &comps, int remaining)
 {
     assert(remaining >= 0);
-    assert(IsValidComputations(comps));
+    assert(comps.IsValid());
     const Shape &object = world.GetObject(comps.objectId);
     const Material &material = object.GetMaterial();
     Color surface = kColorBlack;
@@ -235,11 +200,12 @@ Color Renderer::ShadeHit(const World &world, const Computations &comps, int rema
 Color Renderer::Lighting(const Material &material, const Shape &object, const Light &light, const Tuple &position,
                          const Tuple &eyeVector, const Tuple &normalVector, EInShadow inShadow)
 {
-    assert(IsValidMaterial(material));
-    assert(IsValidLight(light));
+    assert(material.IsValid());
+    assert(light.IsValid());
     assert(position.IsValid());
     assert(eyeVector.IsValid());
     assert(normalVector.IsValid());
+
     Color color;
 
     if (material.GetPattern() != nullptr)
@@ -344,7 +310,7 @@ Computations Renderer::PrepareComputations(const Intersection &intersection, con
 {
     assert(intersection.GetObjectId() != kInvalidObjectId);
     assert(std::isfinite(intersection.GetT()));
-    assert(IsValidRay(ray));
+    assert(ray.IsValid());
     Computations comps;
     comps.t = intersection.GetT();
     comps.objectId = intersection.GetObjectId();
@@ -432,7 +398,7 @@ EInShadow Renderer::IsShadowed(const World &world, const Tuple &point)
 EInShadow Renderer::IsShadowed(const World &world, const Tuple &point, const Light &light)
 {
     assert(point.IsValid());
-    assert(IsValidLight(light));
+    assert(light.IsValid());
     Tuple lightVector = light.position - point;
     float distanceToLight = lightVector.Magnitude();
     Ray shadowRay(point, lightVector.Normalize());
@@ -448,7 +414,7 @@ EInShadow Renderer::IsShadowed(const World &world, const Tuple &point, const Lig
 
 float Renderer::Schlick(const Computations &comps)
 {
-    assert(IsValidComputations(comps));
+    assert(comps.IsValid());
     float cos = comps.eyeVector | comps.normalVector;
     if (comps.n1 > comps.n2)
     {

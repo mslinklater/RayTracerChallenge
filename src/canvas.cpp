@@ -6,14 +6,6 @@
 #include <fstream>
 #include <iostream>
 
-namespace
-{
-bool IsFiniteColor(const Color &color)
-{
-    return std::isfinite(color.r) && std::isfinite(color.g) && std::isfinite(color.b);
-}
-}
-
 Canvas::Canvas(int width, int height) : width(width), height(height), pixels(width * height)
 {
     assert(width > 0);
@@ -31,7 +23,8 @@ Color Canvas::GetPixel(int x, int y) const
 
 void Canvas::WritePixel(int x, int y, const Color &color)
 {
-    assert(IsFiniteColor(color));
+    assert(color.IsValid());
+
     if (x < 0 || x >= width || y < 0 || y >= height)
     {
         return; // Ignore out-of-bounds writes
@@ -42,6 +35,7 @@ void Canvas::WritePixel(int x, int y, const Color &color)
 void Canvas::WriteToPPM(const std::string &filename) const
 {
     assert(!filename.empty());
+
     std::ofstream ppmFile(filename);
     if (!ppmFile.is_open())
     {

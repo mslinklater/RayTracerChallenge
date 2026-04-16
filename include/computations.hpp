@@ -21,4 +21,10 @@ struct Computations
     bool inside = false;                       ///< True when the intersection occurs on the inside of the object.
     float n1 = 0.f;                            ///< Refractive index of the material the ray is exiting.
     float n2 = 0.f;                            ///< Refractive index of the material the ray is entering.
+
+    bool IsValid() const
+    {
+        return std::isfinite(t) && objectId != kInvalidObjectId && point.IsValid() && overPoint.IsValid() &&
+               underPoint.IsValid() && eyeVector.IsValid() && normalVector.IsValid() && reflectv.IsValid();
+    }
 };

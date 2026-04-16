@@ -54,6 +54,7 @@ void Camera::SetTransform(const Matrix &transform)
 {
     assert(transform.GetSize() == 4);
     assert(transform.IsValid());
+
     this->transform = transform;
     inverseTransform = transform.GetInverse();
 }

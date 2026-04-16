@@ -26,6 +26,11 @@ struct Color
     {
         std::cout << "Color(" << r << ", " << g << ", " << b << ")" << std::endl;
     }
+
+    bool IsValid() const
+    {
+        return std::isfinite(r) && std::isfinite(g) && std::isfinite(b);
+    }
 };
 
 /// @brief Colour returned when a ray misses all geometry (cyan sentinel).

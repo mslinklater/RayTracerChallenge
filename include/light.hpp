@@ -1,6 +1,6 @@
 #pragma once
-#include "tuple.hpp"
 #include "color.hpp"
+#include "tuple.hpp"
 #include <cassert>
 #include <cmath>
 
@@ -31,4 +31,9 @@ struct Light
 
     /** @brief Equality comparison. */
     bool operator==(const Light &other) const;
+
+    bool IsValid() const
+    {
+        return position.IsValid() && position.IsPoint() && intensity.IsValid();
+    }
 };

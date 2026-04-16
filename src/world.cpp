@@ -5,19 +5,6 @@
 #include <cmath>
 #include <memory>
 
-namespace
-{
-bool IsFiniteColor(const Color &color)
-{
-    return std::isfinite(color.r) && std::isfinite(color.g) && std::isfinite(color.b);
-}
-
-bool IsValidLight(const Light &light)
-{
-    return light.position.IsValid() && light.position.IsPoint() && IsFiniteColor(light.intensity);
-}
-}
-
 const std::deque<ShapePtr> &World::GetObjects() const
 {
     return objects;
@@ -46,7 +33,7 @@ void World::AddObjectImpl(ShapePtr ptr)
 
 bool World::ContainsLight(const Light &light) const
 {
-    assert(IsValidLight(light));
+    assert(light.IsValid());
     for (auto l : lights)
     {
         if (l == light)
@@ -145,7 +132,7 @@ Shape &World::GetMutableObjectWithName(const std::string &name) const
 
 void World::ReplaceLight(int index, const Light &light)
 {
-    assert(IsValidLight(light));
+    assert(light.IsValid());
     if (index < 0 || static_cast<size_t>(index) >= lights.size())
     {
         throw std::out_of_range("Light index out of range.");

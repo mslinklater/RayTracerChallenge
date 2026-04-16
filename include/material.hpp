@@ -180,6 +180,15 @@ class Material
     /** @brief Copy-assigns all shading parameters and the optional pattern. */
     Material &operator=(const Material &other);
 
+    bool IsValid() const
+    {
+        return color.IsValid() && std::isfinite(ambient) && std::isfinite(diffuse) && std::isfinite(specular) &&
+               std::isfinite(shininess) && std::isfinite(reflective) && std::isfinite(transparency) &&
+               std::isfinite(refractiveIndex) && ambient >= 0.f && ambient <= 1.f && diffuse >= 0.f && diffuse <= 1.f &&
+               specular >= 0.f && specular <= 1.f && shininess >= 0.f && reflective >= 0.f && reflective <= 1.f &&
+               transparency >= 0.f && transparency <= 1.f && refractiveIndex > 0.f;
+    }
+
   private:
     Color color = kDefaultColor;                     ///< The base color of the material.
     float ambient = kDefaultAmbient;                 ///< The ambient reflection coefficient.

@@ -11,8 +11,8 @@ Tuple Plane::NormalAtLocal(const Tuple &point) const
 
 std::vector<float> Plane::IntersectLocal(const Ray &ray) const
 {
-    assert(ray.GetOrigin().IsValid());
-    assert(ray.GetDirection().IsValid());
+    assert(ray.IsValid());
+
     // A plane is infinite, so it only intersects with a ray if the ray is not parallel to the plane
     if (std::abs(ray.GetDirection().y) < 1e-6)
     {

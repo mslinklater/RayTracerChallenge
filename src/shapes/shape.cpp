@@ -26,6 +26,7 @@ void Shape::UpdateTransformCache() const
 {
     assert(transform.GetSize() == 4);
     assert(transform.IsValid());
+
     inverseTransform = transform.GetInverse();
     inverseTransposeTransform = inverseTransform.Transpose();
     transformCacheValidAtomic.store(true, std::memory_order_release);
@@ -46,6 +47,7 @@ void Shape::EnsureTransformCache() const
 Tuple Shape::NormalAt(const Tuple &point) const
 {
     assert(point.IsValid());
+
     Tuple objectPoint = WorldToObject(point);
 
     Tuple objectNormal = NormalAtLocal(objectPoint);
@@ -58,6 +60,7 @@ Tuple Shape::NormalAt(const Tuple &point) const
 Tuple Shape::WorldToObject(const Tuple &point) const
 {
     assert(point.IsValid());
+
     EnsureTransformCache();
     return inverseTransform * point;
 }
@@ -65,13 +68,14 @@ Tuple Shape::WorldToObject(const Tuple &point) const
 Tuple Shape::NormalAtLocal(const Tuple &point) const
 {
     assert(point.IsValid());
+
     return Vector(point.x, point.y, point.z);
 }
 
 std::vector<float> Shape::Intersect(const Ray &ray) const
 {
-    assert(ray.GetOrigin().IsValid());
-    assert(ray.GetDirection().IsValid());
+    assert(ray.IsValid());
+
     EnsureTransformCache();
     Ray localRay = ray * inverseTransform;
     return IntersectLocal(localRay);
@@ -79,7 +83,7 @@ std::vector<float> Shape::Intersect(const Ray &ray) const
 
 std::vector<float> Shape::IntersectLocal(const Ray &ray) const
 {
-    assert(ray.GetOrigin().IsValid());
-    assert(ray.GetDirection().IsValid());
+    assert(ray.IsValid());
+
     return std::vector<float>(); // Default implementation returns an empty vector (no intersections)
 }

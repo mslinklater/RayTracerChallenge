@@ -11,11 +11,12 @@ bool operator==(const Sphere &s1, const Sphere &s2)
 
 std::vector<float> Sphere::IntersectLocal(const Ray &ray) const
 {
-    assert(ray.GetOrigin().IsValid());
-    assert(ray.GetDirection().IsValid());
+    assert(ray.IsValid());
+
     // For a sphere centered at the origin with radius 1, the intersection can be calculated using the quadratic
     // formula. The coefficients of the quadratic equation are derived from substituting the ray equation into the
     // sphere equation.
+
     Tuple sphereToRay = ray.GetOrigin() -
                         Point(0.f, 0.f, 0.f); // Since the sphere is at the origin, we can use the ray's origin directly
     float a = ray.GetDirection() | ray.GetDirection();  // Dot product of direction with itself
@@ -44,5 +45,6 @@ std::vector<float> Sphere::IntersectLocal(const Ray &ray) const
 Tuple Sphere::NormalAtLocal(const Tuple &point) const
 {
     assert(point.IsValid());
+
     return point - Point(0.f, 0.f, 0.f); // Normal is the vector from the center of the sphere to the point
 }

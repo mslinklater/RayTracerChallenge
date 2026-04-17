@@ -9,7 +9,7 @@ Tuple Cube::NormalAtLocal(const Tuple &point) const
 {
     assert(point.IsValid());
 
-    float maxComponent = std::max({std::abs(point.x), std::abs(point.y), std::abs(point.z)});
+    const float maxComponent = std::max({std::abs(point.x), std::abs(point.y), std::abs(point.z)});
 
     if (maxComponent == std::abs(point.x))
     {
@@ -31,8 +31,8 @@ std::vector<float> Cube::IntersectLocal(const Ray &ray) const
     CheckAxis(ray.GetOrigin().y, ray.GetDirection().y, ytmin, ytmax);
     CheckAxis(ray.GetOrigin().z, ray.GetDirection().z, ztmin, ztmax);
 
-    float tmin = std::max({xtmin, ytmin, ztmin});
-    float tmax = std::min({xtmax, ytmax, ztmax});
+    const float tmin = std::max({xtmin, ytmin, ztmin});
+    const float tmax = std::min({xtmax, ytmax, ztmax});
 
     std::vector<float> intersections;
     if (tmax > tmin)
@@ -49,8 +49,8 @@ void Cube::CheckAxis(float origin, float direction, float &tmin, float &tmax) co
     assert(std::isfinite(origin));
     assert(std::isfinite(direction));
 
-    float tminNumerator = (-1.f - origin);
-    float tmaxNumerator = (1.f - origin);
+    const float tminNumerator = (-1.f - origin);
+    const float tmaxNumerator = (1.f - origin);
     if (std::abs(direction) >= 1e-6f)
     {
         tmin = tminNumerator / direction;

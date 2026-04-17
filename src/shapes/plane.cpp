@@ -19,6 +19,6 @@ std::vector<float> Plane::IntersectLocal(const Ray &ray) const
         return {};
     }
 
-    float t = -ray.GetOrigin().y / ray.GetDirection().y;
+    const float t = -ray.GetOrigin().y / ray.GetDirection().y;
     return {t};
 }

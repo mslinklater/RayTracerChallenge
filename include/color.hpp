@@ -15,7 +15,7 @@ struct Color
     /** @brief Subtracts @p other from this colour component-wise. */
     Color operator-(const Color &other) const;
     /** @brief Scales all channels by @p scalar. */
-    Color operator*(float scalar) const;
+    Color operator*(const float scalar) const;
     /** @brief Multiplies two colours component-wise (Hadamard product). */
     Color operator*(const Color &other) const;
     /** @brief Equality comparison using floating-point tolerance. */

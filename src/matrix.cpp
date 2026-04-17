@@ -10,9 +10,9 @@ Matrix::Matrix(int size) : size(size), values(size * size, 0.f)
 
 Matrix::Matrix(const std::vector<float> &values)
 {
-    int vectorSize = static_cast<int>(values.size());
+    const int vectorSize = static_cast<int>(values.size());
     assert(vectorSize > 0);
-    float sqrtSize = std::sqrt(vectorSize);
+    const float sqrtSize = std::sqrt(vectorSize);
     if (sqrtSize != static_cast<int>(sqrtSize))
     {
         throw std::invalid_argument("The number of values must be a perfect square.");
@@ -208,14 +208,14 @@ float Matrix::GetMinor(int row, int col) const
 float Matrix::GetCofactor(int row, int col) const
 {
     assert(IsValid());
-    float minor = GetMinor(row, col);
+    const float minor = GetMinor(row, col);
     return ((row + col) % 2 == 0) ? minor : -minor;
 }
 
 Matrix Matrix::GetInverse() const
 {
     assert(IsValid());
-    float determinant = GetDeterminant();
+    const float determinant = GetDeterminant();
     if (AreEqual(determinant, 0.f))
     {
         throw std::runtime_error("Matrix is not invertible.");
@@ -264,8 +264,8 @@ Matrix Matrix::CreateRotationX(float angle)
     assert(std::isfinite(angle));
     Matrix rotation(4);
     rotation.SetIdentity();
-    float cosA = std::cos(angle);
-    float sinA = std::sin(angle);
+    const float cosA = std::cos(angle);
+    const float sinA = std::sin(angle);
     rotation.Set(1, 1, cosA);
     rotation.Set(1, 2, -sinA);
     rotation.Set(2, 1, sinA);
@@ -278,8 +278,8 @@ Matrix Matrix::CreateRotationY(float angle)
     assert(std::isfinite(angle));
     Matrix rotation(4);
     rotation.SetIdentity();
-    float cosA = std::cos(angle);
-    float sinA = std::sin(angle);
+    const float cosA = std::cos(angle);
+    const float sinA = std::sin(angle);
     rotation.Set(0, 0, cosA);
     rotation.Set(0, 2, sinA);
     rotation.Set(2, 0, -sinA);
@@ -292,8 +292,8 @@ Matrix Matrix::CreateRotationZ(float angle)
     assert(std::isfinite(angle));
     Matrix rotation(4);
     rotation.SetIdentity();
-    float cosA = std::cos(angle);
-    float sinA = std::sin(angle);
+    const float cosA = std::cos(angle);
+    const float sinA = std::sin(angle);
     rotation.Set(0, 0, cosA);
     rotation.Set(0, 1, -sinA);
     rotation.Set(1, 0, sinA);
@@ -330,11 +330,11 @@ Matrix Matrix::ViewTransform(const Tuple &from, const Tuple &to, const Tuple &up
     assert(up.IsVector());
     assert(!AreEqual((to - from).Magnitude(), 0.f));
     assert(!AreEqual(up.Magnitude(), 0.f));
-    Tuple forward = (to - from).Normalize();
-    Tuple upNormalized = up.Normalize();
-    Tuple left = forward ^ upNormalized;
+    const Tuple forward = (to - from).Normalize();
+    const Tuple upNormalized = up.Normalize();
+    const Tuple left = forward ^ upNormalized;
     assert(!AreEqual(left.Magnitude(), 0.f));
-    Tuple trueUp = left ^ forward;
+    const Tuple trueUp = left ^ forward;
 
     Matrix orientation(4);
     orientation.SetIdentity();

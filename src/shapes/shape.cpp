@@ -48,9 +48,9 @@ Tuple Shape::NormalAt(const Tuple &point) const
 {
     assert(point.IsValid());
 
-    Tuple objectPoint = WorldToObject(point);
+    const Tuple objectPoint = WorldToObject(point);
 
-    Tuple objectNormal = NormalAtLocal(objectPoint);
+    const Tuple objectNormal = NormalAtLocal(objectPoint);
 
     Tuple worldNormal = inverseTransposeTransform * objectNormal;
     worldNormal.w = 0.f; // Ensure it's a vector
@@ -77,7 +77,7 @@ std::vector<float> Shape::Intersect(const Ray &ray) const
     assert(ray.IsValid());
 
     EnsureTransformCache();
-    Ray localRay = ray * inverseTransform;
+    const Ray localRay = ray * inverseTransform;
     return IntersectLocal(localRay);
 }
 

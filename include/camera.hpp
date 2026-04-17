@@ -13,14 +13,14 @@ class World;
  */
 class Camera
 {
-public:
+  public:
     /**
      * @brief Constructs a camera with the given resolution and field of view.
      * @param hsize      Horizontal image resolution in pixels.
      * @param vsize      Vertical image resolution in pixels.
      * @param fieldOfView Horizontal field of view in radians.
      */
-    Camera(int hsize, int vsize, float fieldOfView);
+    Camera(const int hsize, const int vsize, const float fieldOfView);
 
     /** @brief Returns the horizontal image resolution in pixels. */
     int GetHSize() const;
@@ -48,13 +48,13 @@ public:
      */
     Ray RayForPixel(int px, int py) const;
 
-private:
-    int hsize;          ///< Horizontal resolution in pixels.
-    int vsize;          ///< Vertical resolution in pixels.
-    float fieldOfView;  ///< Horizontal field of view in radians.
-    Matrix transform;   ///< Camera-to-world transform (view matrix).
+  private:
+    int hsize;               ///< Horizontal resolution in pixels.
+    int vsize;               ///< Vertical resolution in pixels.
+    float fieldOfView;       ///< Horizontal field of view in radians.
+    Matrix transform;        ///< Camera-to-world transform (view matrix).
     Matrix inverseTransform; ///< Cached inverse of @c transform for ray generation.
-    float pixelSize;    ///< World-space width of a single pixel.
-    float halfWidth;    ///< Half the world-space width of the image plane.
-    float halfHeight;   ///< Half the world-space height of the image plane.
+    float pixelSize;         ///< World-space width of a single pixel.
+    float halfWidth;         ///< Half the world-space width of the image plane.
+    float halfHeight;        ///< Half the world-space height of the image plane.
 };

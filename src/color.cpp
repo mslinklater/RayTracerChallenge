@@ -9,7 +9,7 @@ bool IsFiniteColor(const Color &color)
 {
     return std::isfinite(color.r) && std::isfinite(color.g) && std::isfinite(color.b);
 }
-}
+} // namespace
 
 Color Color::operator+(const Color &other) const
 {
@@ -25,7 +25,7 @@ Color Color::operator-(const Color &other) const
     return Color{r - other.r, g - other.g, b - other.b};
 }
 
-Color Color::operator*(float scalar) const
+Color Color::operator*(const float scalar) const
 {
     assert(IsFiniteColor(*this));
     assert(std::isfinite(scalar));

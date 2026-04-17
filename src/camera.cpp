@@ -4,7 +4,7 @@
 #include <cassert>
 #include <cmath>
 
-Camera::Camera(int hsize, int vsize, float fieldOfView)
+Camera::Camera(const int hsize, const int vsize, const float fieldOfView)
     : hsize(hsize), vsize(vsize), fieldOfView(fieldOfView), transform(Matrix(4)), inverseTransform(Matrix(4))
 {
     assert(hsize > 0);
@@ -14,8 +14,8 @@ Camera::Camera(int hsize, int vsize, float fieldOfView)
     transform.SetIdentity();
     inverseTransform.SetIdentity();
 
-    float halfView = std::tan(fieldOfView / 2.f);
-    float aspect = static_cast<float>(hsize) / static_cast<float>(vsize);
+    const float halfView = std::tan(fieldOfView / 2.f);
+    const float aspect = static_cast<float>(hsize) / static_cast<float>(vsize);
 
     if (aspect >= 1.f)
     {
@@ -69,15 +69,15 @@ Ray Camera::RayForPixel(int px, int py) const
     assert(px >= 0 && px < hsize);
     assert(py >= 0 && py < vsize);
 
-    float xoffset = (static_cast<float>(px) + 0.5f) * pixelSize;
-    float yoffset = (static_cast<float>(py) + 0.5f) * pixelSize;
+    const float xoffset = (static_cast<float>(px) + 0.5f) * pixelSize;
+    const float yoffset = (static_cast<float>(py) + 0.5f) * pixelSize;
 
-    float worldX = halfWidth - xoffset;
-    float worldY = halfHeight - yoffset;
+    const float worldX = halfWidth - xoffset;
+    const float worldY = halfHeight - yoffset;
 
-    Tuple pixel = inverseTransform * Point(worldX, worldY, -1.f);
-    Tuple origin = inverseTransform * Point(0.f, 0.f, 0.f);
-    Tuple direction = (pixel - origin).Normalize();
+    const Tuple pixel = inverseTransform * Point(worldX, worldY, -1.f);
+    const Tuple origin = inverseTransform * Point(0.f, 0.f, 0.f);
+    const Tuple direction = (pixel - origin).Normalize();
 
     return Ray(Point(origin), Vector(direction));
 }

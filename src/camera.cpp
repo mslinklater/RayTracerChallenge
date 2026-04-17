@@ -79,5 +79,5 @@ Ray Camera::RayForPixel(int px, int py) const
     Tuple origin = inverseTransform * Point(0.f, 0.f, 0.f);
     Tuple direction = (pixel - origin).Normalize();
 
-    return Ray(origin, direction);
+    return Ray(Point(origin), Vector(direction));
 }

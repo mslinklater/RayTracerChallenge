@@ -2,6 +2,7 @@
 #include "tuple.hpp"
 #include <cassert>
 #include <cmath>
+#include <stdexcept>
 
 struct Matrix;
 
@@ -26,8 +27,10 @@ class Ray
      */
     Ray(const Tuple &origin, const Tuple &direction) : origin(origin), direction(direction)
     {
-        assert(origin.IsValid());
-        assert(direction.IsValid());
+        if (!IsValid())
+        {
+            throw std::invalid_argument("Invalid ray: origin must be a point and direction must be a vector.");
+        }
     }
 
     /** @brief Returns the origin point of the ray. */
@@ -49,15 +52,14 @@ class Ray
      */
     Tuple PositionAt(float t) const
     {
-        assert(origin.IsValid());
-        assert(direction.IsValid());
         assert(std::isfinite(t));
+
         return origin + direction * t;
     }
 
     bool IsValid() const
     {
-        return origin.IsValid() && direction.IsValid();
+        return origin.IsValid() && direction.IsValid() && origin.IsPoint() && direction.IsVector();
     }
 
   private:

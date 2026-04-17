@@ -80,6 +80,18 @@ inline Tuple Point(float x, float y, float z)
 }
 
 /**
+ * @brief Constructs a point tuple from another tuple, setting w = 1.
+ * @param tuple The source tuple (x, y, z components are copied).
+ */
+inline Tuple Point(const Tuple &tuple)
+{
+    assert(std::isfinite(tuple.x));
+    assert(std::isfinite(tuple.y));
+    assert(std::isfinite(tuple.z));
+    return Tuple{tuple.x, tuple.y, tuple.z, 1.f};
+}
+
+/**
  * @brief Constructs a direction vector tuple (w = 0).
  * @param x X component.
  * @param y Y component.
@@ -88,4 +100,16 @@ inline Tuple Point(float x, float y, float z)
 inline Tuple Vector(float x, float y, float z)
 {
     return Tuple{x, y, z, 0.f};
+}
+
+/**
+ * @brief Constructs a vector tuple from another tuple, setting w = 0.
+ * @param tuple The source tuple (x, y, z components are copied).
+ */
+inline Tuple Vector(const Tuple &tuple)
+{
+    assert(std::isfinite(tuple.x));
+    assert(std::isfinite(tuple.y));
+    assert(std::isfinite(tuple.z));
+    return Tuple{tuple.x, tuple.y, tuple.z, 0.f};
 }

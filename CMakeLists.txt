@@ -61,6 +61,7 @@ set(SRC_FILES   src/utils.cpp
                 src/shapes/plane.cpp
                 src/shapes/shape.cpp
                 src/shapes/sphere.cpp
+                src/shapes/cylinder.cpp
                 src/shapes/cube.cpp
                 src/pattern.cpp
                 src/ray.cpp
@@ -124,6 +125,9 @@ add_raytracer_executable(Chapter11Challenge chapter11.cpp)
 # Chapter 12 challenge executable
 add_raytracer_executable(Chapter12Challenge chapter12.cpp)
 
+# Chapter 13 challenge executable
+add_raytracer_executable(Chapter13Challenge chapter13.cpp)
+
 # Test executable
 set(TEST_SRC    tests/test_main.cpp
                 tests/test_camera.cpp
@@ -140,6 +144,7 @@ set(TEST_SRC    tests/test_main.cpp
                 tests/test_shapes.cpp
                 tests/test_materials.cpp
                 tests/test_matrix.cpp
+                tests/test_cylinders.cpp
                 tests/test_cubes.cpp
                 tests/test_json.cpp
                 tests/test_patterns.cpp

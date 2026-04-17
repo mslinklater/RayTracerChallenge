@@ -5,12 +5,12 @@
 #include "matrix.hpp"
 #include "patterns/checker_pattern.hpp"
 #include "renderer.hpp"
-#include "shapes/cube.hpp"
+#include "shapes/cylinder.hpp"
 #include "shapes/plane.hpp"
 #include "tuple.hpp"
 #include "world.hpp"
 
-static constexpr int kCanvasSize = 256;
+static constexpr int kCanvasSize = 1024;
 
 int main()
 {
@@ -23,22 +23,52 @@ int main()
     World world;
 
     // Light
-    Light lightr(Point(-10.0f, 10.0f, -10.0f), Color(1.0f, 0.0f, 0.0f));
+    Light lightr(Point(-10.0f, 10.0f, -10.0f), Color(1.0f, 1.0f, 0.0f));
     world.AddLight(lightr);
     // Light 2
-    Light lightg(Point(10.0f, 10.0f, -10.0f), Color(0.0f, 1.0f, 0.0f));
+    Light lightg(Point(10.0f, 10.0f, -10.0f), Color(0.0f, 1.0f, 1.0f));
     world.AddLight(lightg);
     // Light 2
-    Light lightb(Point(10.0f, 20.0f, 10.0f), Color(0.0f, 0.0f, 1.0f));
+    Light lightb(Point(10.0f, 20.0f, 10.0f), Color(1.0f, 0.0f, 1.0f));
     world.AddLight(lightb);
 
     // Floor
     {
         Plane floor("floor");
-        CheckerPattern check = CheckerPattern(kColorYellow, kColorGreen);
+        CheckerPattern check = CheckerPattern(kColorYellow, kColorBlue);
         check.SetTransform(Matrix::CreateTranslation(0.f, 0.5f, 0.f));
         floor.GetMutableMaterial().SetSpecular(0.0f).SetPattern(check);
         world.AddObject(floor);
+    }
+    // cylinder
+    {
+        Cylinder cylinder("cylinder1");
+        cylinder.SetTransform(Matrix::CreateTranslation(0.f, 1.0f, 0.f) * Matrix::CreateRotationX(0.f));
+        Material mat;
+        mat.SetColor(Color(1.0f, 0.7f, 0.7f)).SetDiffuse(0.7f).SetSpecular(0.3f);
+        mat.SetReflective(0.5f);
+        cylinder.SetMaterial(mat);
+        world.AddObject(cylinder);
+    }
+    // cylinder
+    {
+        Cylinder cylinder("cylinder2");
+        cylinder.SetTransform(Matrix::CreateTranslation(2.f, 1.0f, 0.f) * Matrix::CreateRotationX(1.f));
+        Material mat;
+        mat.SetColor(Color(0.7f, 1.0f, 0.7f)).SetDiffuse(0.7f).SetSpecular(0.3f);
+        mat.SetReflective(0.5f);
+        cylinder.SetMaterial(mat);
+        world.AddObject(cylinder);
+    }
+    // cylinder
+    {
+        Cylinder cylinder("cylinder3");
+        cylinder.SetTransform(Matrix::CreateTranslation(-2.f, 1.0f, 0.f) * Matrix::CreateRotationX(2.f));
+        Material mat;
+        mat.SetColor(Color(0.7f, 0.7f, 1.0f)).SetDiffuse(0.7f).SetSpecular(0.3f);
+        mat.SetReflective(0.5f);
+        cylinder.SetMaterial(mat);
+        world.AddObject(cylinder);
     }
 
     Canvas canvas = Renderer::Render(camera, world);

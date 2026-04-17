@@ -31,6 +31,20 @@ class Cylinder : public Shape
      * @return The outward-facing unit normal vector.
      */
     Tuple NormalAtLocal(const Tuple &point) const override;
+
+    float GetMinimum() const
+    {
+        return minimum;
+    }
+
+    float GetMaximum() const
+    {
+        return maximum;
+    }
+
+  private:
+    float minimum = -std::numeric_limits<float>::infinity(); ///< Minimum y value (default: infinite)
+    float maximum = std::numeric_limits<float>::infinity();  ///< Maximum y value (default: infinite)
 };
 
 /** @brief Equality comparison based on transform and material. */

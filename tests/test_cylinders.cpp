@@ -37,3 +37,30 @@ TEST_CASE("A ray strikes a cylinder", "[cylinders]")
         REQUIRE(AreEqual(xs[1], expectedTs[i][1]));
     }
 }
+
+TEST_CASE("Normal vector on a cylinder", "[cylinders]")
+{
+    Cylinder cyl("cylinder");
+    std::vector<Tuple> points = {Point(1.0f, 0.0f, 0.0f), Point(0.0f, 5.0f, -1.0f), Point(0.0f, -2.0f, 1.0f),
+                                 Point(-1.0f, 1.0f, 0.0f)};
+    std::vector<Tuple> expectedNormals = {Vector(1.0f, 0.0f, 0.0f), Vector(0.0f, 0.0f, -1.0f), Vector(0.0f, 0.0f, 1.0f),
+                                          Vector(-1.0f, 0.0f, 0.0f)};
+
+    for (size_t i = 0; i < points.size(); ++i)
+    {
+        Tuple n = cyl.NormalAtLocal(points[i]);
+        REQUIRE(n == expectedNormals[i]);
+    }
+}
+
+TEST_CASE("The default minimum and maximum for a cylinder", "[cylinders]")
+{
+    Cylinder cyl("cylinder");
+    REQUIRE(cyl.GetMinimum() == -std::numeric_limits<float>::infinity());
+    REQUIRE(cyl.GetMaximum() == std::numeric_limits<float>::infinity());
+}
+
+TEST_CASE("Intersecting a constrained cylinder", "[cylinders]")
+{
+    Cylinder cyl("cylinder");
+}

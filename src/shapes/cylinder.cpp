@@ -45,5 +45,5 @@ Tuple Cylinder::NormalAtLocal(const Tuple &point) const
 {
     assert(point.IsValid());
 
-    return point - Point(0.f, 0.f, 0.f); // Normal is the vector from the center of the sphere to the point
+    return Vector(point.x, 0.f, point.z);
 }

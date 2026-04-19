@@ -62,6 +62,7 @@ set(SRC_FILES   src/utils.cpp
                 src/shapes/shape.cpp
                 src/shapes/sphere.cpp
                 src/shapes/cylinder.cpp
+                src/shapes/cone.cpp
                 src/shapes/cube.cpp
                 src/pattern.cpp
                 src/ray.cpp
@@ -134,12 +135,14 @@ set(TEST_SRC    tests/test_main.cpp
                 tests/test_color.cpp
                 tests/test_tuples.cpp
                 tests/test_utils.cpp
+                tests/test_utils.cpp
                 tests/test_rays.cpp
                 tests/test_world.cpp
                 tests/test_intersections.cpp
                 tests/test_spheres.cpp
                 tests/test_planes.cpp
                 tests/test_lights.cpp
+                tests/test_cones.cpp
                 tests/test_lighting.cpp
                 tests/test_shapes.cpp
                 tests/test_materials.cpp

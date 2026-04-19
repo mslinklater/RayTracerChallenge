@@ -2,50 +2,93 @@
 #include "ray.hpp"
 #include "shapes/cylinder.hpp"
 #include <catch2/catch_test_macros.hpp>
+#include <string>
 
 TEST_CASE("A ray misses a cylinder", "[cylinders]")
 {
-    Cylinder cyl("cylinder");
-    std::vector<Tuple> origins = {Point(1.0f, 0.0f, 0.0f), Point(0.0f, 1.0f, 0.0f), Point(0.0f, 0.0f, -5.0f)};
-    std::vector<Tuple> directions = {Vector(0.0f, 1.0f, 0.0f), Vector(0.0f, 1.0f, 0.0f), Vector(1.0f, 1.0f, 1.0f)};
-
-    for (size_t i = 0; i < origins.size(); ++i)
+    struct TestCase
     {
-        Ray r(origins[i], directions[i]);
-        auto xs = cyl.IntersectLocal(r);
-        REQUIRE(xs.empty());
+        std::string name;
+        Tuple origin;
+        Tuple direction;
+    };
+
+    Cylinder cyl("cylinder");
+    const std::vector<TestCase> cases = {
+        {"parallel from +x", Point(1.0f, 0.0f, 0.0f), Vector(0.0f, 1.0f, 0.0f)},
+        {"parallel from +y axis", Point(0.0f, 1.0f, 0.0f), Vector(0.0f, 1.0f, 0.0f)},
+        {"diagonal past cylinder", Point(0.0f, 0.0f, -5.0f), Vector(1.0f, 1.0f, 1.0f)},
+    };
+
+    for (size_t i = 0; i < cases.size(); ++i)
+    {
+        const auto &testCase = cases[i];
+        DYNAMIC_SECTION("case " << i << ": " << testCase.name)
+        {
+            Ray r(testCase.origin, testCase.direction);
+            auto xs = cyl.IntersectLocal(r);
+            REQUIRE(xs.empty());
+        }
     }
 }
 
 TEST_CASE("A ray strikes a cylinder", "[cylinders]")
 {
-    Cylinder cyl("cylinder");
-    std::vector<Tuple> origins = {Point(1.0f, 0.0f, -5.0f), Point(0.0f, 0.0f, -5.0f), Point(0.5f, 0.0f, -5.0f)};
-    std::vector<Tuple> directions = {Vector(0.0f, 0.0f, 1.0f), Vector(0.0f, 0.0f, 1.0f), Vector(0.1f, 1.0f, 1.0f)};
-    std::vector<std::vector<float>> expectedTs = {{5.0f, 5.0f}, {4.0f, 6.0f}, {6.80798f, 7.08872f}};
-
-    for (size_t i = 0; i < origins.size(); ++i)
+    struct TestCase
     {
-        Ray r(origins[i], directions[i].Normalize());
-        auto xs = cyl.IntersectLocal(r);
-        REQUIRE(xs.size() == 2);
-        REQUIRE(AreEqual(xs[0], expectedTs[i][0]));
-        REQUIRE(AreEqual(xs[1], expectedTs[i][1]));
+        std::string name;
+        Tuple origin;
+        Tuple direction;
+        float expectedT1;
+        float expectedT2;
+    };
+
+    Cylinder cyl("cylinder");
+    const std::vector<TestCase> cases = {
+        {"tangent hit", Point(1.0f, 0.0f, -5.0f), Vector(0.0f, 0.0f, 1.0f), 5.0f, 5.0f},
+        {"straight through center", Point(0.0f, 0.0f, -5.0f), Vector(0.0f, 0.0f, 1.0f), 4.0f, 6.0f},
+        {"angled hit", Point(0.5f, 0.0f, -5.0f), Vector(0.1f, 1.0f, 1.0f), 6.80798f, 7.08872f},
+    };
+
+    for (size_t i = 0; i < cases.size(); ++i)
+    {
+        const auto &testCase = cases[i];
+        DYNAMIC_SECTION("case " << i << ": " << testCase.name)
+        {
+            Ray r(testCase.origin, testCase.direction.Normalize());
+            auto xs = cyl.IntersectLocal(r);
+            REQUIRE(xs.size() == 2);
+            REQUIRE(AreEqual(xs[0], testCase.expectedT1));
+            REQUIRE(AreEqual(xs[1], testCase.expectedT2));
+        }
     }
 }
 
 TEST_CASE("Normal vector on a cylinder", "[cylinders]")
 {
-    Cylinder cyl("cylinder");
-    std::vector<Tuple> points = {Point(1.0f, 0.0f, 0.0f), Point(0.0f, 5.0f, -1.0f), Point(0.0f, -2.0f, 1.0f),
-                                 Point(-1.0f, 1.0f, 0.0f)};
-    std::vector<Tuple> expectedNormals = {Vector(1.0f, 0.0f, 0.0f), Vector(0.0f, 0.0f, -1.0f), Vector(0.0f, 0.0f, 1.0f),
-                                          Vector(-1.0f, 0.0f, 0.0f)};
-
-    for (size_t i = 0; i < points.size(); ++i)
+    struct TestCase
     {
-        Tuple n = cyl.NormalAtLocal(points[i]);
-        REQUIRE(n == expectedNormals[i]);
+        std::string name;
+        Tuple point;
+        Tuple expectedNormal;
+    };
+
+    Cylinder cyl("cylinder");
+    const std::vector<TestCase> cases = {
+        {"point on +x", Point(1.0f, 0.0f, 0.0f), Vector(1.0f, 0.0f, 0.0f)},
+        {"point on -z", Point(0.0f, 5.0f, -1.0f), Vector(0.0f, 0.0f, -1.0f)},
+        {"point on +z", Point(0.0f, -2.0f, 1.0f), Vector(0.0f, 0.0f, 1.0f)},
+        {"point on -x", Point(-1.0f, 1.0f, 0.0f), Vector(-1.0f, 0.0f, 0.0f)},
+    };
+
+    for (size_t i = 0; i < cases.size(); ++i)
+    {
+        const auto &testCase = cases[i];
+        DYNAMIC_SECTION("case " << i << ": " << testCase.name)
+        {
+            Tuple n = cyl.NormalAtLocal(testCase.point);
+            REQUIRE(n == testCase.expectedNormal);
+        }
     }
 }
 
@@ -58,19 +101,74 @@ TEST_CASE("The default minimum and maximum for a cylinder", "[cylinders]")
 
 TEST_CASE("Intersecting a constrained cylinder", "[cylinders]")
 {
+    struct TestCase
+    {
+        std::string name;
+        Tuple origin;
+        Tuple direction;
+        size_t expectedCount;
+    };
+
     Cylinder cyl("cylinder");
     cyl.SetMinimum(1.0f);
     cyl.SetMaximum(2.0f);
-    std::vector<Tuple> origins = {Point(0.0f, 1.5f, 0.0f),  Point(0.0f, 3.0f, -5.0f), Point(0.0f, 0.0f, -5.0f),
-                                  Point(0.0f, 2.5f, -5.0f), Point(0.0f, 1.0f, -5.0f), Point(0.0f, 1.5f, -2.0f)};
-    std::vector<Tuple> directions = {Vector(0.1f, 1.0f, 0.0f), Vector(0.0f, 0.0f, 1.0f), Vector(0.0f, 0.0f, 1.0f),
-                                     Vector(0.0f, 0.0f, 1.0f), Vector(0.0f, 0.0f, 1.0f), Vector(0.0f, 0.0f, 1.0f)};
-    std::vector<int> expectedCounts = {0, 0, 0, 0, 0, 2};
+    const std::vector<TestCase> cases = {
+        {"inside bounds but misses sides", Point(0.0f, 1.5f, 0.0f), Vector(0.1f, 1.0f, 0.0f), 0},
+        {"above cylinder", Point(0.0f, 3.0f, -5.0f), Vector(0.0f, 0.0f, 1.0f), 0},
+        {"below cylinder", Point(0.0f, 0.0f, -5.0f), Vector(0.0f, 0.0f, 1.0f), 0},
+        {"starts above max", Point(0.0f, 2.5f, -5.0f), Vector(0.0f, 0.0f, 1.0f), 0},
+        {"starts at min edge", Point(0.0f, 1.0f, -5.0f), Vector(0.0f, 0.0f, 1.0f), 0},
+        {"passes through constrained body", Point(0.0f, 1.5f, -2.0f), Vector(0.0f, 0.0f, 1.0f), 2},
+    };
 
-    for (size_t i = 0; i < origins.size(); ++i)
+    for (size_t i = 0; i < cases.size(); ++i)
     {
-        Ray r(origins[i], directions[i].Normalize());
-        auto xs = cyl.IntersectLocal(r);
-        REQUIRE(xs.size() == expectedCounts[i]);
+        const auto &testCase = cases[i];
+        DYNAMIC_SECTION("case " << i << ": " << testCase.name)
+        {
+            Ray r(testCase.origin, testCase.direction.Normalize());
+            auto xs = cyl.IntersectLocal(r);
+            REQUIRE(xs.size() == testCase.expectedCount);
+        }
+    }
+}
+
+TEST_CASE("The default closed value of a cylinder", "[cylinders]")
+{
+    Cylinder cyl("cylinder");
+    REQUIRE(cyl.GetClosed() == false);
+}
+
+TEST_CASE("Intersecting the caps of a closed cylinder", "[cylinders]")
+{
+    struct TestCase
+    {
+        std::string name;
+        Tuple origin;
+        Tuple direction;
+    };
+
+    Cylinder cyl("cylinder");
+    cyl.SetMinimum(1.0f);
+    cyl.SetMaximum(2.0f);
+    cyl.SetClosed(true);
+
+    const std::vector<TestCase> cases = {
+        {"one", Point(0.f, 3.f, 0.f), Vector(0.f, -1.f, 0.f)},
+        {"two", Point(0.f, 3.f, -2.f), Vector(0.f, -1.f, 2.f)},
+        {"three", Point(0.f, 4.f, -2.f), Vector(0.f, -1.f, 1.f)},
+        {"four", Point(0.f, 0.f, -2.f), Vector(0.f, 1.f, 2.f)},
+        {"five", Point(0.f, -1.f, -2.f), Vector(0.f, 1.f, 1.f)},
+    };
+
+    for (size_t i = 0; i < cases.size(); ++i)
+    {
+        const auto &testCase = cases[i];
+        DYNAMIC_SECTION("case " << i << ": " << testCase.name)
+        {
+            Ray r(testCase.origin, testCase.direction.Normalize());
+            auto xs = cyl.IntersectLocal(r);
+            REQUIRE(xs.size() == 2);
+        }
     }
 }

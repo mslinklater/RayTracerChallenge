@@ -52,9 +52,22 @@ class Cylinder : public Shape
         maximum = max;
     }
 
+    bool GetClosed() const
+    {
+        return closed;
+    }
+    void SetClosed(bool isClosed)
+    {
+        closed = isClosed;
+    }
+
   private:
+    bool CheckCap(const Ray &ray, float t) const; ///< Helper for checking ray-cap intersection
+    void IntersectCaps(const Ray &ray, std::vector<float> &intersections) const; ///< Helper for intersecting end caps
+
     float minimum = -std::numeric_limits<float>::infinity(); ///< Minimum y value (default: infinite)
     float maximum = std::numeric_limits<float>::infinity();  ///< Maximum y value (default: infinite)
+    bool closed = false;                                     ///< Whether the cylinder has end caps (default: open)
 };
 
 /** @brief Equality comparison based on transform and material. */

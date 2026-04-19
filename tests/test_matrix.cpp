@@ -3,6 +3,8 @@
 #include "tuple.hpp"
 #include "maths.hpp"
 #include <limits>
+#include <string>
+#include <vector>
 
 TEST_CASE("Create matrix and check size", "[matrix]")
 {
@@ -12,12 +14,32 @@ TEST_CASE("Create matrix and check size", "[matrix]")
 
 TEST_CASE("Create empty matrix and check default values", "[matrix]")
 {
+    struct TestCase
+    {
+        std::string name;
+        int col;
+        int row;
+        float expectedValue;
+    };
+
     Matrix m = Matrix(4);
+    std::vector<TestCase> cases;
+    cases.reserve(m.GetSize() * m.GetSize());
+
     for (int row = 0; row < m.GetSize(); ++row)
     {
         for (int col = 0; col < m.GetSize(); ++col)
         {
-            REQUIRE(m.Get(col, row) == 0.f);
+            cases.push_back({"entry(" + std::to_string(col) + ", " + std::to_string(row) + ")", col, row, 0.f});
+        }
+    }
+
+    for (size_t i = 0; i < cases.size(); ++i)
+    {
+        const auto &testCase = cases[i];
+        DYNAMIC_SECTION("case " << i << ": " << testCase.name)
+        {
+            REQUIRE(m.Get(testCase.col, testCase.row) == testCase.expectedValue);
         }
     }
 }
@@ -62,6 +84,14 @@ TEST_CASE("Get and set matrix values", "[matrix]")
 
 TEST_CASE("Create a matrix from a vector of values and check them", "[matrix]")
 {
+    struct TestCase
+    {
+        std::string name;
+        int col;
+        int row;
+        float expectedValue;
+    };
+
     std::vector<float> values = {
         1.f, 2.f, 3.f, 4.f,
         5.5f, 6.5f, 7.5f, 8.5f,
@@ -69,19 +99,25 @@ TEST_CASE("Create a matrix from a vector of values and check them", "[matrix]")
         13.5f, 14.5f, 15.5f, 16.5f};
     Matrix m = Matrix(values);
 
-    for (int row = 0; row < m.GetSize(); ++row)
-    {
-        for (int col = 0; col < m.GetSize(); ++col)
-        {
-            m.Set(col, row, values[row * m.GetSize() + col]);
-        }
-    }
+    std::vector<TestCase> cases;
+    cases.reserve(m.GetSize() * m.GetSize());
 
     for (int row = 0; row < m.GetSize(); ++row)
     {
         for (int col = 0; col < m.GetSize(); ++col)
         {
-            REQUIRE(m.Get(col, row) == values[row * m.GetSize() + col]);
+            cases.push_back({"entry(" + std::to_string(col) + ", " + std::to_string(row) + ")", col, row,
+                             values[row * m.GetSize() + col]});
+            m.Set(col, row, values[row * m.GetSize() + col]);
+        }
+    }
+
+    for (size_t i = 0; i < cases.size(); ++i)
+    {
+        const auto &testCase = cases[i];
+        DYNAMIC_SECTION("case " << i << ": " << testCase.name)
+        {
+            REQUIRE(m.Get(testCase.col, testCase.row) == testCase.expectedValue);
         }
     }
 }

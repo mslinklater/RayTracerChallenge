@@ -7,15 +7,35 @@
 
 TEST_CASE("Create canvas", "[canvas]")
 {
+    struct TestCase
+    {
+        std::string name;
+        int x;
+        int y;
+        Color expected;
+    };
+
     Canvas c{10, 20};
     REQUIRE(c.GetWidth() == 10);
     REQUIRE(c.GetHeight() == 20);
+
+    std::vector<TestCase> cases;
+    cases.reserve(c.GetWidth() * c.GetHeight());
 
     for (int y = 0; y < c.GetHeight(); ++y)
     {
         for (int x = 0; x < c.GetWidth(); ++x)
         {
-            REQUIRE(c.GetPixel(x, y) == Color{0.f, 0.f, 0.f});
+            cases.push_back({"pixel(" + std::to_string(x) + ", " + std::to_string(y) + ")", x, y, Color{0.f, 0.f, 0.f}});
+        }
+    }
+
+    for (size_t i = 0; i < cases.size(); ++i)
+    {
+        const auto &testCase = cases[i];
+        DYNAMIC_SECTION("case " << i << ": " << testCase.name)
+        {
+            REQUIRE(c.GetPixel(testCase.x, testCase.y) == testCase.expected);
         }
     }
 }

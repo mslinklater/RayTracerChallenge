@@ -172,3 +172,35 @@ TEST_CASE("Intersecting the caps of a closed cylinder", "[cylinders]")
         }
     }
 }
+
+TEST_CASE("The normal vector on a cylinder's end caps", "[cylinders]")
+{
+    Cylinder cyl("cylinder");
+    cyl.SetMinimum(1.0f);
+    cyl.SetMaximum(2.0f);
+    cyl.SetClosed(true);
+
+    struct TestCase
+    {
+        std::string name;
+        Tuple point;
+        Tuple normal;
+    };
+
+    const std::vector<TestCase> cases = {{"point on lower cap 1", Point(0.f, 1.f, 0.f), Vector(0.f, -1.f, 0.f)},
+                                         {"point on lower cap 2", Point(0.5f, 1.f, 0.f), Vector(0.f, -1.f, 0.f)},
+                                         {"point on lower cap 3", Point(0.f, 1.f, 0.5f), Vector(0.f, -1.f, 0.f)},
+                                         {"point on upper cap 1", Point(0.f, 2.f, 0.f), Vector(0.f, 1.f, 0.f)},
+                                         {"point on upper cap 2", Point(0.5f, 2.f, 0.f), Vector(0.f, 1.f, 0.f)},
+                                         {"point on upper cap 3", Point(0.f, 2.f, 0.5f), Vector(0.f, 1.f, 0.f)}};
+
+    for (size_t i = 0; i < cases.size(); ++i)
+    {
+        const auto &testCase = cases[i];
+        DYNAMIC_SECTION("case " << i << ": " << testCase.name)
+        {
+            Tuple n = cyl.NormalAtLocal(testCase.point);
+            REQUIRE(n == testCase.normal);
+        }
+    }
+}

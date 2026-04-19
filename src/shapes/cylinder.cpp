@@ -1,6 +1,6 @@
 #include "shapes/cylinder.hpp"
-#include "ray.hpp"
 #include "maths.hpp"
+#include "ray.hpp"
 #include <cassert>
 #include <cmath>
 
@@ -56,7 +56,19 @@ Tuple Cylinder::NormalAtLocal(const Tuple &point) const
 {
     assert(point.IsValid());
 
-    return Vector(point.x, 0.f, point.z);
+    float dist = point.x * point.x + point.z * point.z;
+    if (dist < 1.f && point.y >= maximum - 1e-6f)
+    {
+        return Vector(0.f, 1.f, 0.f);
+    }
+    else if (dist < 1.f && point.y <= minimum + 1e-6f)
+    {
+        return Vector(0.f, -1.f, 0.f);
+    }
+    else
+    {
+        return Vector(point.x, 0.f, point.z);
+    }
 }
 
 bool Cylinder::CheckCap(const Ray &ray, float t) const

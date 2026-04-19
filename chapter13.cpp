@@ -46,6 +46,7 @@ int main()
         cylinder.SetMinimum(-1.f);
         cylinder.SetMaximum(1.f);
         cylinder.SetTransform(Matrix::CreateTranslation(0.f, 1.0f, 0.f) * Matrix::CreateRotationX(0.f));
+        cylinder.SetClosed(true);
         Material mat;
         mat.SetColor(Color(1.0f, 1.0f, 1.0f)).SetDiffuse(0.2f).SetSpecular(0.3f);
         mat.SetReflective(0.5f);
@@ -58,6 +59,7 @@ int main()
         cylinder.SetTransform(Matrix::CreateTranslation(2.f, 1.0f, 0.f) * Matrix::CreateRotationX(1.f));
         cylinder.SetMinimum(-1.f);
         cylinder.SetMaximum(1.f);
+        cylinder.SetClosed(true);
         Material mat;
         mat.SetColor(Color(1.0f, 1.0f, 1.0f)).SetDiffuse(0.2f).SetSpecular(0.3f);
         mat.SetReflective(0.5f);
@@ -70,6 +72,7 @@ int main()
         cylinder.SetTransform(Matrix::CreateTranslation(-2.f, 1.0f, 0.f) * Matrix::CreateRotationX(2.f));
         cylinder.SetMinimum(-1.f);
         cylinder.SetMaximum(1.f);
+        cylinder.SetClosed(true);
         Material mat;
         mat.SetColor(Color(1.0f, 1.0f, 1.0f)).SetDiffuse(0.2f).SetSpecular(0.3f);
         mat.SetReflective(0.5f);

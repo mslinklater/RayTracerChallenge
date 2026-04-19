@@ -36,10 +36,20 @@ class Cylinder : public Shape
     {
         return minimum;
     }
+    void SetMinimum(float min)
+    {
+        assert(std::isfinite(min));
+        minimum = min;
+    }
 
     float GetMaximum() const
     {
         return maximum;
+    }
+    void SetMaximum(float max)
+    {
+        assert(std::isfinite(max));
+        maximum = max;
     }
 
   private:

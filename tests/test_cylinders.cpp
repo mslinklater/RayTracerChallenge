@@ -26,10 +26,6 @@ TEST_CASE("A ray strikes a cylinder", "[cylinders]")
 
     for (size_t i = 0; i < origins.size(); ++i)
     {
-        // NOTE: in the book the directions here are NOT normalized, but the expected t values are based on normalized
-        // directions. This is a bit inconsistent, but we'll normalize the directions here to match the expected
-        // results.
-
         Ray r(origins[i], directions[i].Normalize());
         auto xs = cyl.IntersectLocal(r);
         REQUIRE(xs.size() == 2);
@@ -63,4 +59,18 @@ TEST_CASE("The default minimum and maximum for a cylinder", "[cylinders]")
 TEST_CASE("Intersecting a constrained cylinder", "[cylinders]")
 {
     Cylinder cyl("cylinder");
+    cyl.SetMinimum(1.0f);
+    cyl.SetMaximum(2.0f);
+    std::vector<Tuple> origins = {Point(0.0f, 1.5f, 0.0f),  Point(0.0f, 3.0f, -5.0f), Point(0.0f, 0.0f, -5.0f),
+                                  Point(0.0f, 2.5f, -5.0f), Point(0.0f, 1.0f, -5.0f), Point(0.0f, 1.5f, -2.0f)};
+    std::vector<Tuple> directions = {Vector(0.1f, 1.0f, 0.0f), Vector(0.0f, 0.0f, 1.0f), Vector(0.0f, 0.0f, 1.0f),
+                                     Vector(0.0f, 0.0f, 1.0f), Vector(0.0f, 0.0f, 1.0f), Vector(0.0f, 0.0f, 1.0f)};
+    std::vector<int> expectedCounts = {0, 0, 0, 0, 0, 2};
+
+    for (size_t i = 0; i < origins.size(); ++i)
+    {
+        Ray r(origins[i], directions[i].Normalize());
+        auto xs = cyl.IntersectLocal(r);
+        REQUIRE(xs.size() == expectedCounts[i]);
+    }
 }

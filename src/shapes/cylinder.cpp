@@ -32,10 +32,20 @@ std::vector<float> Cylinder::IntersectLocal(const Ray &ray) const
     else
     {
         const float sqrtDiscriminant = std::sqrt(discriminant);
-        const float t1 = (-b - sqrtDiscriminant) / (2.f * a);
-        const float t2 = (-b + sqrtDiscriminant) / (2.f * a);
-        intersections.push_back(t1);
-        intersections.push_back(t2);
+        const float t0 = (-b - sqrtDiscriminant) / (2.f * a);
+        const float t1 = (-b + sqrtDiscriminant) / (2.f * a);
+
+        float y0 = ray.GetOrigin().y + t0 * ray.GetDirection().y;
+        if (minimum < y0 && y0 < maximum)
+        {
+            intersections.push_back(t0);
+        }
+
+        float y1 = ray.GetOrigin().y + t1 * ray.GetDirection().y;
+        if (minimum < y1 && y1 < maximum)
+        {
+            intersections.push_back(t1);
+        }
 
         return intersections;
     }

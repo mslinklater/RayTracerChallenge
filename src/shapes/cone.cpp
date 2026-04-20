@@ -23,7 +23,7 @@ std::vector<float> Cone::IntersectLocal(const Ray &ray) const
         {
             return intersections;
         }
-        intersections.push_back(-c / (2.f * b));
+        intersections.push_back(-c / b);
         return intersections;
     }
     else
@@ -31,12 +31,17 @@ std::vector<float> Cone::IntersectLocal(const Ray &ray) const
         // same algorithm as cylinder, but with different a, b and c
         float discriminant = b * b - 4.f * a * c;
 
+        // discriminants which should be zero can be slightly negative due to floating point errors, so we need to check
+        // for that
         if ((discriminant < 0.f) && !AreEqual(discriminant, 0.f))
         {
             return intersections;
         }
 
-        float sqrtDiscriminant = std::sqrt(discriminant);
+        // Now we need to make sure those slightly negative discriminants don't cause NaNs in the sqrt, which would
+        // cause the intersection test to fail completely. We can just clamp them to zero.
+        //        discriminant = std::max(discriminant, 0.f);
+        float sqrtDiscriminant = SafeSqrt(discriminant);
         float t0 = (-b - sqrtDiscriminant) / (2.f * a);
         float t1 = (-b + sqrtDiscriminant) / (2.f * a);
 

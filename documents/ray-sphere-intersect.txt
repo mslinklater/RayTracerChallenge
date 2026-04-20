@@ -1,0 +1,42 @@
+Ray/Sphere Intersection
+========================
+
+The equation of a unit sphere can be stated as:
+
+[1] x^2 + y^2 + z^2 = 1
+
+Or it can be stated as a dot product of a vector with itself. If you perform a dot product with a point on the sphere with itself the answer is 1.
+
+[2] P . P = 1
+
+The equation for a ray is:
+
+[3] O + tD
+
+Where O is the origin of the ray, D is the direction of the ray, and t is a scalar that can be used to find points along the ray. If we substitute equation [3] into equation [2] we get:
+
+[4] (O + tD) . (O + tD) = 1
+
+Now we can expand the dot product:
+
+[5] O . O + 2t(O . D) + t^2(D . D) = 1
+
+Note how the form of this equation is similar to the quadratic formula (ax^2 + bx + c = 0). We can rearrange it to look more like the standard form of a quadratic equation:
+
+[6] t^2(D . D) + 2t(O . D) + (O . O - 1) = 0
+
+In this form, we can identify the coefficients a, b, and c:
+
+[7] a = D . D
+
+[8] b = 2(O . D)
+
+[9] c = O . O - 1
+
+We can now put these coefficients into the quadratic formula to find the values of t:
+
+[10] t = (-b ± sqrt(b^2 - 4ac)) / (2a)
+
+Remember that the determinant (b^2 - 4ac) will tell us how many solutions there are. If the determinant is positive, there are two solutions (the ray intersects the sphere at two points). If the determinant is zero, there is one solution (the ray is tangent to the sphere). If the determinant is negative, there are no solutions (the ray does not intersect the sphere).
+
+In this ray tracer code we want tangential rays to be considered as intersecting the sphere, so we will check if the determinant is greater than or equal to zero. If it is, we will calculate the two possible values of t and return the smaller one (the closest intersection point). If the determinant is negative, we will return a value that indicates there is no intersection (such as -1).

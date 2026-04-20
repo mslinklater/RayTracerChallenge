@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <cmath>
 
 /// @brief Conversion factor: multiply degrees by this to obtain radians.
@@ -20,4 +21,29 @@ static constexpr float kPi = 3.14159265f;
 inline bool AreEqual(float a, float b)
 {
     return std::abs(a - b) < kEpsilon;
+}
+
+/**
+ * @brief Finds the square root but asserts that the input is non-negative, to avoid NaNs in the output.
+ * @param x The value to find the square root of.
+ * @return The square root of x.
+ * */
+inline float CheckedSqrt(float x)
+{
+    assert(x >= 0.f);
+    return std::sqrt(x);
+}
+/**
+ * @brief Safely finds the square root of a non-negative value, returning 0 for slightly negative inputs to avoid NaNs
+ * in the output.
+ * @param x The value to find the square root of.
+ * @return The square root of x.
+ * */
+inline float SafeSqrt(float x)
+{
+    if (x < 0.f)
+    {
+        return 0.f;
+    }
+    return std::sqrt(x);
 }

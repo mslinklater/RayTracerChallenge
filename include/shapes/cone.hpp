@@ -33,6 +33,24 @@ class Cone : public Shape
      */
     Tuple NormalAtLocal(const Tuple &point) const override;
 
-  private:
-};
+    float GetMinimum() const
+    {
+        return minimum;
+    }
+    void SetMinimum(float min)
+    {
+        minimum = min;
+    }
+    float GetMaximum() const
+    {
+        return maximum;
+    }
+    void SetMaximum(float max)
+    {
+        maximum = max;
+    }
 
+  private:
+    float minimum = -std::numeric_limits<float>::infinity();
+    float maximum = std::numeric_limits<float>::infinity();
+};

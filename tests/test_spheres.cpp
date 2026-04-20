@@ -32,6 +32,8 @@ class RayCapturingShape : public Shape
 
 TEST_CASE("A ray intersects a sphere at two points", "[spheres]")
 {
+    // Geogebra: documents/geogebra/sphere_intersection_test1.ggb
+
     Sphere sphere("sphere");
     Ray ray(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
     auto xs = sphere.Intersect(ray);
@@ -53,6 +55,8 @@ TEST_CASE("Test Sphere equality operator", "[spheres]")
 
 TEST_CASE("A ray intersects a sphere at tangent - two identical points", "[spheres]")
 {
+    // Geogebra: documents/geogebra/sphere_intersection_test2.ggb
+
     Sphere sphere("sphere");
     Ray ray(Point(0.f, 1.f, -5.f), Vector(0.f, 0.f, 1.f));
     auto xs = sphere.Intersect(ray);
@@ -64,6 +68,8 @@ TEST_CASE("A ray intersects a sphere at tangent - two identical points", "[spher
 
 TEST_CASE("A ray misses a sphere", "[spheres]")
 {
+    // Geogebra: documents/geogebra/sphere_intersection_test3.ggb
+
     Sphere sphere("sphere");
     Ray ray(Point(0.f, 2.f, -5.f), Vector(0.f, 0.f, 1.f));
     auto xs = sphere.Intersect(ray);
@@ -73,6 +79,8 @@ TEST_CASE("A ray misses a sphere", "[spheres]")
 
 TEST_CASE("A ray originates inside a sphere", "[spheres]")
 {
+    // Geogebra: documents/geogebra/sphere_intersection_test4.ggb
+
     Sphere sphere("sphere");
     Ray ray(Point(0.f, 0.f, 0.f), Vector(0.f, 0.f, 1.f));
     auto xs = sphere.Intersect(ray);
@@ -84,6 +92,8 @@ TEST_CASE("A ray originates inside a sphere", "[spheres]")
 
 TEST_CASE("The sphere is behind the ray", "[spheres]")
 {
+    // Geogebra: documents/geogebra/sphere_intersection_test5.ggb
+
     Sphere sphere("sphere");
     Ray ray(Point(0.f, 0.f, 5.f), Vector(0.f, 0.f, 1.f));
     auto xs = sphere.Intersect(ray);

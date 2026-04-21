@@ -69,7 +69,12 @@ std::vector<float> Cone::IntersectLocal(const Ray &ray) const
 
 Tuple Cone::NormalAtLocal(const Tuple &point) const
 {
-    return Vector(0.f, 0.f, 0.f);
+    float y = std::sqrt(point.x * point.x + point.z * point.z);
+    if (point.y > 0.f)
+    {
+        y = -y;
+    }
+    return Vector(point.x, y, point.z);
 }
 
 bool Cone::CheckCap(const Ray &ray, float t, float radius) const

@@ -90,3 +90,30 @@ TEST_CASE("Intersecting a cone's end caps", "[cones]")
         }
     }
 }
+
+TEST_CASE("Computing the normal vector on a cone", "[cones]")
+{
+    struct TestCase
+    {
+        std::string name;
+        Tuple point;
+        Tuple expectedNormal;
+    };
+
+    Cone cone("cone");
+    const std::vector<TestCase> cases = {
+        {"one", Point(0.f, 0.f, 0.f), Vector(0.f, 0.f, 0.f)},
+        {"two", Point(1.f, 1.f, 1.f), Vector(1.f, -std::sqrt(2.f), 1.f)},
+        {"three", Point(-1.f, -1.f, 0.f), Vector(-1.f, 1.f, 0.f)},
+    };
+
+    for (size_t i = 0; i < cases.size(); ++i)
+    {
+        const auto &testCase = cases[i];
+        DYNAMIC_SECTION("case " << i << ": " << testCase.name)
+        {
+            auto normal = cone.NormalAtLocal(testCase.point);
+            REQUIRE(normal == testCase.expectedNormal);
+        }
+    }
+}

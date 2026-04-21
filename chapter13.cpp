@@ -5,6 +5,7 @@
 #include "matrix.hpp"
 #include "patterns/checker_pattern.hpp"
 #include "renderer.hpp"
+#include "shapes/cone.hpp"
 #include "shapes/cylinder.hpp"
 #include "shapes/plane.hpp"
 #include "tuple.hpp"
@@ -53,18 +54,19 @@ int main()
         cylinder.SetMaterial(mat);
         world.AddObject(cylinder);
     }
-    // cylinder
+    // cone
     {
-        Cylinder cylinder("cylinder2");
-        cylinder.SetTransform(Matrix::CreateTranslation(2.f, 1.0f, 0.f) * Matrix::CreateRotationX(1.f));
-        cylinder.SetMinimum(-1.f);
-        cylinder.SetMaximum(1.f);
-        cylinder.SetClosed(true);
+        Cone cone("cone");
+        cone.SetTransform(Matrix::CreateTranslation(2.f, 1.0f, 0.f) * Matrix::CreateScaling(0.5f, 0.5f, 1.0f) *
+                          Matrix::CreateRotationX(1.f));
+        cone.SetMinimum(-3.f);
+        cone.SetMaximum(3.f);
+        cone.SetClosed(true);
         Material mat;
-        mat.SetColor(Color(1.0f, 1.0f, 1.0f)).SetDiffuse(0.2f).SetSpecular(0.3f);
+        mat.SetColor(Color(1.0f, 0.0f, 0.0f)).SetDiffuse(0.2f).SetSpecular(0.3f);
         mat.SetReflective(0.5f);
-        cylinder.SetMaterial(mat);
-        world.AddObject(cylinder);
+        cone.SetMaterial(mat);
+        world.AddObject(cone);
     }
     // cylinder
     {

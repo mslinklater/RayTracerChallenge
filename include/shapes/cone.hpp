@@ -49,8 +49,20 @@ class Cone : public Shape
     {
         maximum = max;
     }
+    bool IsClosed() const
+    {
+        return closed;
+    }
+    void SetClosed(bool isClosed)
+    {
+        closed = isClosed;
+    }
 
   private:
+    bool CheckCap(const Ray &ray, float t, float radius) const; ///< Helper for checking ray-cap intersection
+    void IntersectCaps(const Ray &ray, std::vector<float> &intersections) const; ///< Helper for intersecting end caps
+    ///
     float minimum = -std::numeric_limits<float>::infinity();
     float maximum = std::numeric_limits<float>::infinity();
+    bool closed = false;
 };

@@ -1,3 +1,4 @@
+#include "intersection.hpp"
 #include "maths.hpp"
 #include "ray.hpp"
 #include "shapes/cone.hpp"
@@ -35,6 +36,57 @@ TEST_CASE("Intersecting a cone with a ray", "[cones]")
             REQUIRE(xs.size() == 2);
             REQUIRE(AreEqual(xs[0], testCase.expectedT1));
             REQUIRE(AreEqual(xs[1], testCase.expectedT2));
+        }
+    }
+}
+
+TEST_CASE("Intersecting a cone with a ray parallel to one of its halves", "[cones]")
+{
+    Cone cone("cone");
+    Ray r(Point(0.f, 0.f, -1.f), Vector(0.f, 1.f, 1.f).Normalize());
+    auto xs = cone.IntersectLocal(r);
+    REQUIRE(xs.size() == 1);
+    // REQUIRE(AreEqual(xs[0], 0.35355f));
+    REQUIRE(AreEqual(xs[0], 0.70711f));
+}
+
+TEST_CASE("Default values for a cone", "[cones]")
+{
+    Cone cone("cone");
+    REQUIRE(cone.GetMinimum() == -std::numeric_limits<float>::infinity());
+    REQUIRE(cone.GetMaximum() == std::numeric_limits<float>::infinity());
+    REQUIRE(!cone.IsClosed());
+}
+
+TEST_CASE("Intersecting a cone's end caps", "[cones]")
+{
+    struct TestCase
+    {
+        std::string name;
+        Tuple origin;
+        Tuple direction;
+        int expectedCount;
+    };
+
+    Cone cone("cone");
+    cone.SetMinimum(-0.5f);
+    cone.SetMaximum(0.5f);
+    cone.SetClosed(true);
+
+    std::vector<TestCase> cases = {
+        {"one", Point(0.f, 0.f, -5.f), Vector(0.f, 1.f, 0.f), 0},
+        {"two", Point(0.f, 0.f, -0.25f), Vector(0.f, 1.f, 1.f), 2},
+        {"three", Point(0.f, 0.f, -0.25f), Vector(0.f, 1.f, 0.f), 4},
+    };
+
+    for (size_t i = 0; i < cases.size(); ++i)
+    {
+        const auto &testCase = cases[i];
+        DYNAMIC_SECTION("case " << i << ": " << testCase.name)
+        {
+            Ray r(testCase.origin, testCase.direction.Normalize());
+            auto xs = cone.IntersectLocal(r);
+            REQUIRE(xs.size() == testCase.expectedCount);
         }
     }
 }

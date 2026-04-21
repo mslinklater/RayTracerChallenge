@@ -52,7 +52,7 @@ class Cylinder : public Shape
         maximum = max;
     }
 
-    bool GetClosed() const
+    bool IsClosed() const
     {
         return closed;
     }

@@ -136,7 +136,7 @@ TEST_CASE("Intersecting a constrained cylinder", "[cylinders]")
 TEST_CASE("The default closed value of a cylinder", "[cylinders]")
 {
     Cylinder cyl("cylinder");
-    REQUIRE(cyl.GetClosed() == false);
+    REQUIRE(cyl.IsClosed() == false);
 }
 
 TEST_CASE("Intersecting the caps of a closed cylinder", "[cylinders]")

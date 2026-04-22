@@ -5,7 +5,7 @@
 #include <cmath>
 #include <memory>
 
-const std::deque<ShapePtr> &World::GetObjects() const
+const std::deque<ShapeUniquePtr> &World::GetObjects() const
 {
     return objects;
 }
@@ -15,7 +15,7 @@ const std::vector<Light> &World::GetLights() const
     return lights;
 }
 
-void World::AddObjectImpl(ShapePtr ptr)
+void World::AddObjectImpl(ShapeUniquePtr ptr)
 {
     assert(ptr != nullptr);
     assert(!ptr->GetName().empty());

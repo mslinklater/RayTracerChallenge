@@ -93,7 +93,7 @@ IntersectionVector Renderer::IntersectWorld(const World &world, const Ray &ray)
     std::vector<Intersection> intersections;
     intersections.reserve(world.GetObjects().size() * 2);
 
-    for (const ShapePtr &object : world.GetObjects())
+    for (const ShapeUniquePtr &object : world.GetObjects())
     {
         const std::vector<float> objectIntersections = object->Intersect(ray);
 

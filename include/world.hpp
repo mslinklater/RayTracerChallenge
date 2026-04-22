@@ -22,7 +22,7 @@ class World
     World() = default;
 
     /** @brief Returns a const reference to the deque of all shapes. */
-    const std::deque<ShapePtr> &GetObjects() const;
+    const std::deque<ShapeUniquePtr> &GetObjects() const;
 
     /** @brief Returns a const reference to the list of all lights. */
     const std::vector<Light> &GetLights() const;
@@ -62,7 +62,7 @@ class World
     {
         assert(!object.GetName().empty());
         object.SetWorldObjectId(nextObjectId++);
-        ShapePtr shapePtr = std::make_unique<T>(object);
+        ShapeUniquePtr shapePtr = std::make_unique<T>(object);
         AddObjectImpl(std::move(shapePtr));
         return object.GetWorldObjectId();
     }
@@ -117,10 +117,10 @@ class World
 
   private:
     /** @brief Internal helper that stores a pre-built @c ShapePtr in the deque. */
-    void AddObjectImpl(ShapePtr ptr);
+    void AddObjectImpl(ShapeUniquePtr ptr);
 
-    std::deque<ShapePtr> objects; ///< Owning storage for all shapes in the scene.
-    std::vector<Light> lights;    ///< All lights in the scene.
+    std::deque<ShapeUniquePtr> objects; ///< Owning storage for all shapes in the scene.
+    std::vector<Light> lights;          ///< All lights in the scene.
 
     ObjectId nextObjectId = 9; ///< Monotonically increasing ID counter.
 };

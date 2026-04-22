@@ -64,6 +64,7 @@ set(SRC_FILES   src/utils.cpp
                 src/shapes/cylinder.cpp
                 src/shapes/cone.cpp
                 src/shapes/cube.cpp
+                src/shapes/group.cpp
                 src/pattern.cpp
                 src/ray.cpp
                 src/light.cpp
@@ -149,6 +150,7 @@ set(TEST_SRC    tests/test_main.cpp
                 tests/test_matrix.cpp
                 tests/test_cylinders.cpp
                 tests/test_cubes.cpp
+                tests/test_groups.cpp
                 tests/test_json.cpp
                 tests/test_patterns.cpp
                 tests/test_transformations.cpp

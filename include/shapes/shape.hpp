@@ -3,8 +3,8 @@
 #include "matrix.hpp"
 #include "ray.hpp"
 #include "types.hpp"
-#include <cassert>
 #include <atomic>
+#include <cassert>
 #include <mutex>
 #include <string>
 
@@ -144,4 +144,5 @@ class Shape
 };
 
 /// @brief Owning pointer to a heap-allocated @c Shape.
-using ShapePtr = std::unique_ptr<Shape>;
+using ShapeUniquePtr = std::unique_ptr<Shape>;
+using ShapeSharedPtr = std::shared_ptr<Shape>;

@@ -1,15 +1,6 @@
-#include "intersection.hpp"
+#include "test_shapes.hpp"
 #include "matrix.hpp"
-#include "shapes/shape.hpp"
 #include <catch2/catch_test_macros.hpp>
-
-class TestShape : public Shape
-{
-  public:
-    TestShape(const std::string &name) : Shape(name)
-    {
-    }
-};
 
 TEST_CASE("The default transformation", "[shapes]")
 {

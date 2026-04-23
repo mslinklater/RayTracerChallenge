@@ -27,3 +27,4 @@ AllowShortIfStatementsOnASingleLine: Never
 AllowShortLoopsOnASingleLine: false
 
 AlignAfterOpenBracket: Align
+PointerAlignment: Left

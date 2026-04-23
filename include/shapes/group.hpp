@@ -32,11 +32,11 @@ class Group : public Shape
      */
     Tuple NormalAtLocal(const Tuple &point) const override;
 
-    const std::vector<ShapeSharedPtr> &GetChildren() const
+    const std::vector<Shape *> &GetChildren() const
     {
         return children;
     }
 
   private:
-    std::vector<ShapeSharedPtr> children;
+    std::vector<Shape *> children;
 };

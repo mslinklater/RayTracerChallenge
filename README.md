@@ -109,3 +109,21 @@ std::string pattern = root["material"]["pattern"].asString();
 * Add ImGUI support for real time rendering and scene editing
 * Add a physics engine - the one from 'Physics Engine in a Weekend' would be a good starting point
 * Add a Vulkan renderer
+
+## Refactoring
+
+```
+code
+    core
+        src
+        include
+        tests
+    editor
+        src
+        include
+        tests
+    app
+        src
+        include
+        tests
+```

@@ -128,9 +128,28 @@ class Shape
      */
     virtual std::vector<float> IntersectLocal(const Ray& ray) const;
 
+    /**
+     * @brief Returns a pointer to the parent shape, or nullptr if this is a top-level shape.
+     * @return Pointer to the parent shape, or nullptr if no parent.
+     */
     Shape* GetParent() const
     {
         return parent;
+    }
+
+    /**
+     * @brief Sets the parent shape for this shape.
+     * @param parent Pointer to the parent shape (must not be nullptr).
+     */
+    void SetParent(Shape* parent)
+    {
+        assert(parent != nullptr);
+        if (this->GetParent() != nullptr && this->GetParent() != parent)
+        {
+            throw std::invalid_argument("Group::SetParent() Shape '" + this->GetName() +
+                                        "' already has a different parent.");
+        }
+        this->parent = parent;
     }
 
   protected:

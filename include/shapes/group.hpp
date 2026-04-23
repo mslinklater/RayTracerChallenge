@@ -1,5 +1,6 @@
 #pragma once
 #include "shape.hpp"
+#include <set>
 
 /**
  * @brief A unit cylinder centered at the origin in object space.
@@ -14,7 +15,7 @@ class Group : public Shape
      * @brief Constructs a unit cylinder with an identity transform.
      * @param name Human-readable identifier.
      */
-    Group(const std::string &name) : Shape(name)
+    Group(const std::string& name) : Shape(name)
     {
     }
 
@@ -23,20 +24,38 @@ class Group : public Shape
      * @param ray A ray already transformed into the sphere's local space.
      * @return Up to two ray parameters @c t at each intersection point.
      */
-    std::vector<float> IntersectLocal(const Ray &ray) const override;
+    std::vector<float> IntersectLocal(const Ray& ray) const override;
 
     /**
      * @brief Returns the object-space surface normal at local-space @p point.
      * @param point A point on the sphere's surface in local space.
      * @return The outward-facing unit normal vector.
      */
-    Tuple NormalAtLocal(const Tuple &point) const override;
+    Tuple NormalAtLocal(const Tuple& point) const override;
 
-    const std::vector<Shape *> &GetChildren() const
+    size_t GetNumChildren() const
     {
-        return children;
+        return children.size();
+    }
+
+    void AddChild(Shape* child)
+    {
+        assert(child != nullptr);
+        if (children.find(child) != children.end())
+        {
+            throw std::invalid_argument("Group::AddChild() Child '" + child->GetName() +
+                                        "' is already a member of this group.");
+        }
+        children.insert(child);
+        child->SetParent(this);
+    }
+
+    bool Contains(Shape* child) const
+    {
+        assert(child != nullptr);
+        return children.find(child) != children.end();
     }
 
   private:
-    std::vector<Shape *> children;
+    std::set<Shape*> children;
 };

@@ -1,8 +1,10 @@
 #pragma once
+
 #include "material.hpp"
 #include "matrix.hpp"
 #include "ray.hpp"
 #include "types.hpp"
+
 #include <atomic>
 #include <cassert>
 #include <mutex>
@@ -23,11 +25,7 @@ class Shape
      * @brief Constructs a shape with an identity transform and default material.
      * @param name Human-readable identifier for debugging and lookup.
      */
-    Shape(const std::string& name) : name(name), worldObjectId(kInvalidObjectId), transform(4)
-    {
-        assert(!name.empty());
-        transform.SetIdentity();
-    }
+    Shape(const std::string& name);
     Shape(const Shape& other);
     Shape& operator=(const Shape& other);
     virtual ~Shape() = default;
@@ -36,59 +34,31 @@ class Shape
      * @brief Sets the unique world object ID (assigned by @c World::AddObject).
      * @param id The ID to assign.
      */
-    void SetWorldObjectId(ObjectId id)
-    {
-        assert(id != kInvalidObjectId);
-        worldObjectId = id;
-    }
+    void SetWorldObjectId(ObjectId id);
 
     /** @brief Returns the unique world object ID. */
-    ObjectId GetWorldObjectId() const
-    {
-        return worldObjectId;
-    }
+    ObjectId GetWorldObjectId() const;
 
     /** @brief Returns a mutable reference to the material for in-place modification. */
-    Material& GetMutableMaterial()
-    {
-        return material;
-    }
+    Material& GetMutableMaterial();
+
     /** @brief Returns a const reference to the material. */
-    const Material& GetMaterial() const
-    {
-        return material;
-    }
+    const Material& GetMaterial() const;
+
     /** @brief Replaces the material. */
-    void SetMaterial(const Material& m)
-    {
-        material = m;
-    }
+    void SetMaterial(const Material& m);
 
     /** @brief Returns a const reference to the object-to-world transform. */
-    const Matrix& GetTransform() const
-    {
-        return transform;
-    }
+    const Matrix& GetTransform() const;
+
     /** @brief Returns a mutable reference to the object-to-world transform. */
-    Matrix& GetMutableTransform()
-    {
-        transformCacheValidAtomic = false;
-        return transform;
-    }
+    Matrix& GetMutableTransform();
+
     /** @brief Replaces the object-to-world transform. */
-    void SetTransform(const Matrix& t)
-    {
-        assert(t.GetSize() == 4);
-        assert(t.IsValid());
-        transform = t;
-        UpdateTransformCache();
-    }
+    void SetTransform(const Matrix& t);
 
     /** @brief Returns the human-readable name of the shape. */
-    const std::string& GetName() const
-    {
-        return name;
-    }
+    const std::string& GetName() const;
 
     /**
      * @brief Returns the world-space surface normal at @p point.
@@ -132,25 +102,13 @@ class Shape
      * @brief Returns a pointer to the parent shape, or nullptr if this is a top-level shape.
      * @return Pointer to the parent shape, or nullptr if no parent.
      */
-    Shape* GetParent() const
-    {
-        return parent;
-    }
+    Shape* GetParent() const;
 
     /**
      * @brief Sets the parent shape for this shape.
      * @param parent Pointer to the parent shape (must not be nullptr).
      */
-    void SetParent(Shape* parent)
-    {
-        assert(parent != nullptr);
-        if (this->GetParent() != nullptr && this->GetParent() != parent)
-        {
-            throw std::invalid_argument("Group::SetParent() Shape '" + this->GetName() +
-                                        "' already has a different parent.");
-        }
-        this->parent = parent;
-    }
+    void SetParent(Shape* parent);
 
   protected:
     void UpdateTransformCache() const;

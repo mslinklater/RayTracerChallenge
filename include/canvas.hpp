@@ -21,16 +21,10 @@ class Canvas
     Canvas(int width, int height);
 
     /** @brief Returns the number of pixel columns. */
-    int GetWidth() const
-    {
-        return width;
-    }
+    int GetWidth() const;
 
     /** @brief Returns the number of pixel rows. */
-    int GetHeight() const
-    {
-        return height;
-    }
+    int GetHeight() const;
 
     /**
      * @brief Returns the colour of the pixel at (@p x, @p y).
@@ -45,13 +39,13 @@ class Canvas
      * @param y     Zero-based row index.
      * @param color The colour to write.
      */
-    void WritePixel(int x, int y, const Color &color);
+    void WritePixel(int x, int y, const Color& color);
 
     /**
      * @brief Writes the canvas contents to a PPM file.
      * @param filename Path to the output file (will be created or overwritten).
      */
-    void WriteToPPM(const std::string &filename) const;
+    void WriteToPPM(const std::string& filename) const;
 
   private:
     int width;                 ///< Number of pixel columns.
@@ -63,4 +57,4 @@ class Canvas
  * @brief Compares two canvases pixel-by-pixel using floating-point tolerance.
  * @return true if both canvases have the same dimensions and all pixels match.
  */
-bool operator==(const Canvas &lhs, const Canvas &rhs);
+bool operator==(const Canvas& lhs, const Canvas& rhs);

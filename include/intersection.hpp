@@ -1,7 +1,7 @@
 #pragma once
+#include "types.hpp"
 #include <cassert>
 #include <cmath>
-#include "types.hpp"
 #include <cstddef>
 #include <vector>
 
@@ -19,25 +19,16 @@ class Intersection
      * @param t        Ray parameter at the hit point.
      * @param objectId Stable world ID of the intersected shape.
      */
-    Intersection(float t, ObjectId objectId) : t(t), objectId(objectId)
-    {
-        assert(std::isfinite(t));
-    }
+    Intersection(float t, ObjectId objectId);
 
     /** @brief Returns the ray parameter at the intersection point. */
-    float GetT() const
-    {
-        return t;
-    }
+    float GetT() const;
 
     /** @brief Returns the world object ID of the intersected shape. */
-    ObjectId GetObjectId() const
-    {
-        return objectId;
-    }
+    ObjectId GetObjectId() const;
 
     /** @brief Equality comparison. */
-    bool operator==(const Intersection &other) const;
+    bool operator==(const Intersection& other) const;
 
   private:
     float t;           ///< The distance along the ray to the intersection point.

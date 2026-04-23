@@ -12,6 +12,16 @@ Canvas::Canvas(int width, int height) : width(width), height(height), pixels(wid
     assert(height > 0);
 }
 
+int Canvas::GetWidth() const
+{
+    return width;
+}
+
+int Canvas::GetHeight() const
+{
+    return height;
+}
+
 Color Canvas::GetPixel(int x, int y) const
 {
     if (x < 0 || x >= width || y < 0 || y >= height)
@@ -21,7 +31,7 @@ Color Canvas::GetPixel(int x, int y) const
     return pixels[y * width + x];
 }
 
-void Canvas::WritePixel(int x, int y, const Color &color)
+void Canvas::WritePixel(int x, int y, const Color& color)
 {
     assert(color.IsValid());
 
@@ -32,7 +42,7 @@ void Canvas::WritePixel(int x, int y, const Color &color)
     pixels[y * width + x] = color;
 }
 
-void Canvas::WriteToPPM(const std::string &filename) const
+void Canvas::WriteToPPM(const std::string& filename) const
 {
     assert(!filename.empty());
 
@@ -77,7 +87,7 @@ void Canvas::WriteToPPM(const std::string &filename) const
     }
 }
 
-bool operator==(const Canvas &lhs, const Canvas &rhs)
+bool operator==(const Canvas& lhs, const Canvas& rhs)
 {
     if (lhs.GetWidth() != rhs.GetWidth() || lhs.GetHeight() != rhs.GetHeight())
         return false;

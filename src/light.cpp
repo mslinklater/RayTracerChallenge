@@ -3,7 +3,16 @@
 #include <cassert>
 #include <cmath>
 
-bool Light::operator==(const Light &other) const
+Light::Light(const Tuple& position, const Color& intensity) : position(position), intensity(intensity)
+{
+    assert(position.IsValid());
+    assert(position.IsPoint());
+    assert(std::isfinite(intensity.r));
+    assert(std::isfinite(intensity.g));
+    assert(std::isfinite(intensity.b));
+}
+
+bool Light::operator==(const Light& other) const
 {
     assert(position.IsValid());
     assert(position.IsPoint());
@@ -12,4 +21,9 @@ bool Light::operator==(const Light &other) const
     assert(intensity.IsValid());
     assert(other.intensity.IsValid());
     return position == other.position && intensity == other.intensity;
+}
+
+bool Light::IsValid() const
+{
+    return position.IsValid() && position.IsPoint() && intensity.IsValid();
 }

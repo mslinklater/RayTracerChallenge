@@ -17,23 +17,13 @@ struct Light
      * @param position  World-space position of the light source.
      * @param intensity Colour and brightness of the emitted light.
      */
-    Light(const Tuple &position, const Color &intensity) : position(position), intensity(intensity)
-    {
-        assert(position.IsValid());
-        assert(position.IsPoint());
-        assert(std::isfinite(intensity.r));
-        assert(std::isfinite(intensity.g));
-        assert(std::isfinite(intensity.b));
-    }
+    Light(const Tuple& position, const Color& intensity);
 
     Tuple position;  ///< World-space position of the light source.
     Color intensity; ///< Colour and brightness of the emitted light.
 
     /** @brief Equality comparison. */
-    bool operator==(const Light &other) const;
+    bool operator==(const Light& other) const;
 
-    bool IsValid() const
-    {
-        return position.IsValid() && position.IsPoint() && intensity.IsValid();
-    }
+    bool IsValid() const;
 };

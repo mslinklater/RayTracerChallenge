@@ -29,148 +29,74 @@ class Material
     /// @}
 
     /** @brief Constructs a material with all default shading parameters. */
-    Material()
-    {
-    }
+    Material();
 
-    Material(const Material &other);
+    Material(const Material& other);
 
     /** @brief Returns the base surface colour. */
-    Color GetColor() const
-    {
-        return color;
-    }
+    Color GetColor() const;
+
     /** @brief Returns the ambient reflection coefficient. */
-    float GetAmbient() const
-    {
-        return ambient;
-    }
+    float GetAmbient() const;
+
     /** @brief Returns the diffuse reflection coefficient. */
-    float GetDiffuse() const
-    {
-        return diffuse;
-    }
+    float GetDiffuse() const;
+
     /** @brief Returns the specular reflection coefficient. */
-    float GetSpecular() const
-    {
-        return specular;
-    }
+    float GetSpecular() const;
+
     /** @brief Returns the shininess exponent used for specular highlights. */
-    float GetShininess() const
-    {
-        return shininess;
-    }
+    float GetShininess() const;
+
     /** @brief Returns the reflectivity of the material (0 = non-reflective, 1 = mirror). */
-    float GetReflective() const
-    {
-        return reflective;
-    }
+    float GetReflective() const;
+
     /** @brief Returns the transparency of the material (0 = opaque, 1 = fully transparent). */
-    float GetTransparency() const
-    {
-        return transparency;
-    }
+    float GetTransparency() const;
+
     /** @brief Returns the refractive index (1.0 for vacuum/air). */
-    float GetRefractiveIndex() const
-    {
-        return refractiveIndex;
-    }
+    float GetRefractiveIndex() const;
 
     /**
      * @brief Returns a raw pointer to the optional surface pattern, or nullptr.
      *
      * The pattern, when present, replaces the base colour at each surface point.
      */
-    const Pattern *GetPattern() const
-    {
-        return pattern.get();
-    }
+    const Pattern* GetPattern() const;
 
     /** @brief Returns a mutable pointer to the optional surface pattern, or nullptr. */
-    Pattern *GetMutablePattern()
-    {
-        return pattern.get();
-    }
+    Pattern* GetMutablePattern();
 
     /** @brief Sets the base surface colour. */
-    Material &SetColor(const Color &c)
-    {
-        assert(std::isfinite(c.r));
-        assert(std::isfinite(c.g));
-        assert(std::isfinite(c.b));
-        color = c;
-        return *this;
-    }
+    Material& SetColor(const Color& c);
 
     /** @brief Sets the ambient reflection coefficient. */
-    Material &SetAmbient(float a)
-    {
-        assert(std::isfinite(a));
-        assert(a >= 0.f && a <= 1.f);
-        ambient = a;
-        return *this;
-    }
+    Material& SetAmbient(float a);
 
     /** @brief Sets the diffuse reflection coefficient. */
-    Material &SetDiffuse(float d)
-    {
-        assert(std::isfinite(d));
-        assert(d >= 0.f && d <= 1.f);
-        diffuse = d;
-        return *this;
-    }
+    Material& SetDiffuse(float d);
 
     /** @brief Sets the specular reflection coefficient. */
-    Material &SetSpecular(float s)
-    {
-        assert(std::isfinite(s));
-        assert(s >= 0.f && s <= 1.f);
-        specular = s;
-        return *this;
-    }
+    Material& SetSpecular(float s);
 
     /** @brief Sets the shininess exponent used for specular highlights. */
-    Material &SetShininess(float sh)
-    {
-        assert(std::isfinite(sh));
-        assert(sh >= 0.f);
-        shininess = sh;
-        return *this;
-    }
+    Material& SetShininess(float sh);
 
     /** @brief Sets the reflectivity (0 = non-reflective, 1 = mirror). */
-    Material &SetReflective(float r)
-    {
-        assert(std::isfinite(r));
-        assert(r >= 0.f && r <= 1.f);
-        reflective = r;
-        return *this;
-    }
+    Material& SetReflective(float r);
 
     /** @brief Sets the transparency (0 = opaque, 1 = fully transparent). */
-    Material &SetTransparency(float t)
-    {
-        assert(std::isfinite(t));
-        assert(t >= 0.f && t <= 1.f);
-        transparency = t;
-        return *this;
-    }
+    Material& SetTransparency(float t);
 
     /** @brief Sets the refractive index (1.0 for vacuum/air). */
-    Material &SetRefractiveIndex(float ri)
-    {
-        assert(std::isfinite(ri));
-        assert(ri > 0.f);
-        refractiveIndex = ri;
-        return *this;
-    }
+    Material& SetRefractiveIndex(float ri);
 
     /**
      * @brief Attaches a copy of @p object as the surface pattern.
      * @tparam T A concrete subclass of @c Pattern.
      * @param object The pattern instance to store.
      */
-    template <typename T, typename = std::enable_if_t<std::is_base_of_v<Pattern, T>>> void SetPattern(const T &object)
+    template <typename T, typename = std::enable_if_t<std::is_base_of_v<Pattern, T>>> void SetPattern(const T& object)
     {
         assert(object.GetTransform().GetSize() == 4);
         assert(object.GetTransform().IsValid());
@@ -178,16 +104,9 @@ class Material
     }
 
     /** @brief Copy-assigns all shading parameters and the optional pattern. */
-    Material &operator=(const Material &other);
+    Material& operator=(const Material& other);
 
-    bool IsValid() const
-    {
-        return color.IsValid() && std::isfinite(ambient) && std::isfinite(diffuse) && std::isfinite(specular) &&
-               std::isfinite(shininess) && std::isfinite(reflective) && std::isfinite(transparency) &&
-               std::isfinite(refractiveIndex) && ambient >= 0.f && ambient <= 1.f && diffuse >= 0.f && diffuse <= 1.f &&
-               specular >= 0.f && specular <= 1.f && shininess >= 0.f && reflective >= 0.f && reflective <= 1.f &&
-               transparency >= 0.f && transparency <= 1.f && refractiveIndex > 0.f;
-    }
+    bool IsValid() const;
 
   private:
     Color color = kDefaultColor;                     ///< The base color of the material.
@@ -202,4 +121,4 @@ class Material
 };
 
 /** @brief Equality comparison using floating-point tolerance on all fields. */
-bool operator==(const Material &lhs, const Material &rhs);
+bool operator==(const Material& lhs, const Material& rhs);

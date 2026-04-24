@@ -22,7 +22,7 @@ TEST_CASE("A ray misses a cylinder", "[cylinders]")
 
     for (size_t i = 0; i < cases.size(); ++i)
     {
-        const auto &testCase = cases[i];
+        const auto& testCase = cases[i];
         DYNAMIC_SECTION("case " << i << ": " << testCase.name)
         {
             Ray r(testCase.origin, testCase.direction);
@@ -52,14 +52,14 @@ TEST_CASE("A ray strikes a cylinder", "[cylinders]")
 
     for (size_t i = 0; i < cases.size(); ++i)
     {
-        const auto &testCase = cases[i];
+        const auto& testCase = cases[i];
         DYNAMIC_SECTION("case " << i << ": " << testCase.name)
         {
             Ray r(testCase.origin, testCase.direction.Normalize());
             auto xs = cyl.IntersectLocal(r);
             REQUIRE(xs.size() == 2);
-            REQUIRE(AreEqual(xs[0], testCase.expectedT1));
-            REQUIRE(AreEqual(xs[1], testCase.expectedT2));
+            REQUIRE(AreEqual(xs[0].GetT(), testCase.expectedT1));
+            REQUIRE(AreEqual(xs[1].GetT(), testCase.expectedT2));
         }
     }
 }
@@ -83,7 +83,7 @@ TEST_CASE("Normal vector on a cylinder", "[cylinders]")
 
     for (size_t i = 0; i < cases.size(); ++i)
     {
-        const auto &testCase = cases[i];
+        const auto& testCase = cases[i];
         DYNAMIC_SECTION("case " << i << ": " << testCase.name)
         {
             Tuple n = cyl.NormalAtLocal(testCase.point);
@@ -123,7 +123,7 @@ TEST_CASE("Intersecting a constrained cylinder", "[cylinders]")
 
     for (size_t i = 0; i < cases.size(); ++i)
     {
-        const auto &testCase = cases[i];
+        const auto& testCase = cases[i];
         DYNAMIC_SECTION("case " << i << ": " << testCase.name)
         {
             Ray r(testCase.origin, testCase.direction.Normalize());
@@ -163,7 +163,7 @@ TEST_CASE("Intersecting the caps of a closed cylinder", "[cylinders]")
 
     for (size_t i = 0; i < cases.size(); ++i)
     {
-        const auto &testCase = cases[i];
+        const auto& testCase = cases[i];
         DYNAMIC_SECTION("case " << i << ": " << testCase.name)
         {
             Ray r(testCase.origin, testCase.direction.Normalize());
@@ -196,7 +196,7 @@ TEST_CASE("The normal vector on a cylinder's end caps", "[cylinders]")
 
     for (size_t i = 0; i < cases.size(); ++i)
     {
-        const auto &testCase = cases[i];
+        const auto& testCase = cases[i];
         DYNAMIC_SECTION("case " << i << ": " << testCase.name)
         {
             Tuple n = cyl.NormalAtLocal(testCase.point);

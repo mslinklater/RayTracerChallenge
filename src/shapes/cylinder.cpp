@@ -4,17 +4,17 @@
 #include <cassert>
 #include <cmath>
 
-bool operator==(const Cylinder &s1, const Cylinder &s2)
+bool operator==(const Cylinder& s1, const Cylinder& s2)
 {
     return s1.GetTransform() == s2.GetTransform() && s1.GetMaterial() == s2.GetMaterial() &&
            s1.GetName() == s2.GetName();
 }
 
-std::vector<float> Cylinder::IntersectLocal(const Ray &ray) const
+std::vector<Intersection> Cylinder::IntersectLocal(const Ray& ray) const
 {
     assert(ray.IsValid());
 
-    std::vector<float> intersections;
+    std::vector<Intersection> intersections;
 
     const float a = ray.GetDirection().x * ray.GetDirection().x + ray.GetDirection().z * ray.GetDirection().z;
 
@@ -34,13 +34,13 @@ std::vector<float> Cylinder::IntersectLocal(const Ray &ray) const
             float y0 = ray.GetOrigin().y + t0 * ray.GetDirection().y;
             if (minimum < y0 && y0 < maximum)
             {
-                intersections.push_back(t0);
+                intersections.push_back(Intersection(t0, worldObjectId));
             }
 
             float y1 = ray.GetOrigin().y + t1 * ray.GetDirection().y;
             if (minimum < y1 && y1 < maximum)
             {
-                intersections.push_back(t1);
+                intersections.push_back(Intersection(t1, worldObjectId));
             }
         }
     }
@@ -52,7 +52,7 @@ std::vector<float> Cylinder::IntersectLocal(const Ray &ray) const
     return intersections;
 }
 
-Tuple Cylinder::NormalAtLocal(const Tuple &point) const
+Tuple Cylinder::NormalAtLocal(const Tuple& point) const
 {
     assert(point.IsValid());
 
@@ -71,7 +71,7 @@ Tuple Cylinder::NormalAtLocal(const Tuple &point) const
     }
 }
 
-bool Cylinder::CheckCap(const Ray &ray, float t) const
+bool Cylinder::CheckCap(const Ray& ray, float t) const
 {
     assert(ray.IsValid());
     assert(std::isfinite(t));
@@ -82,7 +82,7 @@ bool Cylinder::CheckCap(const Ray &ray, float t) const
     return distanceSquared < 1.f || AreEqual(distanceSquared, 1.f);
 }
 
-void Cylinder::IntersectCaps(const Ray &ray, std::vector<float> &intersections) const
+void Cylinder::IntersectCaps(const Ray& ray, std::vector<Intersection>& intersections) const
 {
     assert(ray.IsValid());
 
@@ -95,12 +95,12 @@ void Cylinder::IntersectCaps(const Ray &ray, std::vector<float> &intersections) 
     float t = (minimum - ray.GetOrigin().y) / ray.GetDirection().y;
     if (CheckCap(ray, t))
     {
-        intersections.push_back(t);
+        intersections.push_back(Intersection(t, worldObjectId));
     }
 
     t = (maximum - ray.GetOrigin().y) / ray.GetDirection().y;
     if (CheckCap(ray, t))
     {
-        intersections.push_back(t);
+        intersections.push_back(Intersection(t, worldObjectId));
     }
 }

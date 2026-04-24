@@ -29,14 +29,14 @@ TEST_CASE("A ray intersects a cube", "[cubes]")
 
     for (size_t i = 0; i < cases.size(); ++i)
     {
-        const auto &testCase = cases[i];
+        const auto& testCase = cases[i];
         DYNAMIC_SECTION("case " << i << ": " << testCase.name)
         {
             Ray ray(testCase.origin, testCase.direction);
-            std::vector<float> xs = cube.IntersectLocal(ray);
+            std::vector<Intersection> xs = cube.IntersectLocal(ray);
             REQUIRE(xs.size() == 2);
-            REQUIRE(xs[0] == testCase.expectedT1);
-            REQUIRE(xs[1] == testCase.expectedT2);
+            REQUIRE(xs[0].GetT() == testCase.expectedT1);
+            REQUIRE(xs[1].GetT() == testCase.expectedT2);
         }
     }
 }
@@ -63,11 +63,11 @@ TEST_CASE("A ray misses a cube", "[cubes]")
 
     for (size_t i = 0; i < cases.size(); ++i)
     {
-        const auto &testCase = cases[i];
+        const auto& testCase = cases[i];
         DYNAMIC_SECTION("case " << i << ": " << testCase.name)
         {
             Ray ray(testCase.origin, testCase.direction);
-            std::vector<float> xs = cube.IntersectLocal(ray);
+            std::vector<Intersection> xs = cube.IntersectLocal(ray);
             REQUIRE(xs.empty());
         }
     }
@@ -96,7 +96,7 @@ TEST_CASE("The normal on the surface of a cube", "[cubes]")
 
     for (size_t i = 0; i < cases.size(); ++i)
     {
-        const auto &testCase = cases[i];
+        const auto& testCase = cases[i];
         DYNAMIC_SECTION("case " << i << ": " << testCase.name)
         {
             Tuple normal = cube.NormalAtLocal(testCase.point);

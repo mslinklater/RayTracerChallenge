@@ -1,14 +1,14 @@
 #include "shapes/cone.hpp"
 #include "maths.hpp"
 
-std::vector<float> Cone::IntersectLocal(const Ray &ray) const
+std::vector<Intersection> Cone::IntersectLocal(const Ray& ray) const
 {
     // a = (d.x)^2 - (d.y)^2 + (d.z)^2
     // b = 2 * (o.x * d.x - o.y * d.y + o.z * d.z)
     // c = (o.x)^2 - (o.y)^2 + (o.z)^2
 
     assert(ray.IsValid());
-    std::vector<float> intersections;
+    std::vector<Intersection> intersections;
 
     const Tuple origin = ray.GetOrigin();
     const Tuple direction = ray.GetDirection();
@@ -21,7 +21,7 @@ std::vector<float> Cone::IntersectLocal(const Ray &ray) const
     {
         if (std::abs(b) >= 1e-6f)
         {
-            intersections.push_back(-c / b);
+            intersections.push_back(Intersection(-c / b, worldObjectId));
         }
     }
     else
@@ -48,13 +48,13 @@ std::vector<float> Cone::IntersectLocal(const Ray &ray) const
 
             if (minimum < y0 && y0 < maximum)
             {
-                intersections.push_back(t0);
+                intersections.push_back(Intersection(t0, worldObjectId));
             }
 
             float y1 = origin.y + t1 * direction.y;
             if (minimum < y1 && y1 < maximum)
             {
-                intersections.push_back(t1);
+                intersections.push_back(Intersection(t1, worldObjectId));
             }
         }
     }
@@ -67,7 +67,7 @@ std::vector<float> Cone::IntersectLocal(const Ray &ray) const
     return intersections;
 }
 
-Tuple Cone::NormalAtLocal(const Tuple &point) const
+Tuple Cone::NormalAtLocal(const Tuple& point) const
 {
     float y = std::sqrt(point.x * point.x + point.z * point.z);
     if (point.y > 0.f)
@@ -77,7 +77,7 @@ Tuple Cone::NormalAtLocal(const Tuple &point) const
     return Vector(point.x, y, point.z);
 }
 
-bool Cone::CheckCap(const Ray &ray, float t, float radius) const
+bool Cone::CheckCap(const Ray& ray, float t, float radius) const
 {
     assert(ray.IsValid());
     assert(std::isfinite(t));
@@ -88,7 +88,7 @@ bool Cone::CheckCap(const Ray &ray, float t, float radius) const
     return distanceSquared < radius || AreEqual(distanceSquared, radius);
 }
 
-void Cone::IntersectCaps(const Ray &ray, std::vector<float> &intersections) const
+void Cone::IntersectCaps(const Ray& ray, std::vector<Intersection>& intersections) const
 {
     assert(ray.IsValid());
 
@@ -101,12 +101,12 @@ void Cone::IntersectCaps(const Ray &ray, std::vector<float> &intersections) cons
     float t = (minimum - ray.GetOrigin().y) / ray.GetDirection().y;
     if (CheckCap(ray, t, std::abs(minimum)))
     {
-        intersections.push_back(t);
+        intersections.push_back(Intersection(t, worldObjectId));
     }
 
     t = (maximum - ray.GetOrigin().y) / ray.GetDirection().y;
     if (CheckCap(ray, t, std::abs(maximum)))
     {
-        intersections.push_back(t);
+        intersections.push_back(Intersection(t, worldObjectId));
     }
 }

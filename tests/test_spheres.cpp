@@ -11,11 +11,11 @@
 class RayCapturingShape : public Shape
 {
   public:
-    explicit RayCapturingShape(const std::string &name) : Shape(name)
+    explicit RayCapturingShape(const std::string& name) : Shape(name)
     {
     }
 
-    std::vector<float> IntersectLocal(const Ray &ray) const override
+    std::vector<Intersection> IntersectLocal(const Ray& ray) const override
     {
         savedRay = ray;
         return {};
@@ -39,8 +39,8 @@ TEST_CASE("A ray intersects a sphere at two points", "[spheres]")
     auto xs = sphere.Intersect(ray);
 
     REQUIRE(xs.size() == 2);
-    REQUIRE(xs[0] == 4.f);
-    REQUIRE(xs[1] == 6.f);
+    REQUIRE(xs[0].GetT() == 4.f);
+    REQUIRE(xs[1].GetT() == 6.f);
 }
 
 TEST_CASE("Test Sphere equality operator", "[spheres]")
@@ -62,8 +62,8 @@ TEST_CASE("A ray intersects a sphere at tangent - two identical points", "[spher
     auto xs = sphere.Intersect(ray);
 
     REQUIRE(xs.size() == 2);
-    REQUIRE(xs[0] == 5.f);
-    REQUIRE(xs[1] == 5.f);
+    REQUIRE(xs[0].GetT() == 5.f);
+    REQUIRE(xs[1].GetT() == 5.f);
 }
 
 TEST_CASE("A ray misses a sphere", "[spheres]")
@@ -86,8 +86,8 @@ TEST_CASE("A ray originates inside a sphere", "[spheres]")
     auto xs = sphere.Intersect(ray);
 
     REQUIRE(xs.size() == 2);
-    REQUIRE(xs[0] == -1.f);
-    REQUIRE(xs[1] == 1.f);
+    REQUIRE(xs[0].GetT() == -1.f);
+    REQUIRE(xs[1].GetT() == 1.f);
 }
 
 TEST_CASE("The sphere is behind the ray", "[spheres]")
@@ -99,8 +99,8 @@ TEST_CASE("The sphere is behind the ray", "[spheres]")
     auto xs = sphere.Intersect(ray);
 
     REQUIRE(xs.size() == 2);
-    REQUIRE(xs[0] == -6.f);
-    REQUIRE(xs[1] == -4.f);
+    REQUIRE(xs[0].GetT() == -6.f);
+    REQUIRE(xs[1].GetT() == -4.f);
 }
 
 TEST_CASE("A spheres default transformation", "[spheres]")

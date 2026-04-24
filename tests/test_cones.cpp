@@ -28,14 +28,14 @@ TEST_CASE("Intersecting a cone with a ray", "[cones]")
 
     for (size_t i = 0; i < cases.size(); ++i)
     {
-        const auto &testCase = cases[i];
+        const auto& testCase = cases[i];
         DYNAMIC_SECTION("case " << i << ": " << testCase.name)
         {
             Ray r(testCase.origin, testCase.direction.Normalize());
             auto xs = cone.IntersectLocal(r);
             REQUIRE(xs.size() == 2);
-            REQUIRE(AreEqual(xs[0], testCase.expectedT1));
-            REQUIRE(AreEqual(xs[1], testCase.expectedT2));
+            REQUIRE(AreEqual(xs[0].GetT(), testCase.expectedT1));
+            REQUIRE(AreEqual(xs[1].GetT(), testCase.expectedT2));
         }
     }
 }
@@ -47,7 +47,7 @@ TEST_CASE("Intersecting a cone with a ray parallel to one of its halves", "[cone
     auto xs = cone.IntersectLocal(r);
     REQUIRE(xs.size() == 1);
     // REQUIRE(AreEqual(xs[0], 0.35355f));
-    REQUIRE(AreEqual(xs[0], 0.70711f));
+    REQUIRE(AreEqual(xs[0].GetT(), 0.70711f));
 }
 
 TEST_CASE("Default values for a cone", "[cones]")
@@ -81,7 +81,7 @@ TEST_CASE("Intersecting a cone's end caps", "[cones]")
 
     for (size_t i = 0; i < cases.size(); ++i)
     {
-        const auto &testCase = cases[i];
+        const auto& testCase = cases[i];
         DYNAMIC_SECTION("case " << i << ": " << testCase.name)
         {
             Ray r(testCase.origin, testCase.direction.Normalize());
@@ -109,7 +109,7 @@ TEST_CASE("Computing the normal vector on a cone", "[cones]")
 
     for (size_t i = 0; i < cases.size(); ++i)
     {
-        const auto &testCase = cases[i];
+        const auto& testCase = cases[i];
         DYNAMIC_SECTION("case " << i << ": " << testCase.name)
         {
             auto normal = cone.NormalAtLocal(testCase.point);

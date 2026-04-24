@@ -1,15 +1,16 @@
 #include "shapes/sphere.hpp"
 #include "ray.hpp"
+#include "types.hpp"
 #include <cassert>
 #include <cmath>
 
-bool operator==(const Sphere &s1, const Sphere &s2)
+bool operator==(const Sphere& s1, const Sphere& s2)
 {
     return s1.GetTransform() == s2.GetTransform() && s1.GetMaterial() == s2.GetMaterial() &&
            s1.GetName() == s2.GetName();
 }
 
-std::vector<float> Sphere::IntersectLocal(const Ray &ray) const
+std::vector<Intersection> Sphere::IntersectLocal(const Ray& ray) const
 {
     assert(ray.IsValid());
 
@@ -26,7 +27,7 @@ std::vector<float> Sphere::IntersectLocal(const Ray &ray) const
 
     const float discriminant = b * b - 4.f * a * c;
 
-    std::vector<float> intersections;
+    std::vector<Intersection> intersections;
     if (discriminant < 0.f)
     {
         // No intersections
@@ -35,15 +36,15 @@ std::vector<float> Sphere::IntersectLocal(const Ray &ray) const
     else
     {
         const float sqrtDiscriminant = std::sqrt(discriminant);
-        const float t1 = (-b - sqrtDiscriminant) / (2.f * a);
-        const float t2 = (-b + sqrtDiscriminant) / (2.f * a);
+        const Intersection t1 = Intersection((-b - sqrtDiscriminant) / (2.f * a), worldObjectId);
+        const Intersection t2 = Intersection((-b + sqrtDiscriminant) / (2.f * a), worldObjectId);
         intersections.push_back(t1);
         intersections.push_back(t2);
         return intersections;
     }
 }
 
-Tuple Sphere::NormalAtLocal(const Tuple &point) const
+Tuple Sphere::NormalAtLocal(const Tuple& point) const
 {
     assert(point.IsValid());
 

@@ -24,7 +24,7 @@ class Group : public Shape
      * @param ray A ray already transformed into the sphere's local space.
      * @return Up to two ray parameters @c t at each intersection point.
      */
-    std::vector<float> IntersectLocal(const Ray& ray) const override;
+    std::vector<Intersection> IntersectLocal(const Ray& ray) const override;
 
     /**
      * @brief Returns the object-space surface normal at local-space @p point.

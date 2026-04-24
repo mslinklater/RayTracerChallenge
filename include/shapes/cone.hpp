@@ -14,7 +14,7 @@ class Cone : public Shape
      * @brief Constructs a cone
      * @param name Human-readable identifier.
      */
-    Cone(const std::string &name) : Shape(name)
+    Cone(const std::string& name) : Shape(name)
     {
     }
 
@@ -23,7 +23,7 @@ class Cone : public Shape
      * @param ray A ray already transformed into the plane's local space.
      * @return A single ray parameter @c t, or an empty list if the ray is parallel to the plane.
      */
-    std::vector<float> IntersectLocal(const Ray &ray) const override;
+    std::vector<Intersection> IntersectLocal(const Ray& ray) const override;
 
     /**
      * @brief Returns the object-space surface normal at @p point.
@@ -31,7 +31,7 @@ class Cone : public Shape
      * @param point The position of the requested normal
      * @return The plane's upward-facing normal vector.
      */
-    Tuple NormalAtLocal(const Tuple &point) const override;
+    Tuple NormalAtLocal(const Tuple& point) const override;
 
     float GetMinimum() const
     {
@@ -59,8 +59,9 @@ class Cone : public Shape
     }
 
   private:
-    bool CheckCap(const Ray &ray, float t, float radius) const; ///< Helper for checking ray-cap intersection
-    void IntersectCaps(const Ray &ray, std::vector<float> &intersections) const; ///< Helper for intersecting end caps
+    bool CheckCap(const Ray& ray, float t, float radius) const; ///< Helper for checking ray-cap intersection
+    void IntersectCaps(const Ray& ray,
+                       std::vector<Intersection>& intersections) const; ///< Helper for intersecting end caps
     ///
     float minimum = -std::numeric_limits<float>::infinity();
     float maximum = std::numeric_limits<float>::infinity();

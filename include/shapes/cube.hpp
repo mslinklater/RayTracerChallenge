@@ -14,7 +14,7 @@ class Cube : public Shape
      * @brief Constructs a cube
      * @param name Human-readable identifier.
      */
-    Cube(const std::string &name) : Shape(name)
+    Cube(const std::string& name) : Shape(name)
     {
     }
 
@@ -23,7 +23,7 @@ class Cube : public Shape
      * @param ray A ray already transformed into the plane's local space.
      * @return A single ray parameter @c t, or an empty list if the ray is parallel to the plane.
      */
-    std::vector<float> IntersectLocal(const Ray &ray) const override;
+    std::vector<Intersection> IntersectLocal(const Ray& ray) const override;
 
     /**
      * @brief Returns the object-space surface normal at @p point.
@@ -31,8 +31,8 @@ class Cube : public Shape
      * @param point The position of the requested normal
      * @return The plane's upward-facing normal vector.
      */
-    Tuple NormalAtLocal(const Tuple &point) const override;
+    Tuple NormalAtLocal(const Tuple& point) const override;
 
   private:
-    void CheckAxis(float origin, float direction, float &tmin, float &tmax) const;
+    void CheckAxis(float origin, float direction, float& tmin, float& tmax) const;
 };

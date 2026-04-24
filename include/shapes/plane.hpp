@@ -9,12 +9,12 @@
  */
 class Plane : public Shape
 {
-public:
+  public:
     /**
      * @brief Constructs a plane in the XZ plane with an identity transform.
      * @param name Human-readable identifier.
      */
-    Plane(const std::string &name) : Shape(name)
+    Plane(const std::string& name) : Shape(name)
     {
     }
 
@@ -23,7 +23,7 @@ public:
      * @param ray A ray already transformed into the plane's local space.
      * @return A single ray parameter @c t, or an empty list if the ray is parallel to the plane.
      */
-    std::vector<float> IntersectLocal(const Ray &ray) const override;
+    std::vector<Intersection> IntersectLocal(const Ray& ray) const override;
 
     /**
      * @brief Returns the object-space surface normal at @p point.
@@ -32,7 +32,7 @@ public:
      * @param point Unused — normals are uniform across the plane.
      * @return The plane's upward-facing normal vector.
      */
-    Tuple NormalAtLocal(const Tuple &point) const override;
+    Tuple NormalAtLocal(const Tuple& point) const override;
 };
 
 // bool operator==(const Plane &p1, const Plane &p2);

@@ -144,7 +144,7 @@ Tuple Shape::NormalAtLocal(const Tuple& point) const
     return Vector(point.x, point.y, point.z);
 }
 
-std::vector<float> Shape::Intersect(const Ray& ray) const
+std::vector<Intersection> Shape::Intersect(const Ray& ray) const
 {
     assert(ray.IsValid());
 
@@ -153,9 +153,10 @@ std::vector<float> Shape::Intersect(const Ray& ray) const
     return IntersectLocal(localRay);
 }
 
-std::vector<float> Shape::IntersectLocal(const Ray& ray) const
+std::vector<Intersection> Shape::IntersectLocal(const Ray& ray) const
 {
     assert(ray.IsValid());
 
-    return std::vector<float>(); // Default implementation returns an empty vector (no intersections)
+    std::vector<Intersection> intersections;
+    return intersections; // Default implementation returns an empty vector (no intersections)
 }

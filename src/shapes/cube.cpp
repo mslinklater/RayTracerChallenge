@@ -5,7 +5,7 @@
 #include <cmath>
 #include <limits>
 
-Tuple Cube::NormalAtLocal(const Tuple &point) const
+Tuple Cube::NormalAtLocal(const Tuple& point) const
 {
     assert(point.IsValid());
 
@@ -22,7 +22,7 @@ Tuple Cube::NormalAtLocal(const Tuple &point) const
     return Vector(0.f, 0.f, point.z);
 }
 
-std::vector<float> Cube::IntersectLocal(const Ray &ray) const
+std::vector<Intersection> Cube::IntersectLocal(const Ray& ray) const
 {
     assert(ray.IsValid());
 
@@ -34,17 +34,17 @@ std::vector<float> Cube::IntersectLocal(const Ray &ray) const
     const float tmin = std::max({xtmin, ytmin, ztmin});
     const float tmax = std::min({xtmax, ytmax, ztmax});
 
-    std::vector<float> intersections;
+    std::vector<Intersection> intersections;
     if (tmax > tmin)
     {
         intersections.reserve(2);
-        intersections.push_back(tmin);
-        intersections.push_back(tmax);
+        intersections.push_back(Intersection(tmin, worldObjectId));
+        intersections.push_back(Intersection(tmax, worldObjectId));
     }
     return intersections;
 }
 
-void Cube::CheckAxis(float origin, float direction, float &tmin, float &tmax) const
+void Cube::CheckAxis(float origin, float direction, float& tmin, float& tmax) const
 {
     assert(std::isfinite(origin));
     assert(std::isfinite(direction));

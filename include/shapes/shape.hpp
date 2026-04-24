@@ -1,5 +1,6 @@
 #pragma once
 
+#include "intersection.hpp"
 #include "material.hpp"
 #include "matrix.hpp"
 #include "ray.hpp"
@@ -87,7 +88,8 @@ class Shape
      * @param ray A ray in world space.
      * @return A list of ray parameters @c t at each intersection point.
      */
-    std::vector<float> Intersect(const Ray& ray) const;
+    // std::vector<float> Intersect(const Ray& ray) const;
+    std::vector<Intersection> Intersect(const Ray& ray) const;
 
     /**
      * @brief Intersects @p ray (already in object/local space) with this shape.
@@ -96,7 +98,7 @@ class Shape
      * @param ray A ray already transformed into the shape's local space.
      * @return A list of ray parameters @c t at each intersection point.
      */
-    virtual std::vector<float> IntersectLocal(const Ray& ray) const;
+    virtual std::vector<Intersection> IntersectLocal(const Ray& ray) const;
 
     /**
      * @brief Returns a pointer to the parent shape, or nullptr if this is a top-level shape.

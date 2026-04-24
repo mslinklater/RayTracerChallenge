@@ -9,12 +9,12 @@
  */
 class Sphere : public Shape
 {
-public:
+  public:
     /**
      * @brief Constructs a unit sphere with an identity transform.
      * @param name Human-readable identifier.
      */
-    Sphere(const std::string &name) : Shape(name)
+    Sphere(const std::string& name) : Shape(name)
     {
     }
 
@@ -23,15 +23,15 @@ public:
      * @param ray A ray already transformed into the sphere's local space.
      * @return Up to two ray parameters @c t at each intersection point.
      */
-    std::vector<float> IntersectLocal(const Ray &ray) const override;
+    std::vector<Intersection> IntersectLocal(const Ray& ray) const override;
 
     /**
      * @brief Returns the object-space surface normal at local-space @p point.
      * @param point A point on the sphere's surface in local space.
      * @return The outward-facing unit normal vector.
      */
-    Tuple NormalAtLocal(const Tuple &point) const override;
+    Tuple NormalAtLocal(const Tuple& point) const override;
 };
 
 /** @brief Equality comparison based on transform and material. */
-bool operator==(const Sphere &s1, const Sphere &s2);
+bool operator==(const Sphere& s1, const Sphere& s2);

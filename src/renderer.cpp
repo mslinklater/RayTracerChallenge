@@ -14,7 +14,7 @@
 #include <thread>
 #include <vector>
 
-Canvas Renderer::Render(const Camera &camera, const World &world)
+Canvas Renderer::Render(const Camera& camera, const World& world)
 {
     assert(camera.GetHSize() > 0);
     assert(camera.GetVSize() > 0);
@@ -61,7 +61,7 @@ Canvas Renderer::Render(const Camera &camera, const World &world)
     }
 
     // Wait for all worker threads to complete
-    for (std::thread &worker : workers)
+    for (std::thread& worker : workers)
     {
         worker.join();
     }
@@ -69,7 +69,7 @@ Canvas Renderer::Render(const Camera &camera, const World &world)
     return canvas;
 }
 
-Color Renderer::ColorAt(const World &world, const Ray &ray, int remaining)
+Color Renderer::ColorAt(const World& world, const Ray& ray, int remaining)
 {
     assert(remaining >= 0);
     assert(ray.IsValid());
@@ -87,18 +87,19 @@ Color Renderer::ColorAt(const World &world, const Ray &ray, int remaining)
     return ShadeHit(world, comps, remaining);
 }
 
-IntersectionVector Renderer::IntersectWorld(const World &world, const Ray &ray)
+IntersectionVector Renderer::IntersectWorld(const World& world, const Ray& ray)
 {
     assert(ray.IsValid());
     std::vector<Intersection> intersections;
     intersections.reserve(world.GetObjects().size() * 2);
 
-    for (const ShapeUniquePtr &object : world.GetObjects())
+    for (const ShapeUniquePtr& object : world.GetObjects())
     {
-        const std::vector<float> objectIntersections = object->Intersect(ray);
+        const std::vector<Intersection> objectIntersections = object->Intersect(ray);
 
-        for (const float &distance : objectIntersections)
+        for (const Intersection& i : objectIntersections)
         {
+            float distance = i.GetT();
             Intersection intersection(distance, object->GetWorldObjectId());
             intersections.push_back(intersection);
         }
@@ -106,18 +107,18 @@ IntersectionVector Renderer::IntersectWorld(const World &world, const Ray &ray)
 
     // sort intersections by t value
     std::sort(intersections.begin(), intersections.end(),
-              [](const Intersection &a, const Intersection &b) { return a.GetT() < b.GetT(); });
+              [](const Intersection& a, const Intersection& b) { return a.GetT() < b.GetT(); });
     return intersections;
 }
 
-Color Renderer::ReflectedColor(const World &world, const Computations &comps, int remaining)
+Color Renderer::ReflectedColor(const World& world, const Computations& comps, int remaining)
 {
     assert(remaining >= 0);
     assert(comps.IsValid());
     return ReflectedColor(world, world.GetObject(comps.objectId).GetMaterial(), comps, remaining);
 }
 
-Color Renderer::ReflectedColor(const World &world, const Material &material, const Computations &comps, int remaining)
+Color Renderer::ReflectedColor(const World& world, const Material& material, const Computations& comps, int remaining)
 {
     assert(remaining >= 0);
     assert(material.IsValid());
@@ -134,14 +135,14 @@ Color Renderer::ReflectedColor(const World &world, const Material &material, con
     return c * material.GetReflective();
 }
 
-Color Renderer::RefractedColor(const World &world, const Computations &comps, int remaining)
+Color Renderer::RefractedColor(const World& world, const Computations& comps, int remaining)
 {
     assert(remaining >= 0);
     assert(comps.IsValid());
     return RefractedColor(world, world.GetObject(comps.objectId).GetMaterial(), comps, remaining);
 }
 
-Color Renderer::RefractedColor(const World &world, const Material &material, const Computations &comps, int remaining)
+Color Renderer::RefractedColor(const World& world, const Material& material, const Computations& comps, int remaining)
 {
     assert(remaining >= 0);
     assert(material.IsValid());
@@ -170,15 +171,15 @@ Color Renderer::RefractedColor(const World &world, const Material &material, con
     return c;
 }
 
-Color Renderer::ShadeHit(const World &world, const Computations &comps, int remaining)
+Color Renderer::ShadeHit(const World& world, const Computations& comps, int remaining)
 {
     assert(remaining >= 0);
     assert(comps.IsValid());
-    const Shape &object = world.GetObject(comps.objectId);
-    const Material &material = object.GetMaterial();
+    const Shape& object = world.GetObject(comps.objectId);
+    const Material& material = object.GetMaterial();
     Color surface = kColorBlack;
 
-    for (const Light &light : world.GetLights())
+    for (const Light& light : world.GetLights())
     {
         const EInShadow inShadow = IsShadowed(world, comps.overPoint, light);
         surface =
@@ -197,8 +198,8 @@ Color Renderer::ShadeHit(const World &world, const Computations &comps, int rema
     return surface + reflected + refracted;
 }
 
-Color Renderer::Lighting(const Material &material, const Shape &object, const Light &light, const Tuple &position,
-                         const Tuple &eyeVector, const Tuple &normalVector, EInShadow inShadow)
+Color Renderer::Lighting(const Material& material, const Shape& object, const Light& light, const Tuple& position,
+                         const Tuple& eyeVector, const Tuple& normalVector, EInShadow inShadow)
 {
     assert(material.IsValid());
     assert(light.IsValid());
@@ -280,24 +281,24 @@ World Renderer::DefaultWorld()
 
 IntersectionVector Renderer::Intersections(std::initializer_list<Intersection> list)
 {
-    for (const Intersection &intersection : list)
+    for (const Intersection& intersection : list)
     {
         assert(std::isfinite(intersection.GetT()));
     }
     IntersectionVector intersections(list);
     std::sort(intersections.begin(), intersections.end(),
-              [](const Intersection &lhs, const Intersection &rhs) { return lhs.GetT() < rhs.GetT(); });
+              [](const Intersection& lhs, const Intersection& rhs) { return lhs.GetT() < rhs.GetT(); });
     return intersections;
 }
 
-Intersection Renderer::GetClosestIntersection(const IntersectionVector &intersections)
+Intersection Renderer::GetClosestIntersection(const IntersectionVector& intersections)
 {
-    for (const Intersection &intersection : intersections)
+    for (const Intersection& intersection : intersections)
     {
         assert(std::isfinite(intersection.GetT()));
     }
     const auto it = std::lower_bound(intersections.begin(), intersections.end(), 0.f,
-                                     [](const Intersection &intersection, float t) { return intersection.GetT() < t; });
+                                     [](const Intersection& intersection, float t) { return intersection.GetT() < t; });
     if (it == intersections.end())
     {
         return Intersection(0.f, kInvalidObjectId);
@@ -305,8 +306,8 @@ Intersection Renderer::GetClosestIntersection(const IntersectionVector &intersec
     return *it;
 }
 
-Computations Renderer::PrepareComputations(const Intersection &intersection, const Ray &ray, const World &world,
-                                           const IntersectionVector *intersectionVec)
+Computations Renderer::PrepareComputations(const Intersection& intersection, const Ray& ray, const World& world,
+                                           const IntersectionVector* intersectionVec)
 {
     assert(intersection.GetObjectId() != kInvalidObjectId);
     assert(std::isfinite(intersection.GetT()));
@@ -339,7 +340,7 @@ Computations Renderer::PrepareComputations(const Intersection &intersection, con
         std::vector<ObjectId> containers;
 
         // go through the intersecions setting the prev (n1) and next (n2) refractive indices
-        for (auto &i : *intersectionVec)
+        for (auto& i : *intersectionVec)
         {
             // first, set n1
             if (i == intersection)
@@ -385,7 +386,7 @@ Computations Renderer::PrepareComputations(const Intersection &intersection, con
     return comps;
 }
 
-EInShadow Renderer::IsShadowed(const World &world, const Tuple &point)
+EInShadow Renderer::IsShadowed(const World& world, const Tuple& point)
 {
     assert(point.IsValid());
     if (world.GetLights().empty())
@@ -395,7 +396,7 @@ EInShadow Renderer::IsShadowed(const World &world, const Tuple &point)
     return IsShadowed(world, point, world.GetLight(0));
 }
 
-EInShadow Renderer::IsShadowed(const World &world, const Tuple &point, const Light &light)
+EInShadow Renderer::IsShadowed(const World& world, const Tuple& point, const Light& light)
 {
     assert(point.IsValid());
     assert(light.IsValid());
@@ -412,7 +413,7 @@ EInShadow Renderer::IsShadowed(const World &world, const Tuple &point, const Lig
     return EInShadow::No; // No object is blocking the light
 }
 
-float Renderer::Schlick(const Computations &comps)
+float Renderer::Schlick(const Computations& comps)
 {
     assert(comps.IsValid());
     float cos = comps.eyeVector | comps.normalVector;

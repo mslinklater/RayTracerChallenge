@@ -16,6 +16,10 @@ class Intersection
   public:
     /**
      * @brief Constructs an intersection record.
+     */
+    Intersection();
+    /**
+     * @brief Constructs an intersection record.
      * @param t        Ray parameter at the hit point.
      * @param objectId Stable world ID of the intersected shape.
      */

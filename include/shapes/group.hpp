@@ -50,6 +50,20 @@ class Group : public Shape
         child->SetParent(this);
     }
 
+#if 0
+    void RemoveChild(Shape* child)
+    {
+        assert(child != nullptr);
+        if (children.find(child) == children.end())
+        {
+            throw std::invalid_argument("Group::RemoveChild() Child '" + child->GetName() +
+                                        "' is not a member of this group.");
+        }
+        children.erase(child);
+        child->SetParent(nullptr);
+    }
+#endif
+
     bool Contains(Shape* child) const
     {
         assert(child != nullptr);

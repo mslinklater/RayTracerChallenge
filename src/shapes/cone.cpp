@@ -21,7 +21,7 @@ std::vector<Intersection> Cone::IntersectLocal(const Ray& ray) const
     {
         if (std::abs(b) >= 1e-6f)
         {
-            intersections.push_back(Intersection(-c / b, worldObjectId));
+            intersections.push_back(Intersection(-c / b, objectId));
         }
     }
     else
@@ -48,13 +48,13 @@ std::vector<Intersection> Cone::IntersectLocal(const Ray& ray) const
 
             if (minimum < y0 && y0 < maximum)
             {
-                intersections.push_back(Intersection(t0, worldObjectId));
+                intersections.push_back(Intersection(t0, objectId));
             }
 
             float y1 = origin.y + t1 * direction.y;
             if (minimum < y1 && y1 < maximum)
             {
-                intersections.push_back(Intersection(t1, worldObjectId));
+                intersections.push_back(Intersection(t1, objectId));
             }
         }
     }
@@ -101,12 +101,12 @@ void Cone::IntersectCaps(const Ray& ray, std::vector<Intersection>& intersection
     float t = (minimum - ray.GetOrigin().y) / ray.GetDirection().y;
     if (CheckCap(ray, t, std::abs(minimum)))
     {
-        intersections.push_back(Intersection(t, worldObjectId));
+        intersections.push_back(Intersection(t, objectId));
     }
 
     t = (maximum - ray.GetOrigin().y) / ray.GetDirection().y;
     if (CheckCap(ray, t, std::abs(maximum)))
     {
-        intersections.push_back(Intersection(t, worldObjectId));
+        intersections.push_back(Intersection(t, objectId));
     }
 }

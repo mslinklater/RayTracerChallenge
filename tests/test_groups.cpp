@@ -63,7 +63,6 @@ TEST_CASE("Intersecting a ray with an empty group", "[groups]")
     REQUIRE(xs.empty());
 }
 
-#if 0
 TEST_CASE("Intersecting a ray with a non-empty group", "[groups]")
 {
     Group g("group");
@@ -78,12 +77,25 @@ TEST_CASE("Intersecting a ray with a non-empty group", "[groups]")
     Ray r(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
     IntersectionVector xs = g.IntersectLocal(r);
     REQUIRE(xs.size() == 4);
-    REQUIRE(xs[0].GetObject() == &s2);
-    REQUIRE(xs[1].GetObject() == &s2);
-    REQUIRE(xs[2].GetObject() == &s1);
-    REQUIRE(xs[3].GetObject() == &s1);
+    REQUIRE(xs[0].GetObjectId() == s2.GetObjectId());
+    REQUIRE(xs[1].GetObjectId() == s2.GetObjectId());
+    REQUIRE(xs[2].GetObjectId() == s1.GetObjectId());
+    REQUIRE(xs[3].GetObjectId() == s1.GetObjectId());
 }
-#endif
+
+TEST_CASE("Intersecting a transformed group", "[groups]")
+{
+    Group g("group");
+    g.SetTransform(Matrix::CreateScaling(2.f, 2.f, 2.f));
+    Sphere s("sphere");
+    s.SetTransform(Matrix::CreateTranslation(5.f, 0.f, 0.f));
+    g.AddChild(&s);
+    Ray r(Point(10.f, 0.f, -10.f), Vector(0.f, 0.f, 1.f));
+    IntersectionVector xs = g.Intersect(r);
+    REQUIRE(xs.size() == 2);
+    REQUIRE(xs[0].GetObjectId() == s.GetObjectId());
+    REQUIRE(xs[1].GetObjectId() == s.GetObjectId());
+}
 
 #if 0
 TEST_CASE("Moving a child between two groups", "[groups]")

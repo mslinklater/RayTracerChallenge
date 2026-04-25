@@ -36,8 +36,8 @@ std::vector<Intersection> Sphere::IntersectLocal(const Ray& ray) const
     else
     {
         const float sqrtDiscriminant = std::sqrt(discriminant);
-        const Intersection t1 = Intersection((-b - sqrtDiscriminant) / (2.f * a), worldObjectId);
-        const Intersection t2 = Intersection((-b + sqrtDiscriminant) / (2.f * a), worldObjectId);
+        const Intersection t1 = Intersection((-b - sqrtDiscriminant) / (2.f * a), objectId);
+        const Intersection t2 = Intersection((-b + sqrtDiscriminant) / (2.f * a), objectId);
         intersections.push_back(t1);
         intersections.push_back(t2);
         return intersections;

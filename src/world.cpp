@@ -5,12 +5,12 @@
 #include <cmath>
 #include <memory>
 
-const std::deque<ShapeUniquePtr> &World::GetObjects() const
+const std::deque<ShapeUniquePtr>& World::GetObjects() const
 {
     return objects;
 }
 
-const std::vector<Light> &World::GetLights() const
+const std::vector<Light>& World::GetLights() const
 {
     return lights;
 }
@@ -20,7 +20,7 @@ void World::AddObjectImpl(ShapeUniquePtr ptr)
     assert(ptr != nullptr);
     assert(!ptr->GetName().empty());
     // if any existing objects share the same name throw an expeption
-    for (const auto &o : objects)
+    for (const auto& o : objects)
     {
         if (o->GetName() == ptr->GetName())
         {
@@ -31,7 +31,7 @@ void World::AddObjectImpl(ShapeUniquePtr ptr)
     objects.push_back(std::move(ptr));
 }
 
-bool World::ContainsLight(const Light &light) const
+bool World::ContainsLight(const Light& light) const
 {
     assert(light.IsValid());
     for (auto l : lights)
@@ -44,10 +44,10 @@ bool World::ContainsLight(const Light &light) const
     return false;
 }
 
-bool World::ContainsObject(const Shape &object) const
+bool World::ContainsObject(const Shape& object) const
 {
     assert(!object.GetName().empty());
-    for (const auto &o : objects)
+    for (const auto& o : objects)
     {
         if (o->GetTransform() == object.GetTransform() && o->GetMaterial() == object.GetMaterial())
         {
@@ -57,7 +57,7 @@ bool World::ContainsObject(const Shape &object) const
     return false;
 }
 
-const Light &World::GetLight(size_t index) const
+const Light& World::GetLight(size_t index) const
 {
     if (index >= lights.size())
     {
@@ -66,7 +66,7 @@ const Light &World::GetLight(size_t index) const
     return lights[index];
 }
 
-Light &World::GetMutableLight(size_t index)
+Light& World::GetMutableLight(size_t index)
 {
     if (index >= lights.size())
     {
@@ -75,16 +75,16 @@ Light &World::GetMutableLight(size_t index)
     return lights[index];
 }
 
-const Shape &World::GetObject(ObjectId id) const
+const Shape& World::GetObject(ObjectId id) const
 {
     if (id == kInvalidObjectId)
     {
         throw std::invalid_argument("World::GetObject() Invalid Object ID.");
     }
 
-    for (const auto &object : objects)
+    for (const auto& object : objects)
     {
-        if (object->GetWorldObjectId() == id)
+        if (object->GetObjectId() == id)
         {
             return *object;
         }
@@ -92,10 +92,10 @@ const Shape &World::GetObject(ObjectId id) const
     throw std::out_of_range("World::GetObject() Object ID not found.");
 }
 
-const Shape &World::GetObjectWithName(const std::string &name) const
+const Shape& World::GetObjectWithName(const std::string& name) const
 {
     assert(!name.empty());
-    for (const auto &object : objects)
+    for (const auto& object : objects)
     {
         if (object->GetName() == name)
         {
@@ -105,11 +105,11 @@ const Shape &World::GetObjectWithName(const std::string &name) const
     throw std::out_of_range("World::GetObjectWithName() Object name not found.");
 }
 
-Shape &World::GetMutableObject(ObjectId id)
+Shape& World::GetMutableObject(ObjectId id)
 {
-    for (const auto &object : objects)
+    for (const auto& object : objects)
     {
-        if (object->GetWorldObjectId() == id)
+        if (object->GetObjectId() == id)
         {
             return *object;
         }
@@ -117,10 +117,10 @@ Shape &World::GetMutableObject(ObjectId id)
     throw std::out_of_range("World::GetMutableObject() Object ID not found.");
 }
 
-Shape &World::GetMutableObjectWithName(const std::string &name) const
+Shape& World::GetMutableObjectWithName(const std::string& name) const
 {
     assert(!name.empty());
-    for (const auto &object : objects)
+    for (const auto& object : objects)
     {
         if (object->GetName() == name)
         {
@@ -130,7 +130,7 @@ Shape &World::GetMutableObjectWithName(const std::string &name) const
     throw std::out_of_range("World::GetMutableObjectWithName() Object name not found.");
 }
 
-void World::ReplaceLight(int index, const Light &light)
+void World::ReplaceLight(int index, const Light& light)
 {
     assert(light.IsValid());
     if (index < 0 || static_cast<size_t>(index) >= lights.size())

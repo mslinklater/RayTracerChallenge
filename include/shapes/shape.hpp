@@ -35,10 +35,10 @@ class Shape
      * @brief Sets the unique world object ID (assigned by @c World::AddObject).
      * @param id The ID to assign.
      */
-    void SetWorldObjectId(ObjectId id);
+    void SetObjectId(ObjectId id);
 
     /** @brief Returns the unique world object ID. */
-    ObjectId GetWorldObjectId() const;
+    ObjectId GetObjectId() const;
 
     /** @brief Returns a mutable reference to the material for in-place modification. */
     Material& GetMutableMaterial();
@@ -116,7 +116,7 @@ class Shape
     void UpdateTransformCache() const;
     void EnsureTransformCache() const;
 
-    ObjectId worldObjectId = kInvalidObjectId; ///< Unique world ID assigned by @c World.
+    ObjectId objectId = kInvalidObjectId; ///< Unique world ID assigned by @c World.
 
     std::string name;    ///< Human-readable identifier.
     Matrix transform{4}; ///< Object-to-world transformation matrix (default: identity).

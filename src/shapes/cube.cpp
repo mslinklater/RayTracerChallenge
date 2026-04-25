@@ -38,8 +38,8 @@ std::vector<Intersection> Cube::IntersectLocal(const Ray& ray) const
     if (tmax > tmin)
     {
         intersections.reserve(2);
-        intersections.push_back(Intersection(tmin, worldObjectId));
-        intersections.push_back(Intersection(tmax, worldObjectId));
+        intersections.push_back(Intersection(tmin, objectId));
+        intersections.push_back(Intersection(tmax, objectId));
     }
     return intersections;
 }

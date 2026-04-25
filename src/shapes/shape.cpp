@@ -2,14 +2,14 @@
 #include "tuple.hpp"
 #include <cassert>
 
-Shape::Shape(const std::string& name) : name(name), worldObjectId(kInvalidObjectId), transform(4)
+Shape::Shape(const std::string& name) : name(name), objectId(kInvalidObjectId), transform(4)
 {
     assert(!name.empty());
     transform.SetIdentity();
 }
 
 Shape::Shape(const Shape& other)
-    : worldObjectId(other.worldObjectId), name(other.name), transform(other.transform), material(other.material),
+    : objectId(other.objectId), name(other.name), transform(other.transform), material(other.material),
       inverseTransform(4), inverseTransposeTransform(4)
 {
     UpdateTransformCache();
@@ -19,7 +19,7 @@ Shape& Shape::operator=(const Shape& other)
 {
     if (this != &other)
     {
-        worldObjectId = other.worldObjectId;
+        objectId = other.objectId;
         name = other.name;
         transform = other.transform;
         material = other.material;
@@ -28,15 +28,15 @@ Shape& Shape::operator=(const Shape& other)
     return *this;
 }
 
-void Shape::SetWorldObjectId(ObjectId id)
+void Shape::SetObjectId(ObjectId id)
 {
     assert(id != kInvalidObjectId);
-    worldObjectId = id;
+    objectId = id;
 }
 
-ObjectId Shape::GetWorldObjectId() const
+ObjectId Shape::GetObjectId() const
 {
-    return worldObjectId;
+    return objectId;
 }
 
 Material& Shape::GetMutableMaterial()

@@ -34,13 +34,13 @@ std::vector<Intersection> Cylinder::IntersectLocal(const Ray& ray) const
             float y0 = ray.GetOrigin().y + t0 * ray.GetDirection().y;
             if (minimum < y0 && y0 < maximum)
             {
-                intersections.push_back(Intersection(t0, worldObjectId));
+                intersections.push_back(Intersection(t0, objectId));
             }
 
             float y1 = ray.GetOrigin().y + t1 * ray.GetDirection().y;
             if (minimum < y1 && y1 < maximum)
             {
-                intersections.push_back(Intersection(t1, worldObjectId));
+                intersections.push_back(Intersection(t1, objectId));
             }
         }
     }
@@ -95,12 +95,12 @@ void Cylinder::IntersectCaps(const Ray& ray, std::vector<Intersection>& intersec
     float t = (minimum - ray.GetOrigin().y) / ray.GetDirection().y;
     if (CheckCap(ray, t))
     {
-        intersections.push_back(Intersection(t, worldObjectId));
+        intersections.push_back(Intersection(t, objectId));
     }
 
     t = (maximum - ray.GetOrigin().y) / ray.GetDirection().y;
     if (CheckCap(ray, t))
     {
-        intersections.push_back(Intersection(t, worldObjectId));
+        intersections.push_back(Intersection(t, objectId));
     }
 }

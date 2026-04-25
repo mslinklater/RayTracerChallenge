@@ -134,7 +134,7 @@ TEST_CASE("Precomputing the reflection vector", "[ray]")
     Plane shape("plane");
     w.AddObject(shape);
     Ray r(Point(0.f, 1.f, -1.f), Tuple(0.f, -std::sqrt(2.f) / 2.f, std::sqrt(2.f) / 2.f));
-    Intersection i(std::sqrt(2.f), shape.GetWorldObjectId());
+    Intersection i(std::sqrt(2.f), shape.GetObjectId());
     Computations comps = Renderer::PrepareComputations(i, r, w);
     REQUIRE(comps.reflectv == Vector(0.f, std::sqrt(2.f) / 2.f, std::sqrt(2.f) / 2.f));
 }
@@ -159,9 +159,9 @@ TEST_CASE("Finding n1 and n2 at various intersections", "[ray]")
 
     Ray r(Point(0.f, 0.f, -4.f), Tuple(0.f, 0.f, 1.f));
     IntersectionVector xs = {
-        Intersection(2.f, a.GetWorldObjectId()),   Intersection(2.75f, b.GetWorldObjectId()),
-        Intersection(3.25f, c.GetWorldObjectId()), Intersection(4.75f, b.GetWorldObjectId()),
-        Intersection(5.25f, c.GetWorldObjectId()), Intersection(6.f, a.GetWorldObjectId()),
+        Intersection(2.f, a.GetObjectId()),   Intersection(2.75f, b.GetObjectId()),
+        Intersection(3.25f, c.GetObjectId()), Intersection(4.75f, b.GetObjectId()),
+        Intersection(5.25f, c.GetObjectId()), Intersection(6.f, a.GetObjectId()),
     };
 
     Computations comps0 = Renderer::PrepareComputations(xs[0], r, w, &xs);
@@ -197,7 +197,7 @@ TEST_CASE("The under point is offset below the surface", "[ray]")
     w.AddObject(s);
 
     Ray r(Point(0.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
-    Intersection i(5.f, s.GetWorldObjectId());
+    Intersection i(5.f, s.GetObjectId());
     IntersectionVector xs = {i};
     Computations comps = Renderer::PrepareComputations(i, r, w, &xs);
 
@@ -212,8 +212,8 @@ TEST_CASE("The Schlick approximation under total internal reflection", "[ray]")
     w.AddObject(shape);
     Ray r(Point(0.f, 0.f, std::sqrt(2.f) / 2.f), Tuple(0.f, 1.f, 0.f));
     IntersectionVector xs = {
-        Intersection(-std::sqrt(2.f) / 2.f, shape.GetWorldObjectId()),
-        Intersection(std::sqrt(2.f) / 2.f, shape.GetWorldObjectId()),
+        Intersection(-std::sqrt(2.f) / 2.f, shape.GetObjectId()),
+        Intersection(std::sqrt(2.f) / 2.f, shape.GetObjectId()),
     };
     Computations comps = Renderer::PrepareComputations(xs[1], r, w, &xs);
     float reflectance = Renderer::Schlick(comps);
@@ -228,8 +228,8 @@ TEST_CASE("The Schlick approximation with a perpendicular viewing angle", "[ray]
     w.AddObject(shape);
     Ray r(Point(0.f, 0.f, 0.f), Tuple(0.f, 1.f, 0.f));
     IntersectionVector xs = {
-        Intersection(-1.f, shape.GetWorldObjectId()),
-        Intersection(1.f, shape.GetWorldObjectId()),
+        Intersection(-1.f, shape.GetObjectId()),
+        Intersection(1.f, shape.GetObjectId()),
     };
     Computations comps = Renderer::PrepareComputations(xs[1], r, w, &xs);
     float reflectance = Renderer::Schlick(comps);
@@ -244,7 +244,7 @@ TEST_CASE("The Schlick approximation with a small angle and n2 > n1", "[ray]")
     w.AddObject(shape);
     Ray r(Point(0.f, 0.99f, -2.f), Tuple(0.f, 0.f, 1.f));
     IntersectionVector xs = {
-        Intersection(1.8589f, shape.GetWorldObjectId()),
+        Intersection(1.8589f, shape.GetObjectId()),
     };
     Computations comps = Renderer::PrepareComputations(xs[0], r, w, &xs);
     float reflectance = Renderer::Schlick(comps);

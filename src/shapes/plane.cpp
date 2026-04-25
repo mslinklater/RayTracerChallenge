@@ -21,6 +21,6 @@ std::vector<Intersection> Plane::IntersectLocal(const Ray& ray) const
     }
 
     const float t = -ray.GetOrigin().y / ray.GetDirection().y;
-    intersections.push_back(Intersection(t, GetWorldObjectId()));
+    intersections.push_back(Intersection(t, GetObjectId()));
     return intersections;
 }

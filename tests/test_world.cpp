@@ -35,9 +35,9 @@ TEST_CASE("Test GetMutableObject changes persist in the world", "[world]")
     World world;
     Sphere s("s");
     ObjectId id = world.AddObject(s);
-    Shape &mutableS = world.GetMutableObject(id);
+    Shape& mutableS = world.GetMutableObject(id);
     mutableS.GetMutableMaterial().SetColor(Color(0.5f, 0.5f, 0.5f));
-    const Shape &constS = world.GetObject(id);
+    const Shape& constS = world.GetObject(id);
     REQUIRE(constS.GetMaterial().GetColor() == Color(0.5f, 0.5f, 0.5f));
 }
 
@@ -46,10 +46,10 @@ TEST_CASE("Test GetMutableLight changes persist in the world", "[world]")
     World world;
     Light l(Point(0.f, 0.f, 0.f), Color(1.f, 1.f, 1.f));
     world.AddLight(l);
-    Light &mutableL = world.GetMutableLight(0);
+    Light& mutableL = world.GetMutableLight(0);
     mutableL.position = Point(1.f, 1.f, 1.f);
     mutableL.intensity = Color(0.5f, 0.5f, 0.5f);
-    const Light &constL = world.GetLight(0);
+    const Light& constL = world.GetLight(0);
     REQUIRE(constL.position == Point(1.f, 1.f, 1.f));
     REQUIRE(constL.intensity == Color(0.5f, 0.5f, 0.5f));
 }
@@ -59,7 +59,7 @@ TEST_CASE("Adding an object to the world returns a stable object ID", "[world]")
     World world;
     Sphere s("s");
     ObjectId id = world.AddObject(s);
-    ObjectId expected = s.GetWorldObjectId();
+    ObjectId expected = s.GetObjectId();
     REQUIRE(id == expected);
 }
 
@@ -124,7 +124,7 @@ TEST_CASE("Shading an intersection", "[world]")
 {
     World w = Renderer::DefaultWorld();
     Ray r(Point(0.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
-    ObjectId objectId = w.GetObjectWithName("external").GetWorldObjectId();
+    ObjectId objectId = w.GetObjectWithName("external").GetObjectId();
     Intersection i(4.f, objectId);
     auto comps = Renderer::PrepareComputations(i, r, w);
     auto color = Renderer::ShadeHit(w, comps, Renderer::kMaxRecursionDepth);
@@ -136,7 +136,7 @@ TEST_CASE("Shading an intersection from the inside", "[world]")
     World w = Renderer::DefaultWorld();
     w.ReplaceLight(0, Light(Point(0.f, 0.25f, 0.f), Color(1.f, 1.f, 1.f)));
     Ray r(Point(0.f, 0.f, 0.f), Tuple(0.f, 0.f, 1.f));
-    ObjectId objectId = w.GetObjectWithName("internal").GetWorldObjectId();
+    ObjectId objectId = w.GetObjectWithName("internal").GetObjectId();
     Intersection i(0.5f, objectId);
     auto comps = Renderer::PrepareComputations(i, r, w);
     auto color = Renderer::ShadeHit(w, comps, Renderer::kMaxRecursionDepth);
@@ -177,8 +177,8 @@ TEST_CASE("The colour when a ray hits", "[world]")
 TEST_CASE("The colour with an intersection behind the ray", "[world]")
 {
     World w = Renderer::DefaultWorld();
-    Shape &outer = w.GetMutableObjectWithName("external");
-    Shape &inner = w.GetMutableObjectWithName("internal");
+    Shape& outer = w.GetMutableObjectWithName("external");
+    Shape& inner = w.GetMutableObjectWithName("internal");
     outer.GetMutableMaterial().SetAmbient(1.f);
     inner.GetMutableMaterial().SetAmbient(1.f);
     Ray r(Point(0.f, 0.f, 0.75f), Tuple(0.f, 0.f, -1.f));
@@ -309,9 +309,9 @@ TEST_CASE("The reflected color for a nonreflective material", "[world]")
 {
     World w = Renderer::DefaultWorld();
     Ray r(Point(0.f, 0.f, 0.f), Tuple(0.f, 0.f, 1.f));
-    Shape &inner = w.GetMutableObjectWithName("internal");
+    Shape& inner = w.GetMutableObjectWithName("internal");
     inner.GetMutableMaterial().SetAmbient(1.f);
-    Intersection i(1.f, inner.GetWorldObjectId());
+    Intersection i(1.f, inner.GetObjectId());
     Computations comps = Renderer::PrepareComputations(i, r, w);
     Color result = Renderer::ReflectedColor(w, comps, Renderer::kMaxRecursionDepth);
 
@@ -327,7 +327,7 @@ TEST_CASE("The reflected color for a reflective material", "[world]")
     w.AddObject(shape);
 
     Ray r(Point(0.f, 0.f, -3.f), Tuple(0.f, -std::sqrt(2.f) / 2.f, std::sqrt(2.f) / 2.f));
-    Intersection i(std::sqrt(2.f), shape.GetWorldObjectId());
+    Intersection i(std::sqrt(2.f), shape.GetObjectId());
     Computations comps = Renderer::PrepareComputations(i, r, w);
     Color result = Renderer::ReflectedColor(w, comps, Renderer::kMaxRecursionDepth);
 
@@ -343,7 +343,7 @@ TEST_CASE("ShadeHit() with a reflected material", "[world]")
     w.AddObject(shape);
 
     Ray r(Point(0.f, 0.f, -3.f), Tuple(0.f, -std::sqrt(2.f) / 2.f, std::sqrt(2.f) / 2.f));
-    Intersection i(std::sqrt(2.f), shape.GetWorldObjectId());
+    Intersection i(std::sqrt(2.f), shape.GetObjectId());
     Computations comps = Renderer::PrepareComputations(i, r, w);
     Color result = Renderer::ShadeHit(w, comps, Renderer::kMaxRecursionDepth);
 
@@ -388,7 +388,7 @@ TEST_CASE("The reflected color at the maximum recuresive depth", "[world]")
     w.AddObject(p);
 
     Ray r(Point(0.f, 0.f, -3.f), Tuple(0.f, -std::sqrt(2.f) / 2.f, std::sqrt(2.f) / 2.f));
-    Intersection i(std::sqrt(2.f), p.GetWorldObjectId());
+    Intersection i(std::sqrt(2.f), p.GetObjectId());
     Computations comps = Renderer::PrepareComputations(i, r, w);
     Color c = Renderer::ReflectedColor(w, comps, 0);
 
@@ -401,8 +401,8 @@ TEST_CASE("The refracted color with an opaque surface", "[world]")
     Shape s = w.GetObjectWithName("external");
     Ray r(Point(0.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
     IntersectionVector xs = {
-        Intersection(4.f, s.GetWorldObjectId()),
-        Intersection(6.f, s.GetWorldObjectId()),
+        Intersection(4.f, s.GetObjectId()),
+        Intersection(6.f, s.GetObjectId()),
     };
     Computations comps = Renderer::PrepareComputations(xs[0], r, w, &xs);
     Color c = Renderer::RefractedColor(w, comps, Renderer::kMaxRecursionDepth);
@@ -413,13 +413,13 @@ TEST_CASE("The refracted color with an opaque surface", "[world]")
 TEST_CASE("The refracted color at the maximum recursive depth is black", "[world]")
 {
     World w = Renderer::DefaultWorld();
-    Shape &s = w.GetMutableObjectWithName("external");
+    Shape& s = w.GetMutableObjectWithName("external");
     s.GetMutableMaterial().SetTransparency(1.f);
     s.GetMutableMaterial().SetRefractiveIndex(1.5f);
     Ray r(Point(0.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
     IntersectionVector xs = {
-        Intersection(4.f, s.GetWorldObjectId()),
-        Intersection(6.f, s.GetWorldObjectId()),
+        Intersection(4.f, s.GetObjectId()),
+        Intersection(6.f, s.GetObjectId()),
     };
     Computations comps = Renderer::PrepareComputations(xs[0], r, w, &xs);
     Color c = Renderer::RefractedColor(w, comps, 0);
@@ -430,13 +430,13 @@ TEST_CASE("The refracted color at the maximum recursive depth is black", "[world
 TEST_CASE("The refracted color under total internal reflection", "[world]")
 {
     World w = Renderer::DefaultWorld();
-    Shape &s = w.GetMutableObjectWithName("external");
+    Shape& s = w.GetMutableObjectWithName("external");
     s.GetMutableMaterial().SetTransparency(1.f);
     s.GetMutableMaterial().SetRefractiveIndex(1.5f);
     Ray r(Point(0.f, 0.f, std::sqrt(2.f) / 2.f), Tuple(0.f, 1.f, 0.f));
     IntersectionVector xs = {
-        Intersection(-std::sqrt(2.f) / 2.f, s.GetWorldObjectId()),
-        Intersection(std::sqrt(2.f) / 2.f, s.GetWorldObjectId()),
+        Intersection(-std::sqrt(2.f) / 2.f, s.GetObjectId()),
+        Intersection(std::sqrt(2.f) / 2.f, s.GetObjectId()),
     };
     Computations comps = Renderer::PrepareComputations(xs[1], r, w, &xs);
     Color c = Renderer::RefractedColor(w, comps, 5);
@@ -447,23 +447,23 @@ TEST_CASE("The refracted color under total internal reflection", "[world]")
 TEST_CASE("The refracted color with a refracted ray", "[world]")
 {
     World w = Renderer::DefaultWorld();
-    Shape &a = w.GetMutableObjectWithName("external");
-    Material &materiala = a.GetMutableMaterial();
+    Shape& a = w.GetMutableObjectWithName("external");
+    Material& materiala = a.GetMutableMaterial();
     materiala.SetAmbient(1.f);
     TestPattern pattern;
     materiala.SetPattern(pattern);
 
-    Shape &b = w.GetMutableObjectWithName("internal");
-    Material &materialb = b.GetMutableMaterial();
+    Shape& b = w.GetMutableObjectWithName("internal");
+    Material& materialb = b.GetMutableMaterial();
     materialb.SetTransparency(1.f);
     materialb.SetRefractiveIndex(1.5f);
 
     Ray r(Point(0.f, 0.f, 0.1f), Tuple(0.f, 1.f, 0.f));
     IntersectionVector xs = {
-        Intersection(-0.9899f, a.GetWorldObjectId()),
-        Intersection(-0.4899f, b.GetWorldObjectId()),
-        Intersection(0.4899f, b.GetWorldObjectId()),
-        Intersection(0.9899f, a.GetWorldObjectId()),
+        Intersection(-0.9899f, a.GetObjectId()),
+        Intersection(-0.4899f, b.GetObjectId()),
+        Intersection(0.4899f, b.GetObjectId()),
+        Intersection(0.9899f, a.GetObjectId()),
     };
     Computations comps = Renderer::PrepareComputations(xs[2], r, w, &xs);
     Color c = Renderer::RefractedColor(w, comps, 5);
@@ -488,7 +488,7 @@ TEST_CASE("ShadeHit() with a transparent material", "[world]")
 
     Ray r(Point(0.f, 0.f, -3.f), Tuple(0.f, -std::sqrt(2.f) / 2.f, std::sqrt(2.f) / 2.f));
     IntersectionVector xs = {
-        Intersection(std::sqrt(2.f), floor.GetWorldObjectId()),
+        Intersection(std::sqrt(2.f), floor.GetObjectId()),
     };
     Computations comps = Renderer::PrepareComputations(xs[0], r, w, &xs);
     Color c = Renderer::ShadeHit(w, comps, 5);
@@ -519,7 +519,7 @@ TEST_CASE("ShadeHit() with a reflective, transparent material", "[world]")
     w.AddObject(ball);
 
     IntersectionVector xs = {
-        Intersection(std::sqrt(2.f), floor.GetWorldObjectId()),
+        Intersection(std::sqrt(2.f), floor.GetObjectId()),
     };
     Computations comps = Renderer::PrepareComputations(xs[0], r, w, &xs);
     Color c = Renderer::ShadeHit(w, comps, 5);

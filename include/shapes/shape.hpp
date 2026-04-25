@@ -70,8 +70,15 @@ class Shape
      */
     Tuple NormalAt(const Tuple& point) const;
 
+    /**
+     * @brief Convert a local normal to world space
+     * @param normal A normal vector in object space (w component should be 0).
+     * @return The normal vector transformed to world space and normalized.
+     * */
+    Tuple NormalToWorld(const Tuple& normal) const;
+
     /** @brief Converts a world-space point into this shape's object space. */
-    Tuple WorldToObject(const Tuple& point) const;
+    Tuple WorldToObject(Tuple point) const;
 
     /**
      * @brief Returns the object-space surface normal at a local-space @p point.

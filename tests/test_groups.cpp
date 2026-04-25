@@ -1,4 +1,5 @@
 #include "intersection.hpp"
+#include "maths.hpp"
 #include "matrix.hpp"
 #include "shapes/group.hpp"
 #include "shapes/sphere.hpp"
@@ -95,6 +96,34 @@ TEST_CASE("Intersecting a transformed group", "[groups]")
     REQUIRE(xs.size() == 2);
     REQUIRE(xs[0].GetObjectId() == s.GetObjectId());
     REQUIRE(xs[1].GetObjectId() == s.GetObjectId());
+}
+
+TEST_CASE("Convert a point from world to object space", "[groups]")
+{
+    Group g1("group1");
+    g1.SetTransform(Matrix::CreateRotationY(kPi / 2.f));
+    Group g2("group2");
+    g2.SetTransform(Matrix::CreateScaling(2.f, 2.f, 2.f));
+    g1.AddChild(&g2);
+    Sphere s("sphere");
+    s.SetTransform(Matrix::CreateTranslation(5.f, 0.f, 0.f));
+    g2.AddChild(&s);
+    Tuple p = s.WorldToObject(Point(-2.f, 0.f, -10.f));
+    REQUIRE(p == Point(0.f, 0.f, -1.f));
+}
+
+TEST_CASE("Converting a normal from object to world space", "[groups]")
+{
+    Group g1("group1");
+    g1.SetTransform(Matrix::CreateRotationY(kPi / 2.f));
+    Group g2("group2");
+    g2.SetTransform(Matrix::CreateScaling(1.f, 2.f, 3.f));
+    g1.AddChild(&g2);
+    Sphere s("sphere");
+    s.SetTransform(Matrix::CreateTranslation(5.f, 0.f, 0.f));
+    g2.AddChild(&s);
+    Tuple n = s.NormalToWorld(Vector(std::sqrt(3.f) / 3.f, std::sqrt(3.f) / 3.f, std::sqrt(3.f) / 3.f));
+    REQUIRE(n == Vector(0.2857f, 0.4286f, -0.8571f));
 }
 
 #if 0

@@ -129,9 +129,13 @@ Tuple Shape::NormalAt(const Tuple& point) const
     return worldNormal.Normalize();
 }
 
-Tuple Shape::WorldToObject(const Tuple& point) const
+Tuple Shape::WorldToObject(Tuple point) const
 {
     assert(point.IsValid());
+    if (parent != nullptr)
+    {
+        point = parent->WorldToObject(point);
+    }
 
     EnsureTransformCache();
     return inverseTransform * point;
@@ -142,6 +146,12 @@ Tuple Shape::NormalAtLocal(const Tuple& point) const
     assert(point.IsValid());
 
     return Vector(point.x, point.y, point.z);
+}
+
+Tuple Shape::NormalToWorld(const Tuple& normal) const
+{
+    Tuple ret = Vector(normal);
+    return ret;
 }
 
 std::vector<Intersection> Shape::Intersect(const Ray& ray) const

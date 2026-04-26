@@ -124,9 +124,7 @@ Tuple Shape::NormalAt(const Tuple& point) const
 
     const Tuple objectNormal = NormalAtLocal(objectPoint);
 
-    Tuple worldNormal = inverseTransposeTransform * objectNormal;
-    worldNormal.w = 0.f; // Ensure it's a vector
-    return worldNormal.Normalize();
+    return NormalToWorld(objectNormal);
 }
 
 Tuple Shape::WorldToObject(Tuple point) const
@@ -143,6 +141,7 @@ Tuple Shape::WorldToObject(Tuple point) const
 
 Tuple Shape::NormalAtLocal(const Tuple& point) const
 {
+    // TODO: - should probably assert if this is ever called
     assert(point.IsValid());
 
     return Vector(point.x, point.y, point.z);
@@ -150,7 +149,15 @@ Tuple Shape::NormalAtLocal(const Tuple& point) const
 
 Tuple Shape::NormalToWorld(const Tuple& normal) const
 {
-    Tuple ret = Vector(normal);
+    EnsureTransformCache();
+    Tuple ret = inverseTransposeTransform * normal;
+    ret.w = 0.f;
+    ret = ret.Normalize();
+    if (parent != nullptr)
+    {
+        ret = parent->NormalToWorld(ret);
+    }
+
     return ret;
 }
 

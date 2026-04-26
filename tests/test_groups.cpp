@@ -127,6 +127,20 @@ TEST_CASE("Converting a normal from object to world space", "[groups]")
 }
 
 #if 0
+TEST_CASE("Finding the normal on a child object", "[groups]")
+{
+    Group g1("group1");
+    g1.SetTransform(Matrix::CreateRotationY(kPi / 2.f));
+    Group g2("group2");
+    g2.SetTransform(Matrix::CreateScaling(1.f, 2.f, 3.f));
+    g1.AddChild(&g2);
+    Sphere s("sphere");
+    s.SetTransform(Matrix::CreateTranslation(5.f, 0.f, 0.f));
+    g2.AddChild(&s);
+    Tuple n = s.NormalAt(Point(1.7321f, 1.1547f, -5.5774f));
+    REQUIRE(n == Vector(0.2857f, 0.4286f, -0.8571f));
+}
+
 TEST_CASE("Moving a child between two groups", "[groups]")
 {
     Group g1("group1");

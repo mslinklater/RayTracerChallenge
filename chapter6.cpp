@@ -32,7 +32,7 @@ int main()
             auto xs = sphere.Intersect(ray);
             if (!xs.empty())
             {
-                Tuple position = ray.PositionAt(xs[0]);
+                Tuple position = ray.PositionAt(xs[0].GetT());
                 Tuple normalVector = sphere.NormalAt(position);
                 Tuple eyeVector = -ray.GetDirection();
                 Color color = Renderer::Lighting(sphere.GetMaterial(), sphere, light, position, eyeVector, normalVector,

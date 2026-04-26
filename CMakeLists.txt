@@ -130,6 +130,9 @@ add_raytracer_executable(Chapter12Challenge chapter12.cpp)
 # Chapter 13 challenge executable
 add_raytracer_executable(Chapter13Challenge chapter13.cpp)
 
+# Chapter 14 challenge executable
+add_raytracer_executable(Chapter14Challenge chapter14.cpp)
+
 # Test executable
 set(TEST_SRC    tests/test_main.cpp
                 tests/test_camera.cpp

@@ -141,7 +141,6 @@ Tuple Shape::WorldToObject(Tuple point) const
 
 Tuple Shape::NormalAtLocal(const Tuple& point) const
 {
-    // TODO: - should probably assert if this is ever called
     assert(point.IsValid());
 
     return Vector(point.x, point.y, point.z);

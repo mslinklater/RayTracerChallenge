@@ -10,6 +10,7 @@ Color Pattern::PatternAtShape(const Shape &shape, const Tuple &point) const
     assert(transform.IsValid());
     assert(inverseTransform.GetSize() == 4);
     assert(inverseTransform.IsValid());
+
     Tuple localPoint = shape.WorldToObject(point);
     Tuple patternPoint = inverseTransform * localPoint;
     return PatternAt(patternPoint);

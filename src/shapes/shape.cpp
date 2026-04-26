@@ -2,6 +2,22 @@
 #include "tuple.hpp"
 #include <cassert>
 
+namespace
+{
+bool HasAncestor(const Shape* shape, const Shape* candidateAncestor)
+{
+    assert(candidateAncestor != nullptr);
+    for (const Shape* current = shape; current != nullptr; current = current->GetParent())
+    {
+        if (current == candidateAncestor)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+} // namespace
+
 Shape::Shape(const std::string& name) : name(name), objectId(kInvalidObjectId), transform(4)
 {
     assert(!name.empty());
@@ -78,6 +94,11 @@ Shape* Shape::GetParent() const
 void Shape::SetParent(Shape* parent)
 {
     assert(parent != nullptr);
+    if (parent == this || HasAncestor(parent, this))
+    {
+        throw std::invalid_argument("Group::SetParent() Setting parent of shape '" + this->GetName() +
+                                    "' would create a cycle in the group hierarchy.");
+    }
     if (this->GetParent() != nullptr && this->GetParent() != parent)
     {
         throw std::invalid_argument("Group::SetParent() Shape '" + this->GetName() +

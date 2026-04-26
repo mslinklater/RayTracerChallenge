@@ -5,6 +5,7 @@
 #include "patterns/test_pattern.hpp"
 #include "ray.hpp"
 #include "renderer.hpp"
+#include "shapes/group.hpp"
 #include "shapes/plane.hpp"
 #include "shapes/sphere.hpp"
 #include "world.hpp"
@@ -525,4 +526,62 @@ TEST_CASE("ShadeHit() with a reflective, transparent material", "[world]")
     Color c = Renderer::ShadeHit(w, comps, 5);
 
     REQUIRE(c == Color(0.93391f, 0.69643f, 0.69243f));
+}
+
+TEST_CASE("A group copied into the world should not alias the original child shape", "[world][groups][ownership]")
+{
+    World world;
+    Group group("group");
+    Sphere child("child");
+    child.SetTransform(Matrix::CreateTranslation(0.f, 0.f, -3.f));
+    group.AddChild(&child);
+    world.AddObject(group);
+
+    const Ray ray(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
+    const IntersectionVector beforeMutation = Renderer::IntersectWorld(world, ray);
+    REQUIRE(beforeMutation.size() == 2);
+
+    child.SetTransform(Matrix::CreateTranslation(5.f, 0.f, 0.f));
+
+    const IntersectionVector afterMutation = Renderer::IntersectWorld(world, ray);
+    REQUIRE(afterMutation.size() == 2);
+    REQUIRE(AreEqual(afterMutation[0].GetT(), beforeMutation[0].GetT()));
+    REQUIRE(AreEqual(afterMutation[1].GetT(), beforeMutation[1].GetT()));
+}
+
+TEST_CASE("Intersecting a world-owned group should preserve the child object ID", "[world][groups][ownership]")
+{
+    World world;
+    Group group("group");
+    Sphere child("child");
+    child.SetObjectId(42);
+    child.SetTransform(Matrix::CreateTranslation(0.f, 0.f, -3.f));
+    group.AddChild(&child);
+    const ObjectId groupId = world.AddObject(group);
+
+    const Ray ray(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
+    const IntersectionVector xs = Renderer::IntersectWorld(world, ray);
+
+    REQUIRE(xs.size() == 2);
+    REQUIRE(xs[0].GetObjectId() == child.GetObjectId());
+    REQUIRE(xs[1].GetObjectId() == child.GetObjectId());
+    REQUIRE(xs[0].GetObjectId() != groupId);
+}
+
+TEST_CASE("Shading a grouped child should use the child's material", "[world][groups][ownership]")
+{
+    World world;
+    world.AddLight(Light(Point(0.f, 0.f, -10.f), Color(1.f, 1.f, 1.f)));
+
+    Group group("group");
+    group.GetMutableMaterial().SetColor(kColorGreen).SetAmbient(1.f).SetDiffuse(0.f).SetSpecular(0.f);
+
+    Sphere child("child");
+    child.GetMutableMaterial().SetColor(kColorRed).SetAmbient(1.f).SetDiffuse(0.f).SetSpecular(0.f);
+    child.SetTransform(Matrix::CreateTranslation(0.f, 0.f, -3.f));
+    group.AddChild(&child);
+    world.AddObject(group);
+
+    const Color color = Renderer::ColorAt(world, Ray(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f)));
+    REQUIRE(color == kColorRed);
 }

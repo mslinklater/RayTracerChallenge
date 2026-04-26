@@ -99,8 +99,7 @@ IntersectionVector Renderer::IntersectWorld(const World& world, const Ray& ray)
 
         for (const Intersection& i : objectIntersections)
         {
-            float distance = i.GetT();
-            Intersection intersection(distance, object->GetObjectId());
+            Intersection intersection(i.GetT(), i.GetObjectId());
             intersections.push_back(intersection);
         }
     }

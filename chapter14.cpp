@@ -5,9 +5,9 @@
 #include "matrix.hpp"
 #include "patterns/checker_pattern.hpp"
 #include "renderer.hpp"
-#include "shapes/cone.hpp"
-#include "shapes/cylinder.hpp"
+#include "shapes/group.hpp"
 #include "shapes/plane.hpp"
+#include "shapes/sphere.hpp"
 #include "tuple.hpp"
 #include "world.hpp"
 
@@ -26,12 +26,6 @@ int main()
     // Light
     Light lightr(Point(-10.0f, 10.0f, -10.0f), Color(1.0f, 1.0f, 1.0f));
     world.AddLight(lightr);
-    // Light 2
-    Light lightg(Point(10.0f, 10.0f, -10.0f), Color(0.8f, 0.8f, 0.8f));
-    world.AddLight(lightg);
-    // Light 2
-    Light lightb(Point(10.0f, 20.0f, 10.0f), Color(0.5f, 0.5f, 0.5f));
-    world.AddLight(lightb);
 
     // Floor
     {
@@ -41,45 +35,28 @@ int main()
         floor.GetMutableMaterial().SetSpecular(0.0f).SetPattern(check);
         world.AddObject(floor);
     }
-    // cylinder
+
+    // sphere
     {
-        Cylinder cylinder("cylinder1");
-        cylinder.SetMinimum(-1.f);
-        cylinder.SetMaximum(1.f);
-        cylinder.SetTransform(Matrix::CreateTranslation(0.f, 1.0f, 0.f) * Matrix::CreateRotationX(0.f));
-        cylinder.SetClosed(true);
+        Sphere sphere("sphere1");
+        sphere.SetTransform(Matrix::CreateTranslation(2.f, 2.0f, 0.f));
+        CheckerPattern check = CheckerPattern(kColorRed, kColorWhite);
         Material mat;
-        mat.SetColor(Color(1.0f, 1.0f, 1.0f)).SetDiffuse(0.2f).SetSpecular(0.3f);
-        mat.SetReflective(0.5f);
-        cylinder.SetMaterial(mat);
-        world.AddObject(cylinder);
+        mat.SetPattern(check);
+        sphere.SetMaterial(mat);
+        world.AddObject(sphere);
     }
-    // cone
+
     {
-        Cone cone("cone");
-        cone.SetTransform(Matrix::CreateTranslation(2.f, 1.0f, 0.f) * Matrix::CreateScaling(0.5f, 0.5f, 1.0f) *
-                          Matrix::CreateRotationX(1.f));
-        cone.SetMinimum(-3.f);
-        cone.SetMaximum(3.f);
-        cone.SetClosed(true);
+        Group group("group");
+        group.SetTransform(Matrix::CreateTranslation(-2.0f, 2.0f, 1.0f));
+        Sphere sphere("sphere2");
+        CheckerPattern check = CheckerPattern(kColorRed, kColorWhite);
         Material mat;
-        mat.SetColor(Color(1.0f, 0.0f, 0.0f)).SetDiffuse(0.2f).SetSpecular(0.3f);
-        mat.SetReflective(0.5f);
-        cone.SetMaterial(mat);
-        world.AddObject(cone);
-    }
-    // cylinder
-    {
-        Cylinder cylinder("cylinder3");
-        cylinder.SetTransform(Matrix::CreateTranslation(-2.f, 1.0f, 0.f) * Matrix::CreateRotationX(2.f));
-        cylinder.SetMinimum(-1.f);
-        cylinder.SetMaximum(1.f);
-        cylinder.SetClosed(true);
-        Material mat;
-        mat.SetColor(Color(1.0f, 1.0f, 1.0f)).SetDiffuse(0.2f).SetSpecular(0.3f);
-        mat.SetReflective(0.5f);
-        cylinder.SetMaterial(mat);
-        world.AddObject(cylinder);
+        mat.SetPattern(check);
+        sphere.SetMaterial(mat);
+        group.AddChild(&sphere);
+        world.AddObject(group);
     }
 
     Canvas canvas = Renderer::Render(camera, world);

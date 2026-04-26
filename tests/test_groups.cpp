@@ -56,6 +56,21 @@ TEST_CASE("Adding a group as a child of a group", "[groups]")
     REQUIRE(g2.GetParent() == &g1);
 }
 
+TEST_CASE("Adding a group to itself throws", "[groups]")
+{
+    Group g("group");
+    REQUIRE_THROWS_AS(g.AddChild(&g), std::invalid_argument);
+}
+
+TEST_CASE("Adding an ancestor as a child throws", "[groups]")
+{
+    Group g1("group1");
+    Group g2("group2");
+    g1.AddChild(&g2);
+
+    REQUIRE_THROWS_AS(g2.AddChild(&g1), std::invalid_argument);
+}
+
 TEST_CASE("Intersecting a ray with an empty group", "[groups]")
 {
     Group g("group");

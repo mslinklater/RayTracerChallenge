@@ -18,6 +18,11 @@ class Cylinder : public Shape
     {
     }
 
+    std::unique_ptr<Shape> Clone() const override
+    {
+        return std::make_unique<Cylinder>(*this);
+    }
+
     /**
      * @brief Ray-cylinder intersection test in object (local) space.
      * @param ray A ray already transformed into the sphere's local space.

@@ -15,6 +15,11 @@ class RayCapturingShape : public Shape
     {
     }
 
+    std::unique_ptr<Shape> Clone() const override
+    {
+        return std::make_unique<RayCapturingShape>(*this);
+    }
+
     std::vector<Intersection> IntersectLocal(const Ray& ray) const override
     {
         savedRay = ray;

@@ -1,6 +1,9 @@
 #pragma once
 #include "shape.hpp"
-#include <set>
+#include <memory>
+#include <stdexcept>
+#include <type_traits>
+#include <vector>
 
 /**
  * @brief A unit cylinder centered at the origin in object space.
@@ -17,6 +20,14 @@ class Group : public Shape
      */
     Group(const std::string& name) : Shape(name)
     {
+    }
+
+    Group(const Group& other);
+    Group& operator=(const Group& other);
+
+    std::unique_ptr<Shape> Clone() const override
+    {
+        return std::make_unique<Group>(*this);
     }
 
     /**
@@ -38,16 +49,18 @@ class Group : public Shape
         return children.size();
     }
 
-    void AddChild(Shape* child)
+    template <typename T, typename = std::enable_if_t<std::is_base_of_v<Shape, T>>> T& AddChild(const T& child)
     {
-        assert(child != nullptr);
-        if (children.find(child) != children.end())
+        if (static_cast<const Shape*>(&child) == this)
         {
-            throw std::invalid_argument("Group::AddChild() Child '" + child->GetName() +
-                                        "' is already a member of this group.");
+            throw std::invalid_argument("Group::AddChild() Group '" + this->GetName() +
+                                        "' cannot add itself as a child.");
         }
-        children.insert(child);
-        child->SetParent(this);
+        ShapeUniquePtr ownedChild = child.Clone();
+        Shape& addedChild = AddOwnedChild(std::move(ownedChild));
+        auto* typedChild = dynamic_cast<T*>(&addedChild);
+        assert(typedChild != nullptr);
+        return *typedChild;
     }
 
 #if 0
@@ -64,12 +77,18 @@ class Group : public Shape
     }
 #endif
 
-    bool Contains(Shape* child) const
+    bool Contains(const Shape& child) const
     {
-        assert(child != nullptr);
-        return children.find(child) != children.end();
+        return FindChildByName(child.GetName()) != nullptr;
     }
 
+    const Shape& GetChild(size_t index) const;
+    Shape& GetMutableChild(size_t index);
+    const std::vector<ShapeUniquePtr>& GetChildren() const;
+
   private:
-    std::set<Shape*> children;
+    Shape& AddOwnedChild(ShapeUniquePtr child);
+    const Shape* FindChildByName(const std::string& childName) const;
+
+    std::vector<ShapeUniquePtr> children;
 };

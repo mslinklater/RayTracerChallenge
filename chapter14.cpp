@@ -55,7 +55,7 @@ int main()
         Material mat;
         mat.SetPattern(check);
         sphere.SetMaterial(mat);
-        group.AddChild(&sphere);
+        group.AddChild(sphere);
         world.AddObject(group);
     }
 

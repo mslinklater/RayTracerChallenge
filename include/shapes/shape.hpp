@@ -8,6 +8,7 @@
 
 #include <atomic>
 #include <cassert>
+#include <memory>
 #include <mutex>
 #include <string>
 
@@ -30,6 +31,9 @@ class Shape
     Shape(const Shape& other);
     Shape& operator=(const Shape& other);
     virtual ~Shape() = default;
+
+    /** @brief Creates a heap-allocated copy preserving the concrete runtime type. */
+    virtual std::unique_ptr<Shape> Clone() const;
 
     /**
      * @brief Sets the unique world object ID (assigned by @c World::AddObject).

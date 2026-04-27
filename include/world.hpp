@@ -5,7 +5,9 @@
 #include <cassert>
 #include <deque>
 #include <memory>
+#include <string>
 #include <type_traits>
+#include <unordered_map>
 #include <vector>
 
 /**
@@ -61,8 +63,9 @@ class World
     template <typename T, typename = std::enable_if_t<std::is_base_of_v<Shape, T>>> ObjectId AddObject(T& object)
     {
         assert(!object.GetName().empty());
-        object.SetObjectId(nextObjectId++);
-        ShapeUniquePtr shapePtr = std::make_unique<T>(object);
+        ShapeUniquePtr shapePtr = object.Clone();
+        AssignObjectIds(*shapePtr);
+        object.SetObjectId(shapePtr->GetObjectId());
         AddObjectImpl(std::move(shapePtr));
         return object.GetObjectId();
     }
@@ -118,9 +121,12 @@ class World
   private:
     /** @brief Internal helper that stores a pre-built @c ShapePtr in the deque. */
     void AddObjectImpl(ShapeUniquePtr ptr);
+    void AssignObjectIds(Shape& shape);
 
     std::deque<ShapeUniquePtr> objects; ///< Owning storage for all shapes in the scene.
     std::vector<Light> lights;          ///< All lights in the scene.
+    std::unordered_map<ObjectId, Shape*> objectsById;
+    std::unordered_map<std::string, Shape*> objectsByName;
 
     ObjectId nextObjectId = 9; ///< Monotonically increasing ID counter.
 };

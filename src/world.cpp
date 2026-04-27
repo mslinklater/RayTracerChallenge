@@ -1,9 +1,26 @@
 #include "world.hpp"
 #include "light.hpp"
 #include "ray.hpp"
+#include "shapes/group.hpp"
 #include <cassert>
-#include <cmath>
 #include <memory>
+#include <unordered_set>
+
+namespace
+{
+void CollectShapeHierarchy(Shape& shape, std::vector<Shape*>& hierarchy)
+{
+    hierarchy.push_back(&shape);
+
+    if (auto* group = dynamic_cast<Group*>(&shape))
+    {
+        for (const ShapeUniquePtr& child : group->GetChildren())
+        {
+            CollectShapeHierarchy(*child, hierarchy);
+        }
+    }
+}
+} // namespace
 
 const std::deque<ShapeUniquePtr>& World::GetObjects() const
 {
@@ -19,16 +36,39 @@ void World::AddObjectImpl(ShapeUniquePtr ptr)
 {
     assert(ptr != nullptr);
     assert(!ptr->GetName().empty());
-    // if any existing objects share the same name throw an expeption
-    for (const auto& o : objects)
+
+    std::vector<Shape*> hierarchy;
+    CollectShapeHierarchy(*ptr, hierarchy);
+
+    std::unordered_set<std::string> newNames;
+    for (Shape* shape : hierarchy)
     {
-        if (o->GetName() == ptr->GetName())
+        if (!newNames.insert(shape->GetName()).second || objectsByName.contains(shape->GetName()))
         {
-            throw std::invalid_argument("World::AddObjectImpl() Object with name '" + ptr->GetName() +
+            throw std::invalid_argument("World::AddObjectImpl() Object with name '" + shape->GetName() +
                                         "' already exists in the world.");
         }
     }
+
     objects.push_back(std::move(ptr));
+
+    for (Shape* shape : hierarchy)
+    {
+        objectsById.emplace(shape->GetObjectId(), shape);
+        objectsByName.emplace(shape->GetName(), shape);
+    }
+}
+
+void World::AssignObjectIds(Shape& shape)
+{
+    shape.SetObjectId(nextObjectId++);
+    if (auto* group = dynamic_cast<Group*>(&shape))
+    {
+        for (const ShapeUniquePtr& child : group->GetChildren())
+        {
+            AssignObjectIds(*child);
+        }
+    }
 }
 
 bool World::ContainsLight(const Light& light) const
@@ -47,9 +87,10 @@ bool World::ContainsLight(const Light& light) const
 bool World::ContainsObject(const Shape& object) const
 {
     assert(!object.GetName().empty());
-    for (const auto& o : objects)
+    for (const auto& [id, shape] : objectsById)
     {
-        if (o->GetTransform() == object.GetTransform() && o->GetMaterial() == object.GetMaterial())
+        (void)id;
+        if (shape->GetTransform() == object.GetTransform() && shape->GetMaterial() == object.GetMaterial())
         {
             return true;
         }
@@ -82,12 +123,10 @@ const Shape& World::GetObject(ObjectId id) const
         throw std::invalid_argument("World::GetObject() Invalid Object ID.");
     }
 
-    for (const auto& object : objects)
+    auto it = objectsById.find(id);
+    if (it != objectsById.end())
     {
-        if (object->GetObjectId() == id)
-        {
-            return *object;
-        }
+        return *it->second;
     }
     throw std::out_of_range("World::GetObject() Object ID not found.");
 }
@@ -95,24 +134,20 @@ const Shape& World::GetObject(ObjectId id) const
 const Shape& World::GetObjectWithName(const std::string& name) const
 {
     assert(!name.empty());
-    for (const auto& object : objects)
+    auto it = objectsByName.find(name);
+    if (it != objectsByName.end())
     {
-        if (object->GetName() == name)
-        {
-            return *object;
-        }
+        return *it->second;
     }
     throw std::out_of_range("World::GetObjectWithName() Object name not found.");
 }
 
 Shape& World::GetMutableObject(ObjectId id)
 {
-    for (const auto& object : objects)
+    auto it = objectsById.find(id);
+    if (it != objectsById.end())
     {
-        if (object->GetObjectId() == id)
-        {
-            return *object;
-        }
+        return *it->second;
     }
     throw std::out_of_range("World::GetMutableObject() Object ID not found.");
 }
@@ -120,12 +155,10 @@ Shape& World::GetMutableObject(ObjectId id)
 Shape& World::GetMutableObjectWithName(const std::string& name) const
 {
     assert(!name.empty());
-    for (const auto& object : objects)
+    auto it = objectsByName.find(name);
+    if (it != objectsByName.end())
     {
-        if (object->GetName() == name)
-        {
-            return *object;
-        }
+        return *it->second;
     }
     throw std::out_of_range("World::GetMutableObjectWithName() Object name not found.");
 }

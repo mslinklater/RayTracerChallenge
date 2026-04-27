@@ -44,6 +44,11 @@ Shape& Shape::operator=(const Shape& other)
     return *this;
 }
 
+std::unique_ptr<Shape> Shape::Clone() const
+{
+    return std::make_unique<Shape>(*this);
+}
+
 void Shape::SetObjectId(ObjectId id)
 {
     assert(id != kInvalidObjectId);

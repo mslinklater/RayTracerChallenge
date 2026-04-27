@@ -534,7 +534,7 @@ TEST_CASE("A group copied into the world should not alias the original child sha
     Group group("group");
     Sphere child("child");
     child.SetTransform(Matrix::CreateTranslation(0.f, 0.f, -3.f));
-    group.AddChild(&child);
+    group.AddChild(child);
     world.AddObject(group);
 
     const Ray ray(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
@@ -554,17 +554,17 @@ TEST_CASE("Intersecting a world-owned group should preserve the child object ID"
     World world;
     Group group("group");
     Sphere child("child");
-    child.SetObjectId(42);
     child.SetTransform(Matrix::CreateTranslation(0.f, 0.f, -3.f));
-    group.AddChild(&child);
+    group.AddChild(child);
     const ObjectId groupId = world.AddObject(group);
+    const ObjectId childId = world.GetObjectWithName("child").GetObjectId();
 
     const Ray ray(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
     const IntersectionVector xs = Renderer::IntersectWorld(world, ray);
 
     REQUIRE(xs.size() == 2);
-    REQUIRE(xs[0].GetObjectId() == child.GetObjectId());
-    REQUIRE(xs[1].GetObjectId() == child.GetObjectId());
+    REQUIRE(xs[0].GetObjectId() == childId);
+    REQUIRE(xs[1].GetObjectId() == childId);
     REQUIRE(xs[0].GetObjectId() != groupId);
 }
 
@@ -579,7 +579,7 @@ TEST_CASE("Shading a grouped child should use the child's material", "[world][gr
     Sphere child("child");
     child.GetMutableMaterial().SetColor(kColorRed).SetAmbient(1.f).SetDiffuse(0.f).SetSpecular(0.f);
     child.SetTransform(Matrix::CreateTranslation(0.f, 0.f, -3.f));
-    group.AddChild(&child);
+    group.AddChild(child);
     world.AddObject(group);
 
     const Color color = Renderer::ColorAt(world, Ray(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f)));

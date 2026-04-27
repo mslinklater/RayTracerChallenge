@@ -1,4 +1,5 @@
 
+#include "json/writer.h"
 #include <iostream>
 
 #include "camera.hpp"
@@ -58,6 +59,14 @@ int main()
         group.AddChild(sphere);
         world.AddObject(group);
     }
+
+    // Serialize and print out world
+    Json::Value root;
+    world.Serialize(root["world"]);
+    Json::StreamWriterBuilder writerBuilder;
+    writerBuilder["indentation"] = "  ";
+    std::string json = Json::writeString(writerBuilder, root);
+    std::cout << json << std::endl;
 
     Canvas canvas = Renderer::Render(camera, world);
     canvas.WriteToPPM("../images/chapter14.ppm");

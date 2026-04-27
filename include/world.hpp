@@ -1,4 +1,5 @@
 #pragma once
+#include "iserializable.hpp"
 #include "light.hpp"
 #include "shapes/shape.hpp"
 #include "types.hpp"
@@ -17,7 +18,7 @@
  * keep pointer stability as objects are added. Each shape receives a unique
  * @c ObjectId when added. Lights are stored by value in a vector.
  */
-class World
+class World : public ISerializable
 {
   public:
     /** @brief Constructs an empty world with no objects or lights. */
@@ -63,9 +64,15 @@ class World
     template <typename T, typename = std::enable_if_t<std::is_base_of_v<Shape, T>>> ObjectId AddObject(T& object)
     {
         assert(!object.GetName().empty());
+
+        // Clone a new allocated and unique_ptr owned instance
         ShapeUniquePtr shapePtr = object.Clone();
         AssignObjectIds(*shapePtr);
+
+        // Set the objectId of the parameter object - so calling code can read it
         object.SetObjectId(shapePtr->GetObjectId());
+
+        // Add the new instance to the world, transferring ownership to the world
         AddObjectImpl(std::move(shapePtr));
         return object.GetObjectId();
     }
@@ -118,6 +125,10 @@ class World
      */
     bool ContainsObject(const Shape& object) const;
 
+    // ISerializable begin
+    void Serialize(Json::Value& json) const override;
+    void Deserialize(const Json::Value& json) override;
+    // ISerializable end
   private:
     /** @brief Internal helper that stores a pre-built @c ShapePtr in the deque. */
     void AddObjectImpl(ShapeUniquePtr ptr);
@@ -128,5 +139,5 @@ class World
     std::unordered_map<ObjectId, Shape*> objectsById;
     std::unordered_map<std::string, Shape*> objectsByName;
 
-    ObjectId nextObjectId = 9; ///< Monotonically increasing ID counter.
+    ObjectId nextObjectId = 1; ///< Monotonically increasing ID counter.
 };

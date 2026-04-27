@@ -8,6 +8,8 @@
 
 namespace
 {
+// Used to recursively collect all shapes in a hierarchy for name and ID uniqueness checks when adding a new object to
+// the world
 void CollectShapeHierarchy(Shape& shape, std::vector<Shape*>& hierarchy)
 {
     hierarchy.push_back(&shape);
@@ -62,6 +64,8 @@ void World::AddObjectImpl(ShapeUniquePtr ptr)
 void World::AssignObjectIds(Shape& shape)
 {
     shape.SetObjectId(nextObjectId++);
+
+    // If this is a gruop, descend into the children and assign them IDs as well
     if (auto* group = dynamic_cast<Group*>(&shape))
     {
         for (const ShapeUniquePtr& child : group->GetChildren())
@@ -171,4 +175,14 @@ void World::ReplaceLight(int index, const Light& light)
         throw std::out_of_range("Light index out of range.");
     }
     lights[index] = light;
+}
+
+void World::Serialize(Json::Value& json) const
+{
+    json["numObjects"] = (int)objects.size();
+    json["numLights"] = (int)lights.size();
+}
+
+void World::Deserialize(const Json::Value& json)
+{
 }

@@ -90,9 +90,11 @@ std::string pattern = root["material"]["pattern"].asString();
 
 ## TODO
 
-* Test multiple lights - AI added this so needs testing
+* Add serialisation interface
+* Add some serialisation stuff for world so I can output what the world state is as a JSON file
 * Add output comparison tests - maybe wait until we have a scene description language
 * Add chaining setters to the structure based classes like Material
+* Try breaking the ownership model for lights - similar to how it was done with objects
 
 ## Misc
 

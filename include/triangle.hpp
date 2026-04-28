@@ -18,4 +18,8 @@ class Triangle
     Tuple p1;
     Tuple p2;
     Tuple p3;
+
+    Tuple edge1;
+    Tuple edge2;
+    Tuple normal;
 };

@@ -11,22 +11,17 @@ struct Color
     float b = 0.f; ///< Blue channel.
 
     /** @brief Adds two colours component-wise. */
-    Color operator+(const Color &other) const;
+    Color operator+(const Color& other) const;
     /** @brief Subtracts @p other from this colour component-wise. */
-    Color operator-(const Color &other) const;
+    Color operator-(const Color& other) const;
     /** @brief Scales all channels by @p scalar. */
     Color operator*(const float scalar) const;
     /** @brief Multiplies two colours component-wise (Hadamard product). */
-    Color operator*(const Color &other) const;
+    Color operator*(const Color& other) const;
     /** @brief Equality comparison using floating-point tolerance. */
-    bool operator==(const Color &other) const;
+    bool operator==(const Color& other) const;
 
-    /** @brief Prints the colour to stdout in human-readable form. */
-    void Cout() const
-    {
-        std::cout << "Color(" << r << ", " << g << ", " << b << ")" << std::endl;
-    }
-
+    /** @brief Returns whether the Color has valid values */
     bool IsValid() const
     {
         return std::isfinite(r) && std::isfinite(g) && std::isfinite(b);

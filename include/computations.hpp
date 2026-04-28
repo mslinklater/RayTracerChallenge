@@ -8,7 +8,7 @@
  * Populated by @c Renderer::PrepareComputations and consumed by
  * @c Renderer::ShadeHit to avoid recalculating geometry per-light.
  */
-struct Computations
+struct Computations // TODO: This needs renaming
 {
     float t = 0.f;                             ///< Ray parameter at the intersection point.
     ObjectId objectId = kInvalidObjectId;      ///< World ID of the intersected shape.

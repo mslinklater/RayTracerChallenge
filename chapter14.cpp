@@ -40,8 +40,9 @@ int main()
     // sphere
     {
         Sphere sphere("sphere1");
-        sphere.SetTransform(Matrix::CreateTranslation(2.f, 2.0f, 0.f));
+        sphere.SetTransform(Matrix::CreateTranslation(2.f, 2.0f, 0.f) * Matrix::CreateRotationX(0.5f));
         CheckerPattern check = CheckerPattern(kColorRed, kColorWhite);
+        check.SetTransform(Matrix::CreateScaling(0.5f, 0.5f, 0.5f));
         Material mat;
         mat.SetPattern(check);
         sphere.SetMaterial(mat);
@@ -50,9 +51,10 @@ int main()
 
     {
         Group group("group");
-        group.SetTransform(Matrix::CreateTranslation(-2.0f, 2.0f, 1.0f));
+        group.SetTransform(Matrix::CreateTranslation(-2.0f, 2.0f, 0.0f) * Matrix::CreateRotationX(0.5f));
         Sphere sphere("sphere2");
-        CheckerPattern check = CheckerPattern(kColorRed, kColorWhite);
+        CheckerPattern check = CheckerPattern(kColorGreen, kColorWhite);
+        check.SetTransform(Matrix::CreateScaling(0.5f, 0.5f, 0.5f));
         Material mat;
         mat.SetPattern(check);
         sphere.SetMaterial(mat);

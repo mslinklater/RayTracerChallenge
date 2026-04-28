@@ -90,7 +90,8 @@ std::string pattern = root["material"]["pattern"].asString();
 
 ## TODO
 
-* Add serialisation interface
+* Add a command line parser and a config system
+* Add serialisation interface - save and load scenes
 * Add some serialisation stuff for world so I can output what the world state is as a JSON file
 * Add output comparison tests - maybe wait until we have a scene description language
 * Add chaining setters to the structure based classes like Material

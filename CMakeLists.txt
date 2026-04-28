@@ -73,6 +73,7 @@ set(SRC_FILES   src/utils.cpp
                 src/material.cpp
                 src/renderer.cpp
                 src/world.cpp
+                src/triangle.cpp
                 src/canvas.cpp)
 
 set(PROJECT_COVERAGE_FLAGS "")
@@ -152,6 +153,7 @@ set(TEST_SRC    tests/test_main.cpp
                 tests/test_materials.cpp
                 tests/test_matrix.cpp
                 tests/test_cylinders.cpp
+                tests/test_triangles.cpp
                 tests/test_cubes.cpp
                 tests/test_groups.cpp
                 tests/test_json.cpp

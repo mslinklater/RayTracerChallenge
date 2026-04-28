@@ -197,7 +197,8 @@ std::vector<Intersection> Shape::Intersect(const Ray& ray) const
 
 std::vector<Intersection> Shape::IntersectLocal(const Ray& ray) const
 {
-    assert(ray.IsValid());
+    throw std::logic_error("Shape::IntersectLocal() not implemented for base Shape class. This method should be "
+                           "overridden in derived classes to provide shape-specific intersection logic.");
 
     std::vector<Intersection> intersections;
     return intersections; // Default implementation returns an empty vector (no intersections)

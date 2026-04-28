@@ -90,6 +90,7 @@ std::string pattern = root["material"]["pattern"].asString();
 
 ## TODO
 
+* Accelerate the triangle mesh stuff - it's insane !!
 * Add a command line parser and a config system
 * Add serialisation interface - save and load scenes
 * Add some serialisation stuff for world so I can output what the world state is as a JSON file

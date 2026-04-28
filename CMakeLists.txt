@@ -73,7 +73,7 @@ set(SRC_FILES   src/utils.cpp
                 src/material.cpp
                 src/renderer.cpp
                 src/world.cpp
-                src/triangle.cpp
+                src/shapes/triangle.cpp
                 src/canvas.cpp)
 
 set(PROJECT_COVERAGE_FLAGS "")

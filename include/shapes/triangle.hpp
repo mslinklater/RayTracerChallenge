@@ -1,7 +1,8 @@
 #pragma once
+#include "shapes/shape.hpp"
 #include "tuple.hpp"
 
-class Triangle
+class Triangle : public Shape
 {
   public:
     Triangle(const Tuple& p1, const Tuple& p2, const Tuple& p3);
@@ -14,6 +15,14 @@ class Triangle
     Tuple GetEdge2() const;
     Tuple GetNormal() const;
 
+    std::unique_ptr<Shape> Clone() const override
+    {
+        return std::make_unique<Triangle>(*this);
+    }
+
+    Tuple NormalAtLocal(const Tuple& point) const override;
+    std::vector<Intersection> IntersectLocal(const Ray& ray) const override;
+
   private:
     Tuple p1;
     Tuple p2;
@@ -22,4 +31,6 @@ class Triangle
     Tuple edge1;
     Tuple edge2;
     Tuple normal;
+
+    static int triangleCount;
 };

@@ -27,3 +27,28 @@ bool Light::IsValid() const
 {
     return position.IsValid() && position.IsPoint() && intensity.IsValid();
 }
+
+const Tuple& Light::GetPosition() const
+{
+    return position;
+}
+
+Light& Light::SetPosition(const Tuple& position)
+{
+    assert(position.IsValid());
+    assert(position.IsPoint());
+    this->position = position;
+    return *this;
+}
+
+const Color& Light::GetIntensity() const
+{
+    return intensity;
+}
+
+Light& Light::SetIntensity(const Color& intensity)
+{
+    assert(intensity.IsValid());
+    this->intensity = intensity;
+    return *this;
+}

@@ -1,7 +1,7 @@
-#include <catch2/catch_test_macros.hpp>
-#include "tuple.hpp"
-#include "light.hpp"
 #include "color.hpp"
+#include "light.hpp"
+#include "tuple.hpp"
+#include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("A point light has a position and intensity", "[light]")
 {
@@ -9,6 +9,6 @@ TEST_CASE("A point light has a position and intensity", "[light]")
     Tuple position = Point(0.f, 0.f, 0.f);
     Light light(position, intensity);
 
-    REQUIRE(light.position == position);
-    REQUIRE(light.intensity == intensity);
+    REQUIRE(light.GetPosition() == position);
+    REQUIRE(light.GetIntensity() == intensity);
 }

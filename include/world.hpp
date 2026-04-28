@@ -43,11 +43,7 @@ class World : public ISerializable
      */
     void AddLight(const Light& light)
     {
-        assert(light.position.IsValid());
-        assert(light.position.IsPoint());
-        assert(std::isfinite(light.intensity.r));
-        assert(std::isfinite(light.intensity.g));
-        assert(std::isfinite(light.intensity.b));
+        assert(light.IsValid());
         lights.push_back(light);
     }
 

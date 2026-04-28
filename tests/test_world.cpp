@@ -48,11 +48,11 @@ TEST_CASE("Test GetMutableLight changes persist in the world", "[world]")
     Light l(Point(0.f, 0.f, 0.f), Color(1.f, 1.f, 1.f));
     world.AddLight(l);
     Light& mutableL = world.GetMutableLight(0);
-    mutableL.position = Point(1.f, 1.f, 1.f);
-    mutableL.intensity = Color(0.5f, 0.5f, 0.5f);
+    mutableL.SetPosition(Point(1.f, 1.f, 1.f));
+    mutableL.SetIntensity(Color(0.5f, 0.5f, 0.5f));
     const Light& constL = world.GetLight(0);
-    REQUIRE(constL.position == Point(1.f, 1.f, 1.f));
-    REQUIRE(constL.intensity == Color(0.5f, 0.5f, 0.5f));
+    REQUIRE(constL.GetPosition() == Point(1.f, 1.f, 1.f));
+    REQUIRE(constL.GetIntensity() == Color(0.5f, 0.5f, 0.5f));
 }
 
 TEST_CASE("Adding an object to the world returns a stable object ID", "[world]")
@@ -117,8 +117,8 @@ TEST_CASE("Is able to replace a light in the world", "[world]")
     w.AddLight(light);
     Light newLight(Point(0.f, 0.25f, 0.f), Color(1.f, 1.f, 1.f));
     w.ReplaceLight(0, newLight);
-    REQUIRE(w.GetLight(0).position == Point(0.f, 0.25f, 0.f));
-    REQUIRE(w.GetLight(0).intensity == Color(1.f, 1.f, 1.f));
+    REQUIRE(w.GetLight(0).GetPosition() == Point(0.f, 0.25f, 0.f));
+    REQUIRE(w.GetLight(0).GetIntensity() == Color(1.f, 1.f, 1.f));
 }
 
 TEST_CASE("Shading an intersection", "[world]")

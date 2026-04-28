@@ -217,9 +217,9 @@ Color Renderer::Lighting(const Material& material, const Shape& object, const Li
         color = material.GetColor();
     }
 
-    Color effectiveColor = color * light.intensity;
+    Color effectiveColor = color * light.GetIntensity();
 
-    Tuple lightVector = (light.position - position).Normalize();
+    Tuple lightVector = (light.GetPosition() - position).Normalize();
 
     // the three components of the Phong reflection model: ambient, diffuse, and specular
     Color ambient = effectiveColor * material.GetAmbient();
@@ -253,7 +253,7 @@ Color Renderer::Lighting(const Material& material, const Shape& object, const Li
         else
         {
             float factor = std::pow(reflectDotEye, material.GetShininess());
-            specular = light.intensity * material.GetSpecular() * factor;
+            specular = light.GetIntensity() * material.GetSpecular() * factor;
         }
     }
 
@@ -399,7 +399,7 @@ EInShadow Renderer::IsShadowed(const World& world, const Tuple& point, const Lig
 {
     assert(point.IsValid());
     assert(light.IsValid());
-    Tuple lightVector = light.position - point;
+    Tuple lightVector = light.GetPosition() - point;
     float distanceToLight = lightVector.Magnitude();
     Ray shadowRay(point, lightVector.Normalize());
 

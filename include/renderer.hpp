@@ -33,7 +33,7 @@ class Renderer
      * @param world  The scene to render.
      * @return A @c Canvas containing the rendered pixel colours.
      */
-    static Canvas Render(const Camera &camera, const World &world);
+    static Canvas Render(const Camera& camera, const World& world);
 
     /**
      * @brief Computes the colour seen along @p ray within @p world.
@@ -42,15 +42,15 @@ class Renderer
      * @param remaining Maximum remaining recursion depth for reflections.
      * @return The colour at the first hit, or @c kBackgroundColor on a miss.
      */
-    static Color ColorAt(const World &world, const Ray &ray, int remaining = 10);
+    static Color ColorAt(const World& world, const Ray& ray, int remaining = 10);
 
     /**
      * @brief Collects all ray-shape intersections in @p world, sorted by @c t.
      * @param world The scene to intersect.
      * @param ray   The ray to test against all shapes.
-     * @return A sorted list of all intersection records.
+     * @return A sorted vector of all intersection records.
      */
-    static IntersectionVector IntersectWorld(const World &world, const Ray &ray);
+    static std::vector<Intersection> IntersectWorld(const World& world, const Ray& ray);
 
     /**
      * @brief Computes the colour contribution from reflected rays.
@@ -59,7 +59,7 @@ class Renderer
      * @param remaining Maximum remaining recursion depth.
      * @return The reflected colour, or black if the material is non-reflective or depth is exhausted.
      */
-    static Color ReflectedColor(const World &world, const Computations &comps, int remaining);
+    static Color ReflectedColor(const World& world, const Computations& comps, int remaining);
 
     /**
      * @brief Computes the colour contribution from reflected rays.
@@ -69,7 +69,7 @@ class Renderer
      * @param remaining Maximum remaining recursion depth.
      * @return The reflected colour, or black if the material is non-reflective or depth is exhausted.
      */
-    static Color ReflectedColor(const World &world, const Material &material, const Computations &comps, int remaining);
+    static Color ReflectedColor(const World& world, const Material& material, const Computations& comps, int remaining);
 
     /**
      * @brief Computes the colour contribution from refracted rays.
@@ -78,7 +78,7 @@ class Renderer
      * @param remaining Maximum remaining recursion depth.
      * @return The refracted colour, or black if the material is non-reflective or depth is exhausted.
      */
-    static Color RefractedColor(const World &world, const Computations &comps, int remaining);
+    static Color RefractedColor(const World& world, const Computations& comps, int remaining);
 
     /**
      * @brief Computes the colour contribution from refracted rays.
@@ -88,8 +88,7 @@ class Renderer
      * @param remaining Maximum remaining recursion depth.
      * @return The refracted colour, or black if the material is non-reflective or depth is exhausted.
      */
-    static Color RefractedColor(const World &world, const Material &material, const Computations &comps,
-                                int remaining);
+    static Color RefractedColor(const World& world, const Material& material, const Computations& comps, int remaining);
 
     /**
      * @brief Computes the final shaded colour at a surface intersection.
@@ -100,7 +99,7 @@ class Renderer
      * @param remaining Maximum remaining recursion depth for reflections.
      * @return The shaded colour at the intersection.
      */
-    static Color ShadeHit(const World &world, const Computations &comps, int remaining);
+    static Color ShadeHit(const World& world, const Computations& comps, int remaining);
 
     /**
      * @brief Computes the Phong shading colour at a surface point.
@@ -113,8 +112,8 @@ class Renderer
      * @param inShadow     Whether the point is in shadow of @p light.
      * @return The Phong-shaded colour.
      */
-    static Color Lighting(const Material &material, const Shape &object, const Light &light, const Tuple &position,
-                          const Tuple &eyeVector, const Tuple &normalVector, EInShadow inShadow);
+    static Color Lighting(const Material& material, const Shape& object, const Light& light, const Tuple& position,
+                          const Tuple& eyeVector, const Tuple& normalVector, EInShadow inShadow);
 
     /**
      * @brief Creates a default test world with two spheres and one point light.
@@ -127,14 +126,14 @@ class Renderer
      * @param list An initialiser list of @c Intersection values.
      * @return The intersections sorted by ascending @c t.
      */
-    static IntersectionVector Intersections(std::initializer_list<Intersection> list);
+    static std::vector<Intersection> Intersections(std::initializer_list<Intersection> list);
 
     /**
      * @brief Returns the first positive-t intersection (the visible hit).
      * @param intersections A sorted list of intersections.
      * @return The closest intersection with t > 0, or an invalid intersection on miss.
      */
-    static Intersection GetClosestIntersection(const IntersectionVector &intersections);
+    static Intersection GetClosestIntersection(const std::vector<Intersection>& intersections);
 
     /**
      * @brief Pre-computes shading data for @p intersection along @p ray.
@@ -144,8 +143,8 @@ class Renderer
      * @param intersectionVec Optional full hit list used for computing n1/n2 refraction indices.
      * @return A populated @c Computations struct.
      */
-    static Computations PrepareComputations(const Intersection &intersection, const Ray &ray, const World &world,
-                                            const IntersectionVector *intersectionVec = nullptr);
+    static Computations PrepareComputations(const Intersection& intersection, const Ray& ray, const World& world,
+                                            const std::vector<Intersection>* intersectionVec = nullptr);
 
     /**
      * @brief Determines whether @p point is in shadow with respect to the first light.
@@ -153,7 +152,7 @@ class Renderer
      * @param point The world-space point to test.
      * @return @c EInShadow::Yes if the point is in shadow, @c EInShadow::No otherwise.
      */
-    static EInShadow IsShadowed(const World &world, const Tuple &point);
+    static EInShadow IsShadowed(const World& world, const Tuple& point);
 
     /**
      * @brief Determines whether @p point is in shadow with respect to @p light.
@@ -162,13 +161,13 @@ class Renderer
      * @param light The specific light to test against.
      * @return @c EInShadow::Yes if the point is shadowed from @p light, @c EInShadow::No otherwise.
      */
-    static EInShadow IsShadowed(const World &world, const Tuple &point, const Light &light);
+    static EInShadow IsShadowed(const World& world, const Tuple& point, const Light& light);
 
     /**
      * @brief Compute the Schlk approximation for reflectance at a surface intersection.
      * @param comps The pre-computed intersection data.
      */
-    static float Schlick(const Computations &comps);
+    static float Schlick(const Computations& comps);
 
   private:
     Renderer() = default; ///< Non-instantiable static class.

@@ -401,7 +401,7 @@ TEST_CASE("The refracted color with an opaque surface", "[world]")
     World w = Renderer::DefaultWorld();
     Shape s = w.GetObjectWithName("external");
     Ray r(Point(0.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
-    IntersectionVector xs = {
+    std::vector<Intersection> xs = {
         Intersection(4.f, s.GetObjectId()),
         Intersection(6.f, s.GetObjectId()),
     };
@@ -418,7 +418,7 @@ TEST_CASE("The refracted color at the maximum recursive depth is black", "[world
     s.GetMutableMaterial().SetTransparency(1.f);
     s.GetMutableMaterial().SetRefractiveIndex(1.5f);
     Ray r(Point(0.f, 0.f, -5.f), Tuple(0.f, 0.f, 1.f));
-    IntersectionVector xs = {
+    std::vector<Intersection> xs = {
         Intersection(4.f, s.GetObjectId()),
         Intersection(6.f, s.GetObjectId()),
     };
@@ -435,7 +435,7 @@ TEST_CASE("The refracted color under total internal reflection", "[world]")
     s.GetMutableMaterial().SetTransparency(1.f);
     s.GetMutableMaterial().SetRefractiveIndex(1.5f);
     Ray r(Point(0.f, 0.f, std::sqrt(2.f) / 2.f), Tuple(0.f, 1.f, 0.f));
-    IntersectionVector xs = {
+    std::vector<Intersection> xs = {
         Intersection(-std::sqrt(2.f) / 2.f, s.GetObjectId()),
         Intersection(std::sqrt(2.f) / 2.f, s.GetObjectId()),
     };
@@ -460,7 +460,7 @@ TEST_CASE("The refracted color with a refracted ray", "[world]")
     materialb.SetRefractiveIndex(1.5f);
 
     Ray r(Point(0.f, 0.f, 0.1f), Tuple(0.f, 1.f, 0.f));
-    IntersectionVector xs = {
+    std::vector<Intersection> xs = {
         Intersection(-0.9899f, a.GetObjectId()),
         Intersection(-0.4899f, b.GetObjectId()),
         Intersection(0.4899f, b.GetObjectId()),
@@ -488,7 +488,7 @@ TEST_CASE("ShadeHit() with a transparent material", "[world]")
     w.AddObject(ball);
 
     Ray r(Point(0.f, 0.f, -3.f), Tuple(0.f, -std::sqrt(2.f) / 2.f, std::sqrt(2.f) / 2.f));
-    IntersectionVector xs = {
+    std::vector<Intersection> xs = {
         Intersection(std::sqrt(2.f), floor.GetObjectId()),
     };
     Computations comps = Renderer::PrepareComputations(xs[0], r, w, &xs);
@@ -519,7 +519,7 @@ TEST_CASE("ShadeHit() with a reflective, transparent material", "[world]")
     ball.SetTransform(Matrix::CreateTranslation(0.f, -3.5f, -0.5f));
     w.AddObject(ball);
 
-    IntersectionVector xs = {
+    std::vector<Intersection> xs = {
         Intersection(std::sqrt(2.f), floor.GetObjectId()),
     };
     Computations comps = Renderer::PrepareComputations(xs[0], r, w, &xs);
@@ -538,12 +538,12 @@ TEST_CASE("A group copied into the world should not alias the original child sha
     world.AddObject(group);
 
     const Ray ray(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
-    const IntersectionVector beforeMutation = Renderer::IntersectWorld(world, ray);
+    const std::vector<Intersection> beforeMutation = Renderer::IntersectWorld(world, ray);
     REQUIRE(beforeMutation.size() == 2);
 
     child.SetTransform(Matrix::CreateTranslation(5.f, 0.f, 0.f));
 
-    const IntersectionVector afterMutation = Renderer::IntersectWorld(world, ray);
+    const std::vector<Intersection> afterMutation = Renderer::IntersectWorld(world, ray);
     REQUIRE(afterMutation.size() == 2);
     REQUIRE(AreEqual(afterMutation[0].GetT(), beforeMutation[0].GetT()));
     REQUIRE(AreEqual(afterMutation[1].GetT(), beforeMutation[1].GetT()));
@@ -560,7 +560,7 @@ TEST_CASE("Intersecting a world-owned group should preserve the child object ID"
     const ObjectId childId = world.GetObjectWithName("child").GetObjectId();
 
     const Ray ray(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
-    const IntersectionVector xs = Renderer::IntersectWorld(world, ray);
+    const std::vector<Intersection> xs = Renderer::IntersectWorld(world, ray);
 
     REQUIRE(xs.size() == 2);
     REQUIRE(xs[0].GetObjectId() == childId);

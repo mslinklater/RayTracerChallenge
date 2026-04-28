@@ -25,8 +25,8 @@ Camera MakeBenchmarkCamera()
     return camera;
 }
 
-void WriteReport(const std::filesystem::path &outputPath, const char *reportTemplate,
-                 const std::vector<ankerl::nanobench::Result> &results)
+void WriteReport(const std::filesystem::path& outputPath, const char* reportTemplate,
+                 const std::vector<ankerl::nanobench::Result>& results)
 {
     std::ofstream output(outputPath);
     if (!output)
@@ -37,7 +37,7 @@ void WriteReport(const std::filesystem::path &outputPath, const char *reportTemp
     ankerl::nanobench::render(reportTemplate, results, output);
 }
 
-void WriteReports(const std::filesystem::path &outputDirectory, const std::vector<ankerl::nanobench::Result> &results)
+void WriteReports(const std::filesystem::path& outputDirectory, const std::vector<ankerl::nanobench::Result>& results)
 {
     std::filesystem::create_directories(outputDirectory);
     WriteReport(outputDirectory / "raytracer-benchmarks.csv", ankerl::nanobench::templates::csv(), results);
@@ -46,14 +46,15 @@ void WriteReports(const std::filesystem::path &outputDirectory, const std::vecto
 }
 } // namespace
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
-    const std::filesystem::path outputDirectory = argc > 1 ? std::filesystem::path(argv[1]) : std::filesystem::path("benchmarks");
+    const std::filesystem::path outputDirectory =
+        argc > 1 ? std::filesystem::path(argv[1]) : std::filesystem::path("benchmarks");
 
     const World world = Renderer::DefaultWorld();
     const Camera camera = MakeBenchmarkCamera();
     const Ray centerRay = camera.RayForPixel(kBenchmarkWidth / 2, kBenchmarkHeight / 2);
-    const IntersectionVector intersections = Renderer::IntersectWorld(world, centerRay);
+    const std::vector<Intersection> intersections = Renderer::IntersectWorld(world, centerRay);
     const Intersection hit = Renderer::GetClosestIntersection(intersections);
     const Computations comps = Renderer::PrepareComputations(hit, centerRay, world, &intersections);
 
@@ -62,7 +63,7 @@ int main(int argc, char **argv)
     fastBench.minEpochIterations(100000);
 
     fastBench.run("IntersectWorld center ray", [&] {
-        const IntersectionVector result = Renderer::IntersectWorld(world, centerRay);
+        const std::vector<Intersection> result = Renderer::IntersectWorld(world, centerRay);
         ankerl::nanobench::doNotOptimizeAway(result);
     });
 

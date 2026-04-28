@@ -95,7 +95,7 @@ TEST_CASE("Intersecting a ray with a non-empty group", "[groups]")
     stored1.SetObjectId(1);
     stored2.SetObjectId(2);
     Ray r(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
-    IntersectionVector xs = g.IntersectLocal(r);
+    std::vector<Intersection> xs = g.IntersectLocal(r);
     REQUIRE(xs.size() == 4);
     REQUIRE(xs[0].GetObjectId() == stored2.GetObjectId());
     REQUIRE(xs[1].GetObjectId() == stored2.GetObjectId());
@@ -112,7 +112,7 @@ TEST_CASE("Intersecting a transformed group", "[groups]")
     Sphere& stored = g.AddChild(s);
     stored.SetObjectId(1);
     Ray r(Point(10.f, 0.f, -10.f), Vector(0.f, 0.f, 1.f));
-    IntersectionVector xs = g.Intersect(r);
+    std::vector<Intersection> xs = g.Intersect(r);
     REQUIRE(xs.size() == 2);
     REQUIRE(xs[0].GetObjectId() == stored.GetObjectId());
     REQUIRE(xs[1].GetObjectId() == stored.GetObjectId());

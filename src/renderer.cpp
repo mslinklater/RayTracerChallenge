@@ -73,7 +73,7 @@ Color Renderer::ColorAt(const World& world, const Ray& ray, int remaining)
 {
     assert(remaining >= 0);
     assert(ray.IsValid());
-    const IntersectionVector intersections = IntersectWorld(world, ray);
+    const std::vector<Intersection> intersections = IntersectWorld(world, ray);
     if (intersections.empty())
     {
         return kBackgroundColor; // Return cyan if no intersections
@@ -87,7 +87,7 @@ Color Renderer::ColorAt(const World& world, const Ray& ray, int remaining)
     return ShadeHit(world, comps, remaining);
 }
 
-IntersectionVector Renderer::IntersectWorld(const World& world, const Ray& ray)
+std::vector<Intersection> Renderer::IntersectWorld(const World& world, const Ray& ray)
 {
     assert(ray.IsValid());
     std::vector<Intersection> intersections;
@@ -278,19 +278,19 @@ World Renderer::DefaultWorld()
     return w;
 }
 
-IntersectionVector Renderer::Intersections(std::initializer_list<Intersection> list)
+std::vector<Intersection> Renderer::Intersections(std::initializer_list<Intersection> list)
 {
     for (const Intersection& intersection : list)
     {
         assert(std::isfinite(intersection.GetT()));
     }
-    IntersectionVector intersections(list);
+    std::vector<Intersection> intersections(list);
     std::sort(intersections.begin(), intersections.end(),
               [](const Intersection& lhs, const Intersection& rhs) { return lhs.GetT() < rhs.GetT(); });
     return intersections;
 }
 
-Intersection Renderer::GetClosestIntersection(const IntersectionVector& intersections)
+Intersection Renderer::GetClosestIntersection(const std::vector<Intersection>& intersections)
 {
     for (const Intersection& intersection : intersections)
     {
@@ -306,11 +306,12 @@ Intersection Renderer::GetClosestIntersection(const IntersectionVector& intersec
 }
 
 Computations Renderer::PrepareComputations(const Intersection& intersection, const Ray& ray, const World& world,
-                                           const IntersectionVector* intersectionVec)
+                                           const std::vector<Intersection>* intersectionVec)
 {
     assert(intersection.GetObjectId() != kInvalidObjectId);
     assert(std::isfinite(intersection.GetT()));
     assert(ray.IsValid());
+
     Computations comps;
     comps.t = intersection.GetT();
     comps.objectId = intersection.GetObjectId();
@@ -403,7 +404,7 @@ EInShadow Renderer::IsShadowed(const World& world, const Tuple& point, const Lig
     float distanceToLight = lightVector.Magnitude();
     Ray shadowRay(point, lightVector.Normalize());
 
-    const IntersectionVector intersections = IntersectWorld(world, shadowRay);
+    const std::vector<Intersection> intersections = IntersectWorld(world, shadowRay);
     const Intersection hit = GetClosestIntersection(intersections);
     if (hit.GetObjectId() != kInvalidObjectId && hit.GetT() < distanceToLight)
     {

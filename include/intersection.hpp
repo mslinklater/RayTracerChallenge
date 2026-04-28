@@ -40,4 +40,4 @@ class Intersection
 };
 
 /// @brief Convenience alias for a list of intersections sorted by @c t.
-typedef std::vector<Intersection> IntersectionVector;
+// typedef std::vector<Intersection> IntersectionVector;

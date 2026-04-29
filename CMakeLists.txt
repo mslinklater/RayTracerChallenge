@@ -9,6 +9,7 @@ option(ENABLE_COVERAGE "Build with coverage instrumentation" OFF)
 option(BUILD_BENCHMARKS "Build nanobench benchmark executable" ON)
 
 include(FetchContent)
+include(ProcessorCount)
 
 find_package(Catch2 3 REQUIRED)
 
@@ -54,6 +55,11 @@ endif()
 include(Catch)  # This provides catch_discover_tests()
 enable_testing()
 
+ProcessorCount(PARALLEL_TEST_JOBS)
+if(NOT PARALLEL_TEST_JOBS)
+    set(PARALLEL_TEST_JOBS 1)
+endif()
+
 set(SRC_FILES   src/utils.cpp
                 src/camera.cpp
                 src/color.cpp
@@ -72,6 +78,7 @@ set(SRC_FILES   src/utils.cpp
                 src/intersection.cpp
                 src/material.cpp
                 src/renderer.cpp
+                src/objfile.cpp
                 src/world.cpp
                 src/shapes/triangle.cpp
                 src/canvas.cpp)
@@ -134,6 +141,9 @@ add_raytracer_executable(Chapter13Challenge chapter13.cpp)
 # Chapter 14 challenge executable
 add_raytracer_executable(Chapter14Challenge chapter14.cpp)
 
+# Chapter 15 challenge executable
+add_raytracer_executable(Chapter15Challenge chapter15.cpp)
+
 # Test executable
 set(TEST_SRC    tests/test_main.cpp
                 tests/test_camera.cpp
@@ -157,6 +167,7 @@ set(TEST_SRC    tests/test_main.cpp
                 tests/test_cubes.cpp
                 tests/test_groups.cpp
                 tests/test_json.cpp
+                tests/test_objfiles.cpp
                 tests/test_patterns.cpp
                 tests/test_transformations.cpp
                 tests/test_determinism.cpp
@@ -207,7 +218,7 @@ if(ENABLE_COVERAGE)
     if(LCOV_BIN)
         add_custom_target(coverage
             COMMAND ${LCOV_BIN} --zerocounters --directory ${CMAKE_BINARY_DIR}
-            COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
+            COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure --parallel ${PARALLEL_TEST_JOBS}
             COMMAND ${LCOV_BIN} --capture --ignore-errors inconsistent,unsupported,format --directory ${CMAKE_BINARY_DIR} --output-file ${CMAKE_BINARY_DIR}/coverage_raw.info
             COMMAND ${LCOV_BIN} --extract ${CMAKE_BINARY_DIR}/coverage_raw.info "${CMAKE_SOURCE_DIR}/src/*" "${CMAKE_SOURCE_DIR}/include/*" --ignore-errors inconsistent,unused --output-file ${CMAKE_BINARY_DIR}/coverage.info
             WORKING_DIRECTORY ${CMAKE_BINARY_DIR}

@@ -26,6 +26,12 @@ This writes terminal output plus CSV, JSON, and HTML benchmark reports to `build
 
 ## Run tests
 
+Run the Catch2 tests through CTest in parallel:
+
+```bash
+ctest --test-dir build --output-on-failure -j <num-cores>
+```
+
 For a full test coverage report in HTML format run the following
 
 ```

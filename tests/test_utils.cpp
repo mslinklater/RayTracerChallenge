@@ -1,6 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include "utils.hpp"
 #include "maths.hpp"
+#include <filesystem>
 #include <fstream>
 
 // Tests for AreEqual
@@ -58,7 +59,7 @@ TEST_CASE("ReadFileAsLines with non-existent file", "[utils]")
 TEST_CASE("ReadFileAsLines with a valid file", "[utils]")
 {
     // Create a temporary file with known content
-    const std::string filename = "temp_test_file.txt";
+    const std::string filename = (std::filesystem::temp_directory_path() / "raytracerchallenge_valid_lines.txt").string();
     std::ofstream outFile(filename);
     outFile << "Line 1\nLine 2\nLine 3";
     outFile.close();
@@ -76,7 +77,7 @@ TEST_CASE("ReadFileAsLines with a valid file", "[utils]")
 TEST_CASE("ReadFileAsLines with an empty file", "[utils]")
 {
     // Create an empty temporary file
-    const std::string filename = "empty_test_file.txt";
+    const std::string filename = (std::filesystem::temp_directory_path() / "raytracerchallenge_empty_lines.txt").string();
     std::ofstream outFile(filename);
     outFile.close();
 

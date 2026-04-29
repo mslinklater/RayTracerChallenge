@@ -65,8 +65,6 @@ std::vector<Intersection> Triangle::IntersectLocal(const Ray& ray) const
                 intersections.push_back(Intersection(t, objectId));
             }
         }
-        // do something bad to cause an error - remove this
-        // return {Intersection(1.f, objectId)};
     }
     return intersections;
 }

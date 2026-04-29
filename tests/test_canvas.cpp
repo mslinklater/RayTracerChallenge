@@ -1,6 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include "canvas.hpp"
 #include "utils.hpp"
+#include <filesystem>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -73,9 +74,11 @@ TEST_CASE("Pixels on canvas bounds", "[canvas]")
 TEST_CASE("Write canvas to PPM file", "[canvas]")
 {
     Canvas c{5, 3};
-    c.WriteToPPM("test.ppm");
+    const auto filename = (std::filesystem::temp_directory_path() / "raytracerchallenge_canvas_header.ppm").string();
+    c.WriteToPPM(filename);
 
-    auto lines = ReadLinesFromFile("test.ppm");
+    auto lines = ReadLinesFromFile(filename);
+    std::filesystem::remove(filename);
 
     REQUIRE(lines.size() >= 3);
     REQUIRE(lines[0] == "P3");
@@ -94,9 +97,11 @@ TEST_CASE("PPM file pixel data", "[canvas]")
     c.WritePixel(2, 1, c2);
     c.WritePixel(4, 2, c3);
 
-    c.WriteToPPM("test.ppm");
+    const auto filename = (std::filesystem::temp_directory_path() / "raytracerchallenge_canvas_pixels.ppm").string();
+    c.WriteToPPM(filename);
 
-    auto lines = ReadLinesFromFile("test.ppm");
+    auto lines = ReadLinesFromFile(filename);
+    std::filesystem::remove(filename);
 
     REQUIRE(lines.size() >= 6);
     REQUIRE(lines[3] == "255 0 0 0 0 0 0 0 0 0 0 0 0 0 0");
@@ -115,9 +120,11 @@ TEST_CASE("PPM file pixel data with line breaks", "[canvas]")
         }
     }
 
-    c.WriteToPPM("test.ppm");
+    const auto filename = (std::filesystem::temp_directory_path() / "raytracerchallenge_canvas_line_breaks.ppm").string();
+    c.WriteToPPM(filename);
 
-    auto lines = ReadLinesFromFile("test.ppm");
+    auto lines = ReadLinesFromFile(filename);
+    std::filesystem::remove(filename);
 
     REQUIRE(lines.size() >= 4);
     REQUIRE(lines[3] == "255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204");
@@ -129,9 +136,11 @@ TEST_CASE("Ensure that coordinate 0,0 is the top left of the image", "[canvas]")
     Canvas c{5, 3};
     Color red{1.f, 0.f, 0.f};
     c.WritePixel(0, 0, red);
-    c.WriteToPPM("ensureoriginistopleft.ppm");
+    const auto filename = (std::filesystem::temp_directory_path() / "raytracerchallenge_canvas_origin.ppm").string();
+    c.WriteToPPM(filename);
 
-    auto lines = ReadLinesFromFile("ensureoriginistopleft.ppm");
+    auto lines = ReadLinesFromFile(filename);
+    std::filesystem::remove(filename);
 
     REQUIRE(lines.size() >= 4);
     REQUIRE(lines[3] == "255 0 0 0 0 0 0 0 0 0 0 0 0 0 0");

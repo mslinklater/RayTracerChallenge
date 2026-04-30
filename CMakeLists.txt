@@ -77,6 +77,7 @@ set(SRC_FILES   src/utils.cpp
                 src/tuple.cpp
                 src/intersection.cpp
                 src/material.cpp
+                src/filesystem.cpp
                 src/renderer.cpp
                 src/objfile.cpp
                 src/world.cpp
@@ -145,33 +146,36 @@ add_raytracer_executable(Chapter14Challenge chapter14.cpp)
 add_raytracer_executable(Chapter15Challenge chapter15.cpp)
 
 # Test executable
-set(TEST_SRC    tests/test_main.cpp
+set(TEST_SRC
                 tests/test_camera.cpp
+                tests/test_canvas.cpp
                 tests/test_color.cpp
-                tests/test_tuples.cpp
-                tests/test_utils.cpp
-                tests/test_utils.cpp
-                tests/test_rays.cpp
-                tests/test_world.cpp
-                tests/test_intersections.cpp
-                tests/test_spheres.cpp
-                tests/test_planes.cpp
-                tests/test_lights.cpp
                 tests/test_cones.cpp
+                tests/test_cubes.cpp
+                tests/test_cylinders.cpp
+                tests/test_determinism.cpp
+                tests/test_filesystem.cpp
+                tests/test_groups.cpp
+                tests/test_intersections.cpp
+                tests/test_json.cpp
                 tests/test_lighting.cpp
-                tests/test_shapes.cpp
+                tests/test_lights.cpp
+                tests/test_main.cpp
                 tests/test_materials.cpp
                 tests/test_matrix.cpp
-                tests/test_cylinders.cpp
-                tests/test_triangles.cpp
-                tests/test_cubes.cpp
-                tests/test_groups.cpp
-                tests/test_json.cpp
                 tests/test_objfiles.cpp
                 tests/test_patterns.cpp
+                tests/test_planes.cpp
+                tests/test_rays.cpp
+                tests/test_shapes.cpp
+                tests/test_spheres.cpp
                 tests/test_transformations.cpp
-                tests/test_determinism.cpp
-                tests/test_canvas.cpp)
+                tests/test_triangles.cpp
+                tests/test_tuples.cpp
+                tests/test_utils.cpp
+                tests/test_world.cpp
+
+)
 
 add_executable(RayTracerChallengeTests ${TEST_SRC})
 target_link_libraries(RayTracerChallengeTests PRIVATE RayTracerChallengeLib Catch2::Catch2WithMain)

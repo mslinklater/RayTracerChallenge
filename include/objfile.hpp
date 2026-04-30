@@ -5,4 +5,6 @@ class ObjFile
 {
   public:
     ObjFile(const std::string& filename);
+
+  private:
 };

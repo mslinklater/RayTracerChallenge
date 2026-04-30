@@ -7,3 +7,8 @@ TEST_CASE("Correctly reports being unable to find the file", "[obj_file]")
 
     REQUIRE_THROWS(ObjFile("nonexistent.obj"));
 }
+
+TEST_CASE("Ignoring unrecognised lines", "[obj_file]")
+{
+    ObjFile obj("testdata/objfiles/unrecognised_lines.obj");
+}

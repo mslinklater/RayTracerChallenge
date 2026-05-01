@@ -1,4 +1,5 @@
 #include "objfile.hpp"
+#include "tuple.hpp"
 #include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("Correctly reports being unable to find the file", "[obj_file]")
@@ -11,4 +12,30 @@ TEST_CASE("Correctly reports being unable to find the file", "[obj_file]")
 TEST_CASE("Ignoring unrecognised lines", "[obj_file]")
 {
     ObjFile obj("testdata/objfiles/unrecognised_lines.obj");
+}
+
+TEST_CASE("Vertex records", "[obj_file]")
+{
+    ObjFile obj("testdata/objfiles/vertex_records.obj");
+    REQUIRE(obj.GetNumVertices() == 4);
+    REQUIRE(obj.GetVertex(1) == ObjFileVertex(-1.0f, 1.0f, 0.0f));
+    REQUIRE(obj.GetVertex(2) == ObjFileVertex(-1.0f, 0.5f, 0.0f));
+    REQUIRE(obj.GetVertex(3) == ObjFileVertex(1.0f, 0.0f, 0.0f));
+    REQUIRE(obj.GetVertex(4) == ObjFileVertex(1.0f, 1.0f, 0.0f));
+}
+
+TEST_CASE("Parsing triangle faces", "[obj_file]")
+{
+    ObjFile obj("testdata/objfiles/triangle_faces.obj");
+
+    uint32_t groupIndex = obj.GetDefaultGroup();
+
+    const ObjFileTriangle& t1 = obj.GetTriangle(groupIndex, 1);
+    const ObjFileTriangle& t2 = obj.GetTriangle(groupIndex, 2);
+    REQUIRE(*t1.p1 == obj.GetVertex(1));
+    REQUIRE(*t1.p2 == obj.GetVertex(2));
+    REQUIRE(*t1.p3 == obj.GetVertex(3));
+    REQUIRE(*t2.p1 == obj.GetVertex(1));
+    REQUIRE(*t2.p2 == obj.GetVertex(3));
+    REQUIRE(*t2.p3 == obj.GetVertex(4));
 }

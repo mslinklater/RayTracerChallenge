@@ -4,13 +4,22 @@
 #include <fstream>
 #include <sstream>
 
+//--------------------------------------------------------
+// ObjFileVertex
+//--------------------------------------------------------
+
 bool operator==(const ObjFileVertex& lhs, const ObjFileVertex& rhs)
 {
     return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z;
 }
 
+//--------------------------------------------------------
+// ObjFile
+//--------------------------------------------------------
+
 ObjFile::ObjFile(const std::string& filename)
 {
+    // Find the input file and open it for reading
     std::filesystem::path path = Filesystem::FindFile(filename); // throws an exception if the file cannot be found
 
     if (path.empty())
@@ -19,6 +28,11 @@ ObjFile::ObjFile(const std::string& filename)
     }
     std::ifstream file(path);
 
+    // Setup the groups
+    currentGroup = std::make_shared<ObjFileGroup>();
+    currentGroup->name = "default";
+
+    // Parse the file line by line, building up the vertex and face lists
     for (std::string line; std::getline(file, line);)
     {
         if (line.empty())
@@ -43,6 +57,8 @@ ObjFile::ObjFile(const std::string& filename)
     BuildTriangles();
 }
 
+//--------------------------------------------------------
+
 const ObjFileTriangle& ObjFile::GetTriangle(uint32_t groupIndex, uint32_t triangleIndex) const
 {
     if (groupIndex != GetDefaultGroup())
@@ -56,10 +72,14 @@ const ObjFileTriangle& ObjFile::GetTriangle(uint32_t groupIndex, uint32_t triang
     return triangles[triangleIndex - 1];
 }
 
+//--------------------------------------------------------
+
 uint32_t ObjFile::GetNumVertices() const
 {
     return vertices.size();
 }
+
+//--------------------------------------------------------
 
 const ObjFileVertex& ObjFile::GetVertex(int index) const
 {
@@ -69,6 +89,8 @@ const ObjFileVertex& ObjFile::GetVertex(int index) const
     }
     return vertices[index - 1];
 }
+
+//--------------------------------------------------------
 
 std::optional<ObjFileVertex> ObjFile::ParseVertex(const std::string& line) const
 {
@@ -89,6 +111,8 @@ std::optional<ObjFileVertex> ObjFile::ParseVertex(const std::string& line) const
 
     return vertex;
 }
+
+//--------------------------------------------------------
 
 std::optional<ObjFileFace> ObjFile::ParseFace(const std::string& line) const
 {
@@ -118,10 +142,14 @@ std::optional<ObjFileFace> ObjFile::ParseFace(const std::string& line) const
     return face;
 }
 
+//--------------------------------------------------------
+
 uint32_t ObjFile::GetDefaultGroup() const
 {
     return 0;
 }
+
+//--------------------------------------------------------
 
 void ObjFile::BuildTriangles()
 {

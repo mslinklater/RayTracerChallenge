@@ -34,6 +34,15 @@ struct ObjFileFace
 
 //--------------------------------------------------------
 
+struct ObjFileGroup
+{
+    std::string name;
+    std::vector<ObjFileFace> faces;
+    std::vector<ObjFileTriangle> triangles;
+};
+
+//--------------------------------------------------------
+
 class ObjFile
 {
   public:
@@ -49,6 +58,9 @@ class ObjFile
     std::optional<ObjFileVertex> ParseVertex(const std::string& line) const;
     std::optional<ObjFileFace> ParseFace(const std::string& line) const;
     void BuildTriangles();
+
+    std::vector<std::shared_ptr<ObjFileGroup>> groups;
+    std::shared_ptr<ObjFileGroup> currentGroup;
 
     std::vector<ObjFileVertex> vertices;
     std::vector<ObjFileFace> faces;

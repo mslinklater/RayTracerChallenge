@@ -39,3 +39,38 @@ TEST_CASE("Parsing triangle faces", "[obj_file]")
     REQUIRE(*t2.p2 == obj.GetVertex(3));
     REQUIRE(*t2.p3 == obj.GetVertex(4));
 }
+
+TEST_CASE("Triangulating polygons", "[obj_file]")
+{
+    ObjFile obj("testdata/objfiles/polygon_faces.obj");
+    uint32_t groupIndex = obj.GetDefaultGroup();
+    const ObjFileTriangle& t1 = obj.GetTriangle(groupIndex, 1);
+    const ObjFileTriangle& t2 = obj.GetTriangle(groupIndex, 2);
+    const ObjFileTriangle& t3 = obj.GetTriangle(groupIndex, 3);
+    REQUIRE(*t1.p1 == obj.GetVertex(1));
+    REQUIRE(*t1.p2 == obj.GetVertex(2));
+    REQUIRE(*t1.p3 == obj.GetVertex(3));
+    REQUIRE(*t2.p1 == obj.GetVertex(1));
+    REQUIRE(*t2.p2 == obj.GetVertex(3));
+    REQUIRE(*t2.p3 == obj.GetVertex(4));
+    REQUIRE(*t3.p1 == obj.GetVertex(1));
+    REQUIRE(*t3.p2 == obj.GetVertex(4));
+    REQUIRE(*t3.p3 == obj.GetVertex(5));
+}
+
+#if 0
+TEST_CASE("Triangles in groups", "[obj_file]")
+{
+    ObjFile obj("testdata/objfiles/triangles.obj");
+    uint32_t g1 = obj.GetGroupIndex("FirstGroup");
+    uint32_t g2 = obj.GetGroupIndex("SecondGroup");
+    const ObjFileTriangle& t1 = obj.GetTriangle(g1, 1);
+    const ObjFileTriangle& t2 = obj.GetTriangle(g2, 1);
+    REQUIRE(*t1.p1 == obj.GetVertex(1));
+    REQUIRE(*t1.p2 == obj.GetVertex(2));
+    REQUIRE(*t1.p3 == obj.GetVertex(3));
+    REQUIRE(*t2.p1 == obj.GetVertex(1));
+    REQUIRE(*t2.p2 == obj.GetVertex(3));
+    REQUIRE(*t2.p3 == obj.GetVertex(4));
+}
+#endif

@@ -31,6 +31,7 @@ ObjFile::ObjFile(const std::string& filename)
     // Setup the groups
     currentGroup = std::make_shared<ObjFileGroup>();
     currentGroup->name = "default";
+    groups.push_back(currentGroup);
 
     // Parse the file line by line, building up the vertex and face lists
     for (std::string line; std::getline(file, line);)
@@ -48,28 +49,33 @@ ObjFile::ObjFile(const std::string& filename)
         auto face = ParseFace(line);
         if (face)
         {
-            faces.push_back(std::move(*face));
+            currentGroup->faces.push_back(std::move(*face));
             continue;
         }
     }
+
     // File is now parsed
     // Now we can build the triangle list
+
     BuildTriangles();
 }
 
 //--------------------------------------------------------
 
-const ObjFileTriangle& ObjFile::GetTriangle(uint32_t groupIndex, uint32_t triangleIndex) const
+const ObjFileTriangle& ObjFile::GetTriangle(ObjFile::GroupIndex groupIndex, uint32_t triangleIndex) const
 {
-    if (groupIndex != GetDefaultGroup())
+    if (groupIndex.value > groups.size())
     {
-        throw std::out_of_range("Invalid group index: " + std::to_string(groupIndex));
+        throw std::out_of_range("Invalid group index: " + std::to_string(groupIndex.value));
     }
-    if ((triangleIndex < 1) || (triangleIndex > triangles.size()))
+
+    std::shared_ptr<ObjFileGroup> group = groups[groupIndex.value];
+
+    if ((triangleIndex < 1) || (triangleIndex > group->triangles.size()))
     {
         throw std::out_of_range("Triangle index out of range: " + std::to_string(triangleIndex));
     }
-    return triangles[triangleIndex - 1];
+    return group->triangles[triangleIndex - 1];
 }
 
 //--------------------------------------------------------
@@ -144,24 +150,41 @@ std::optional<ObjFileFace> ObjFile::ParseFace(const std::string& line) const
 
 //--------------------------------------------------------
 
-uint32_t ObjFile::GetDefaultGroup() const
+ObjFile::GroupIndex ObjFile::GetDefaultGroupIndex() const
 {
-    return 0;
+    return GroupIndex{0};
+}
+
+//--------------------------------------------------------
+
+ObjFile::GroupIndex ObjFile::GetGroupIndex(const std::string& groupName) const
+{
+    for (size_t i = 0; i < groups.size(); ++i)
+    {
+        if (groups[i]->name == groupName)
+        {
+            return GroupIndex{static_cast<uint32_t>(i)};
+        }
+    }
+    throw std::out_of_range("Group not found: " + groupName);
 }
 
 //--------------------------------------------------------
 
 void ObjFile::BuildTriangles()
 {
-    for (const ObjFileFace& face : faces)
+    for (std::shared_ptr<ObjFileGroup>& group : groups)
     {
-        for (size_t i = 1; i < face.vertexIndices.size() - 1; ++i)
+        for (const ObjFileFace& face : group->faces)
         {
-            ObjFileTriangle triangle;
-            triangle.p1 = &GetVertex(face.vertexIndices[0]);
-            triangle.p2 = &GetVertex(face.vertexIndices[i]);
-            triangle.p3 = &GetVertex(face.vertexIndices[i + 1]);
-            triangles.push_back(triangle);
+            for (size_t i = 1; i < face.vertexIndices.size() - 1; ++i)
+            {
+                ObjFileTriangle triangle;
+                triangle.p1 = &GetVertex(face.vertexIndices[0]);
+                triangle.p2 = &GetVertex(face.vertexIndices[i]);
+                triangle.p3 = &GetVertex(face.vertexIndices[i + 1]);
+                group->triangles.push_back(triangle);
+            }
         }
     }
 }

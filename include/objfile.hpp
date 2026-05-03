@@ -46,13 +46,19 @@ struct ObjFileGroup
 class ObjFile
 {
   public:
+    struct GroupIndex
+    {
+        uint32_t value = 0;
+    };
+
     ObjFile(const std::string& filename);
 
     uint32_t GetNumVertices() const;
     const ObjFileVertex& GetVertex(int index) const;
-    const ObjFileTriangle& GetTriangle(uint32_t groupIndex, uint32_t triangleIndex) const;
+    const ObjFileTriangle& GetTriangle(GroupIndex groupIndex, uint32_t triangleIndex) const;
 
-    uint32_t GetDefaultGroup() const;
+    GroupIndex GetDefaultGroupIndex() const;
+    GroupIndex GetGroupIndex(const std::string& groupName) const;
 
   private:
     std::optional<ObjFileVertex> ParseVertex(const std::string& line) const;
@@ -60,9 +66,7 @@ class ObjFile
     void BuildTriangles();
 
     std::vector<std::shared_ptr<ObjFileGroup>> groups;
-    std::shared_ptr<ObjFileGroup> currentGroup;
+    std::shared_ptr<ObjFileGroup> currentGroup; // TODO: Can we get rid of this ?
 
     std::vector<ObjFileVertex> vertices;
-    std::vector<ObjFileFace> faces;
-    std::vector<ObjFileTriangle> triangles;
 };

@@ -1,4 +1,6 @@
 #include "objfile.hpp"
+#include "shapes/group.hpp"
+#include "world.hpp"
 #include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("Correctly reports being unable to find the file", "[obj_file]")
@@ -61,7 +63,6 @@ TEST_CASE("Triangulating polygons", "[obj_file]")
     REQUIRE(*t3.p3 == obj.GetVertex(5));
 }
 
-#if 1
 TEST_CASE("Triangles in groups", "[obj_file]")
 {
     ObjFile obj("testdata/objfiles/triangles.obj");
@@ -76,4 +77,9 @@ TEST_CASE("Triangles in groups", "[obj_file]")
     REQUIRE(*t2.p2 == obj.GetVertex(3));
     REQUIRE(*t2.p3 == obj.GetVertex(4));
 }
-#endif
+
+TEST_CASE("Converting an OBJ file to a group", "[obj_file]")
+{
+    ObjFile obj("testdata/objfiles/triangles.obj");
+    World world;
+}

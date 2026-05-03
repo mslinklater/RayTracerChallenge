@@ -1,5 +1,6 @@
 #pragma once
 
+#include "shapes/group.hpp"
 #include "shapes/sphere.hpp"
 #include <string>
 #include <vector>
@@ -16,7 +17,7 @@ extern int ToPPMChannel(float value);
  * @param filename Path to the file to read.
  * @return A vector where each element is one line from the file (without newline).
  */
-extern std::vector<std::string> ReadLinesFromFile(const std::string &filename);
+extern std::vector<std::string> ReadLinesFromFile(const std::string& filename);
 
 /**
  * @brief Creates a unit sphere with a glass-like material preset.
@@ -25,4 +26,6 @@ extern std::vector<std::string> ReadLinesFromFile(const std::string &filename);
  * @param name Human-readable identifier for the sphere.
  * @return A configured @c Sphere with glass material properties.
  */
-extern Sphere GlassSphere(const std::string &name);
+extern Sphere GlassSphere(const std::string& name);
+
+extern std::vector<Group> ObjFileToGroups(const std::string& filename);

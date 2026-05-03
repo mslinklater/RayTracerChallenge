@@ -1,5 +1,4 @@
 #pragma once
-#include "tuple.hpp"
 #include <string>
 #include <vector>
 
@@ -63,6 +62,7 @@ class ObjFile
   private:
     std::optional<ObjFileVertex> ParseVertex(const std::string& line) const;
     std::optional<ObjFileFace> ParseFace(const std::string& line) const;
+    std::optional<ObjFileGroup> ParseGroup(const std::string& line);
     void BuildTriangles();
 
     std::vector<std::shared_ptr<ObjFileGroup>> groups;

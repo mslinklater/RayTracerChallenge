@@ -52,6 +52,13 @@ ObjFile::ObjFile(const std::string& filename)
             currentGroup->faces.push_back(std::move(*face));
             continue;
         }
+        auto group = ParseGroup(line);
+        if (group)
+        {
+            groups.push_back(std::make_shared<ObjFileGroup>(*group));
+            currentGroup = groups.back();
+            continue;
+        }
     }
 
     // File is now parsed
@@ -146,6 +153,30 @@ std::optional<ObjFileFace> ObjFile::ParseFace(const std::string& line) const
     face.vertexIndices = std::move(indices);
 
     return face;
+}
+
+//--------------------------------------------------------
+
+std::optional<ObjFileGroup> ObjFile::ParseGroup(const std::string& line)
+{
+    std::istringstream stream(line);
+    GroupIndex groupIndex;
+    char prefix;
+    std::string groupName;
+
+    if (!(stream >> prefix >> groupName) || prefix != 'g')
+    {
+        return std::nullopt;
+    }
+    stream >> std::ws; // consume any trailing whitespace
+    if (!stream.eof())
+    {
+        return std::nullopt; // extra data after the vertex coordinates
+    }
+
+    ObjFileGroup group;
+    group.name = std::move(groupName);
+    return group;
 }
 
 //--------------------------------------------------------

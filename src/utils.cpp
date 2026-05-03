@@ -13,7 +13,7 @@ int ToPPMChannel(float value)
     return static_cast<int>(std::round(clamped * 255.0f));
 }
 
-std::vector<std::string> ReadLinesFromFile(const std::string &filename)
+std::vector<std::string> ReadLinesFromFile(const std::string& filename)
 {
     assert(!filename.empty());
     // load 'test.ppm' as a text file
@@ -34,7 +34,7 @@ std::vector<std::string> ReadLinesFromFile(const std::string &filename)
     return lines;
 }
 
-Sphere GlassSphere(const std::string &name)
+Sphere GlassSphere(const std::string& name)
 {
     assert(!name.empty());
     Sphere sphere(name);
@@ -43,4 +43,8 @@ Sphere GlassSphere(const std::string &name)
     mat.SetRefractiveIndex(1.5f);
     sphere.SetMaterial(mat);
     return sphere;
+}
+
+std::vector<Group> ObjFileToGroups(const std::string& filename);
+{
 }

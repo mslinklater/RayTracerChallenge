@@ -52,7 +52,9 @@ class ObjFile
 
     ObjFile(const std::string& filename);
 
+    uint32_t GetNumGroups() const;
     uint32_t GetNumVertices() const;
+    const ObjFileGroup& GetGroup(GroupIndex groupIndex) const;
     const ObjFileVertex& GetVertex(int index) const;
     const ObjFileTriangle& GetTriangle(GroupIndex groupIndex, uint32_t triangleIndex) const;
 

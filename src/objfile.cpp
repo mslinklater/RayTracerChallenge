@@ -69,20 +69,34 @@ ObjFile::ObjFile(const std::string& filename)
 
 //--------------------------------------------------------
 
-const ObjFileTriangle& ObjFile::GetTriangle(ObjFile::GroupIndex groupIndex, uint32_t triangleIndex) const
+uint32_t ObjFile::GetNumGroups() const
 {
-    if (groupIndex.value > groups.size())
+    return static_cast<uint32_t>(groups.size());
+}
+
+//--------------------------------------------------------
+
+const ObjFileGroup& ObjFile::GetGroup(ObjFile::GroupIndex groupIndex) const
+{
+    if (groupIndex.value >= groups.size())
     {
         throw std::out_of_range("Invalid group index: " + std::to_string(groupIndex.value));
     }
 
-    std::shared_ptr<ObjFileGroup> group = groups[groupIndex.value];
+    return *groups[groupIndex.value];
+}
 
-    if ((triangleIndex < 1) || (triangleIndex > group->triangles.size()))
+//--------------------------------------------------------
+
+const ObjFileTriangle& ObjFile::GetTriangle(ObjFile::GroupIndex groupIndex, uint32_t triangleIndex) const
+{
+    const ObjFileGroup& group = GetGroup(groupIndex);
+
+    if ((triangleIndex < 1) || (triangleIndex > group.triangles.size()))
     {
         throw std::out_of_range("Triangle index out of range: " + std::to_string(triangleIndex));
     }
-    return group->triangles[triangleIndex - 1];
+    return group.triangles[triangleIndex - 1];
 }
 
 //--------------------------------------------------------

@@ -1,4 +1,6 @@
 #include "utils.hpp"
+#include "objfile.hpp"
+#include "shapes/triangle.hpp"
 #include <algorithm>
 #include <cassert>
 #include <cmath>
@@ -45,6 +47,37 @@ Sphere GlassSphere(const std::string& name)
     return sphere;
 }
 
-std::vector<Group> ObjFileToGroups(const std::string& filename);
+std::vector<Group> ObjFileToGroups(const std::string& filename)
 {
+    assert(!filename.empty());
+
+    ObjFile objFile(filename);
+    std::vector<Group> groups;
+    groups.reserve(objFile.GetNumGroups());
+
+    for (uint32_t groupIndexValue = 0; groupIndexValue < objFile.GetNumGroups(); ++groupIndexValue)
+    {
+        const ObjFileGroup& objGroup = objFile.GetGroup(ObjFile::GroupIndex{groupIndexValue});
+        if (objGroup.triangles.empty())
+        {
+            continue;
+        }
+
+        Group group(objGroup.name);
+        for (const ObjFileTriangle& objTriangle : objGroup.triangles)
+        {
+            assert(objTriangle.p1 != nullptr);
+            assert(objTriangle.p2 != nullptr);
+            assert(objTriangle.p3 != nullptr);
+
+            const Tuple p1 = Point(objTriangle.p1->x, objTriangle.p1->y, objTriangle.p1->z);
+            const Tuple p2 = Point(objTriangle.p2->x, objTriangle.p2->y, objTriangle.p2->z);
+            const Tuple p3 = Point(objTriangle.p3->x, objTriangle.p3->y, objTriangle.p3->z);
+            group.AddChild(Triangle(p1, p2, p3));
+        }
+
+        groups.push_back(group);
+    }
+
+    return groups;
 }

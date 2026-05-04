@@ -1,5 +1,6 @@
 #pragma once
 
+#include "objfile.hpp"
 #include "shapes/group.hpp"
 #include "shapes/sphere.hpp"
 #include <string>
@@ -28,4 +29,14 @@ extern std::vector<std::string> ReadLinesFromFile(const std::string& filename);
  */
 extern Sphere GlassSphere(const std::string& name);
 
+/**
+ * @brief Converts an OBJ file into scene-ready groups of triangles.
+ *
+ * Each parsed OBJ group becomes a @c Group shape. Each triangulated face in that
+ * OBJ group becomes a child @c Triangle shape within the corresponding group.
+ * Empty OBJ groups are omitted.
+ *
+ * @param filename Path to the OBJ file.
+ * @return A vector of groups ready to be added to a @c World.
+ */
 extern std::vector<Group> ObjFileToGroups(const std::string& filename);

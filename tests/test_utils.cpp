@@ -1,6 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
-#include "utils.hpp"
 #include "maths.hpp"
+#include "shapes/triangle.hpp"
+#include "utils.hpp"
 #include <filesystem>
 #include <fstream>
 
@@ -86,4 +87,27 @@ TEST_CASE("ReadFileAsLines with an empty file", "[utils]")
 
     // Clean up the temporary file
     std::remove(filename.c_str());
+}
+
+TEST_CASE("ObjFileToGroups creates a group hierarchy from an obj file", "[utils]")
+{
+    const std::vector<Group> groups = ObjFileToGroups("testdata/objfiles/triangles.obj");
+
+    REQUIRE(groups.size() == 2);
+    REQUIRE(groups[0].GetName() == "FirstGroup");
+    REQUIRE(groups[1].GetName() == "SecondGroup");
+    REQUIRE(groups[0].GetNumChildren() == 1);
+    REQUIRE(groups[1].GetNumChildren() == 1);
+
+    const auto* firstTriangle = dynamic_cast<const Triangle*>(&groups[0].GetChild(0));
+    const auto* secondTriangle = dynamic_cast<const Triangle*>(&groups[1].GetChild(0));
+
+    REQUIRE(firstTriangle != nullptr);
+    REQUIRE(secondTriangle != nullptr);
+    REQUIRE(firstTriangle->GetP1() == Point(-1.f, 1.f, 0.f));
+    REQUIRE(firstTriangle->GetP2() == Point(-1.f, 0.f, 0.f));
+    REQUIRE(firstTriangle->GetP3() == Point(1.f, 0.f, 0.f));
+    REQUIRE(secondTriangle->GetP1() == Point(-1.f, 1.f, 0.f));
+    REQUIRE(secondTriangle->GetP2() == Point(1.f, 0.f, 0.f));
+    REQUIRE(secondTriangle->GetP3() == Point(1.f, 1.f, 0.f));
 }

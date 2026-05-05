@@ -10,23 +10,33 @@
 #include "shapes/plane.hpp"
 #include "shapes/sphere.hpp"
 #include "tuple.hpp"
+#include "utils.hpp"
 #include "world.hpp"
 
-static constexpr int kCanvasSize = 512;
+static constexpr int kCanvasSize = 1024;
 
 int main()
 {
     std::cout << "Chapter 15 challenge !!!" << std::endl;
 
-    Camera camera(kCanvasSize * (16.f / 9.f), kCanvasSize, M_PI / 3.0f);
+    Camera camera(kCanvasSize * (16.f / 9.f), kCanvasSize, M_PI / 2.0f);
     camera.SetTransform(
-        Matrix::ViewTransform(Point(2.0f, 5.0f, -5.0f), Point(0.0f, 1.0f, 0.0f), Vector(0.0f, 1.0f, 0.0f)));
+        Matrix::ViewTransform(Point(2.0f, 4.0f, -5.0f), Point(0.0f, 2.0f, 0.0f), Vector(0.0f, 1.0f, 0.0f)));
 
     World world;
 
     // Light
-    Light lightr(Point(-10.0f, 10.0f, -10.0f), Color(1.0f, 1.0f, 1.0f));
+    Light lightr(Point(-10.0f, 10.0f, -10.0f), Color(1.0f, 0.0f, 1.0f));
     world.AddLight(lightr);
+    Light lightl(Point(10.0f, 10.0f, -10.0f), Color(1.0f, 1.0f, 0.0f));
+    world.AddLight(lightl);
+
+    auto groups = ObjFileToGroups("../objfiles/teapot.obj");
+    for (auto group : groups)
+    {
+        group.SetTransform(Matrix::CreateTranslation(0.f, 1.f, 0.f));
+        world.AddObject(group);
+    }
 
     // Floor
     {

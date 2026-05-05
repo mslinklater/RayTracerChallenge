@@ -3,6 +3,8 @@
 #include <cassert>
 #include <cmath>
 
+// Intersection
+
 Intersection::Intersection() : t(0.f), objectId(kInvalidObjectId)
 {
 }
@@ -28,4 +30,22 @@ float Intersection::GetT() const
 ObjectId Intersection::GetObjectId() const
 {
     return objectId;
+}
+
+// IntersectionWithUV
+
+IntersectionWithUV::IntersectionWithUV(float t, ObjectId objectId, float u, float v)
+    : Intersection(t, objectId), u(u), v(v)
+{
+    assert(std::isfinite(t));
+}
+
+float IntersectionWithUV::GetU() const
+{
+    return u;
+}
+
+float IntersectionWithUV::GetV() const
+{
+    return v;
 }

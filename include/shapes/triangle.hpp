@@ -23,7 +23,7 @@ class Triangle : public Shape
     Tuple NormalAtLocal(const Tuple& point) const override;
     std::vector<Intersection> IntersectLocal(const Ray& ray) const override;
 
-  private:
+  protected:
     Tuple p1;
     Tuple p2;
     Tuple p3;

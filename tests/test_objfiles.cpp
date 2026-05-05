@@ -1,5 +1,6 @@
 #include "objfile.hpp"
 #include "shapes/group.hpp"
+#include "utils.hpp"
 #include "world.hpp"
 #include <catch2/catch_test_macros.hpp>
 
@@ -80,6 +81,21 @@ TEST_CASE("Triangles in groups", "[obj_file]")
 
 TEST_CASE("Converting an OBJ file to a group", "[obj_file]")
 {
-    ObjFile obj("testdata/objfiles/triangles.obj");
-    World world;
+    std::vector<Group> groups = ObjFileToGroups("testdata/objfiles/triangles.obj");
+    bool bFoundFirstGroup = false;
+    bool bFoundSecondGroup = false;
+
+    for (auto group : groups)
+    {
+        if (group.GetName() == "FirstGroup")
+        {
+            bFoundFirstGroup = true;
+        }
+        else if (group.GetName() == "SecondGroup")
+        {
+            bFoundSecondGroup = true;
+        }
+    }
+    REQUIRE(bFoundFirstGroup);
+    REQUIRE(bFoundSecondGroup);
 }

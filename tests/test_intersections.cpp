@@ -5,6 +5,7 @@
 #include "renderer.hpp"
 #include "shapes/plane.hpp"
 #include "shapes/sphere.hpp"
+#include "shapes/triangle.hpp"
 #include "utils.hpp"
 #include "world.hpp"
 #include <catch2/catch_test_macros.hpp>
@@ -250,4 +251,12 @@ TEST_CASE("The Schlick approximation with a small angle and n2 > n1", "[ray]")
     float reflectance = Renderer::Schlick(comps);
 
     REQUIRE(AreEqual(reflectance, 0.48873f));
+}
+
+TEST_CASE("An intersection can encapsulate 'u' and 'v'", "[intersections]")
+{
+    Triangle s(Point(0.f, 1.f, 0.f), Point(-1.f, 0.f, 0.f), Point(1.f, 0.f, 0.f));
+    IntersectionWithUV i(3.5f, s.GetObjectId(), 0.2f, 0.4f);
+    REQUIRE(i.GetU() == 0.2f);
+    REQUIRE(i.GetV() == 0.4f);
 }

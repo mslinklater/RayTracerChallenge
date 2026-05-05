@@ -1,9 +1,7 @@
 #pragma once
 #include "types.hpp"
 #include <cassert>
-#include <cmath>
 #include <cstddef>
-#include <vector>
 
 /**
  * @brief Records a single ray-object intersection as a @c (t, objectId) pair.
@@ -34,10 +32,20 @@ class Intersection
     /** @brief Equality comparison. */
     bool operator==(const Intersection& other) const;
 
-  private:
+  protected:
     float t;           ///< The distance along the ray to the intersection point.
     ObjectId objectId; ///< Stable ID of the intersected object; kInvalidObjectId means no hit.
 };
 
-/// @brief Convenience alias for a list of intersections sorted by @c t.
-// typedef std::vector<Intersection> IntersectionVector;
+class IntersectionWithUV : public Intersection
+{
+  public:
+    IntersectionWithUV(float t, ObjectId objectId, float u, float v);
+
+    float GetU() const;
+    float GetV() const;
+
+  private:
+    float u; ///< Barycentric coordinate u at the intersection point.
+    float v; ///< Barycentric coordinate v at the intersection point.
+};

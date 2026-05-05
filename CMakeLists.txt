@@ -71,6 +71,7 @@ set(SRC_FILES   src/utils.cpp
                 src/shapes/cone.cpp
                 src/shapes/cube.cpp
                 src/shapes/group.cpp
+                src/shapes/smoothtriangle.cpp
                 src/pattern.cpp
                 src/ray.cpp
                 src/light.cpp
@@ -168,6 +169,7 @@ set(TEST_SRC
                 tests/test_planes.cpp
                 tests/test_rays.cpp
                 tests/test_shapes.cpp
+                tests/test_smoothtriangles.cpp
                 tests/test_spheres.cpp
                 tests/test_transformations.cpp
                 tests/test_triangles.cpp

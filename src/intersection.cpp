@@ -34,18 +34,17 @@ ObjectId Intersection::GetObjectId() const
 
 // IntersectionWithUV
 
-IntersectionWithUV::IntersectionWithUV(float t, ObjectId objectId, float u, float v)
-    : Intersection(t, objectId), u(u), v(v)
+Intersection::Intersection(float t, ObjectId objectId, float u, float v) : t(t), objectId(objectId), u(u), v(v)
 {
     assert(std::isfinite(t));
 }
 
-float IntersectionWithUV::GetU() const
+float Intersection::GetU() const
 {
     return u;
 }
 
-float IntersectionWithUV::GetV() const
+float Intersection::GetV() const
 {
     return v;
 }

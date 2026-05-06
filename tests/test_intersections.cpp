@@ -256,7 +256,7 @@ TEST_CASE("The Schlick approximation with a small angle and n2 > n1", "[ray]")
 TEST_CASE("An intersection can encapsulate 'u' and 'v'", "[intersections]")
 {
     Triangle s(Point(0.f, 1.f, 0.f), Point(-1.f, 0.f, 0.f), Point(1.f, 0.f, 0.f));
-    IntersectionWithUV i(3.5f, s.GetObjectId(), 0.2f, 0.4f);
+    Intersection i(3.5f, s.GetObjectId(), 0.2f, 0.4f);
     REQUIRE(i.GetU() == 0.2f);
     REQUIRE(i.GetV() == 0.4f);
 }

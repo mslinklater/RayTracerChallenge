@@ -21,3 +21,30 @@ const Tuple& SmoothTriangle::GetN3() const
 {
     return n3;
 }
+
+std::vector<Intersection> SmoothTriangle::IntersectLocal(const Ray& ray) const
+{
+
+    std::vector<Intersection> intersections;
+    Tuple dirCrossEdge2 = ray.GetDirection() ^ edge2;
+    float det = edge1 | dirCrossEdge2;
+    if (std::abs(det) > 1e-6)
+    {
+        float f = 1.f / det;
+        Tuple p1ToOrigin = ray.GetOrigin() - p1;
+        float u = f * (p1ToOrigin | dirCrossEdge2);
+
+        if (u >= 0.f && u <= 1.f)
+        {
+            Tuple originCrossEdge1 = p1ToOrigin ^ edge1;
+            float v = f * (ray.GetDirection() | originCrossEdge1);
+
+            if (v >= 0.f && (u + v) <= 1.f)
+            {
+                float t = f * (edge2 | originCrossEdge1);
+                intersections.push_back(Intersection(t, objectId, u, v));
+            }
+        }
+    }
+    return intersections;
+}

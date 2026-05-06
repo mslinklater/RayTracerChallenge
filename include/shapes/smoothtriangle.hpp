@@ -18,6 +18,8 @@ class SmoothTriangle : public Triangle
         return std::make_unique<SmoothTriangle>(*this);
     }
 
+    std::vector<Intersection> IntersectLocal(const Ray& ray) const override;
+
   private:
     Tuple n1;
     Tuple n2;

@@ -16,6 +16,7 @@ class Intersection
      * @brief Constructs an intersection record.
      */
     Intersection();
+
     /**
      * @brief Constructs an intersection record.
      * @param t        Ray parameter at the hit point.
@@ -23,8 +24,20 @@ class Intersection
      */
     Intersection(float t, ObjectId objectId);
 
+    /**
+     * @brief Constructs an intersection record.
+     * @param t        Ray parameter at the hit point.
+     * @param objectId Stable world ID of the intersected shape.
+     * @param u        Barycentric coordinate u at the intersection point.
+     * @param v        Barycentric coordinate v at the intersection point.
+     */
+    Intersection(float t, ObjectId objectId, float u, float v);
+
     /** @brief Returns the ray parameter at the intersection point. */
     float GetT() const;
+
+    float GetU() const;
+    float GetV() const;
 
     /** @brief Returns the world object ID of the intersected shape. */
     ObjectId GetObjectId() const;
@@ -33,19 +46,8 @@ class Intersection
     bool operator==(const Intersection& other) const;
 
   protected:
-    float t;           ///< The distance along the ray to the intersection point.
-    ObjectId objectId; ///< Stable ID of the intersected object; kInvalidObjectId means no hit.
-};
-
-class IntersectionWithUV : public Intersection
-{
-  public:
-    IntersectionWithUV(float t, ObjectId objectId, float u, float v);
-
-    float GetU() const;
-    float GetV() const;
-
-  private:
-    float u; ///< Barycentric coordinate u at the intersection point.
-    float v; ///< Barycentric coordinate v at the intersection point.
+    float t = 0.f;                        ///< The distance along the ray to the intersection point.
+    ObjectId objectId = kInvalidObjectId; ///< Stable ID of the intersected object; kInvalidObjectId means no hit.
+    float u = 0.f;                        ///< Barycentric coordinate u at the intersection point.
+    float v = 0.f;                        ///< Barycentric coordinate v at the intersection point.
 };

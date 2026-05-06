@@ -317,7 +317,7 @@ Computations Renderer::PrepareComputations(const Intersection& intersection, con
     comps.objectId = intersection.GetObjectId();
     comps.point = ray.PositionAt(comps.t);
     comps.eyeVector = -ray.GetDirection();
-    comps.normalVector = world.GetObject(comps.objectId).NormalAt(comps.point);
+    comps.normalVector = world.GetObject(comps.objectId).NormalAt(comps.point, intersection);
 
     if ((comps.normalVector | comps.eyeVector) < 0.f)
     {

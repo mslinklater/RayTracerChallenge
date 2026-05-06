@@ -52,7 +52,7 @@ std::vector<Intersection> Cylinder::IntersectLocal(const Ray& ray) const
     return intersections;
 }
 
-Tuple Cylinder::NormalAtLocal(const Tuple& point) const
+Tuple Cylinder::NormalAtLocal(const Tuple& point, const Intersection& intersection) const
 {
     assert(point.IsValid());
 

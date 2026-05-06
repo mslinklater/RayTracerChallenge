@@ -19,6 +19,7 @@ class SmoothTriangle : public Triangle
     }
 
     std::vector<Intersection> IntersectLocal(const Ray& ray) const override;
+    Tuple NormalAtLocal(const Tuple& point, const Intersection& intersection) const override;
 
   private:
     Tuple n1;

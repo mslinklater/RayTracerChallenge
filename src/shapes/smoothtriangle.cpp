@@ -48,3 +48,8 @@ std::vector<Intersection> SmoothTriangle::IntersectLocal(const Ray& ray) const
     }
     return intersections;
 }
+
+Tuple SmoothTriangle::NormalAtLocal(const Tuple& point, const Intersection& intersection) const
+{
+    return n2 * intersection.GetU() + n3 * intersection.GetV() + n1 * (1.f - intersection.GetU() - intersection.GetV());
+}

@@ -20,7 +20,7 @@ class Triangle : public Shape
         return std::make_unique<Triangle>(*this);
     }
 
-    Tuple NormalAtLocal(const Tuple& point) const override;
+    Tuple NormalAtLocal(const Tuple& point, const Intersection& intersection) const override;
     std::vector<Intersection> IntersectLocal(const Ray& ray) const override;
 
   protected:

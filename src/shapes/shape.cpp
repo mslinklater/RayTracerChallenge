@@ -142,13 +142,13 @@ void Shape::EnsureTransformCache() const
     }
 }
 
-Tuple Shape::NormalAt(const Tuple& point) const
+Tuple Shape::NormalAt(const Tuple& point, const Intersection& intersection) const
 {
     assert(point.IsValid());
 
     const Tuple objectPoint = WorldToObject(point);
 
-    const Tuple objectNormal = NormalAtLocal(objectPoint);
+    const Tuple objectNormal = NormalAtLocal(objectPoint, intersection);
 
     return NormalToWorld(objectNormal);
 }
@@ -165,7 +165,7 @@ Tuple Shape::WorldToObject(Tuple point) const
     return inverseTransform * point;
 }
 
-Tuple Shape::NormalAtLocal(const Tuple& point) const
+Tuple Shape::NormalAtLocal(const Tuple& point, const Intersection& intersection) const
 {
     assert(point.IsValid());
 

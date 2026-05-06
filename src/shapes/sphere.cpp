@@ -44,7 +44,7 @@ std::vector<Intersection> Sphere::IntersectLocal(const Ray& ray) const
     }
 }
 
-Tuple Sphere::NormalAtLocal(const Tuple& point) const
+Tuple Sphere::NormalAtLocal(const Tuple& point, const Intersection& intersection) const
 {
     assert(point.IsValid());
 

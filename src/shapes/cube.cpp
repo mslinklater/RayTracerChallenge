@@ -5,7 +5,7 @@
 #include <cmath>
 #include <limits>
 
-Tuple Cube::NormalAtLocal(const Tuple& point) const
+Tuple Cube::NormalAtLocal(const Tuple& point, const Intersection& intersection) const
 {
     assert(point.IsValid());
 

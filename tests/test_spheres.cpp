@@ -151,21 +151,24 @@ TEST_CASE("Intersecting a translated sphere with a ray", "[spheres]")
 TEST_CASE("The normal on a sphere at a point on the x axis", "[spheres]")
 {
     Sphere sphere("sphere");
-    Tuple normal = sphere.NormalAt(Point(1.f, 0.f, 0.f));
+    Intersection i;
+    Tuple normal = sphere.NormalAt(Point(1.f, 0.f, 0.f), i);
     REQUIRE(normal == Vector(1.f, 0.f, 0.f));
 }
 
 TEST_CASE("The normal on a sphere at a point on the y axis", "[spheres]")
 {
     Sphere sphere("sphere");
-    Tuple normal = sphere.NormalAt(Point(0.f, 1.f, 0.f));
+    Intersection i;
+    Tuple normal = sphere.NormalAt(Point(0.f, 1.f, 0.f), i);
     REQUIRE(normal == Vector(0.f, 1.f, 0.f));
 }
 
 TEST_CASE("The normal on a sphere at a point on the z axis", "[spheres]")
 {
     Sphere sphere("sphere");
-    Tuple normal = sphere.NormalAt(Point(0.f, 0.f, 1.f));
+    Intersection i;
+    Tuple normal = sphere.NormalAt(Point(0.f, 0.f, 1.f), i);
     REQUIRE(normal == Vector(0.f, 0.f, 1.f));
 }
 
@@ -173,7 +176,8 @@ TEST_CASE("The normal on a sphere at a nonaxial point", "[spheres]")
 {
     Sphere sphere("sphere");
     float rootThreeOverThree = std::sqrt(3.f) / 3.f;
-    Tuple normal = sphere.NormalAt(Point(rootThreeOverThree, rootThreeOverThree, rootThreeOverThree));
+    Intersection i;
+    Tuple normal = sphere.NormalAt(Point(rootThreeOverThree, rootThreeOverThree, rootThreeOverThree), i);
     REQUIRE(normal == Vector(rootThreeOverThree, rootThreeOverThree, rootThreeOverThree));
 }
 
@@ -181,7 +185,8 @@ TEST_CASE("The normal on a sphere at a nonaxial point 2", "[spheres]")
 {
     Sphere sphere("sphere");
     float rootThreeOverThree = std::sqrt(3.f) / 3.f;
-    Tuple normal = sphere.NormalAt(Point(1.f, 1.f, 1.f));
+    Intersection i;
+    Tuple normal = sphere.NormalAt(Point(1.f, 1.f, 1.f), i);
     REQUIRE(normal == Vector(rootThreeOverThree, rootThreeOverThree, rootThreeOverThree));
 }
 
@@ -189,7 +194,8 @@ TEST_CASE("The normal is normalised", "[spheres]")
 {
     Sphere sphere("sphere");
     float rootThreeOverThree = std::sqrt(3.f) / 3.f;
-    Tuple normal = sphere.NormalAt(Point(1.f, 1.f, 1.f));
+    Intersection i;
+    Tuple normal = sphere.NormalAt(Point(1.f, 1.f, 1.f), i);
     REQUIRE(normal == normal.Normalize());
     REQUIRE(AreEqual(normal.Magnitude(), 1.f));
 }
@@ -198,7 +204,8 @@ TEST_CASE("Computing the normal on a translated shape", "[spheres]")
 {
     Shape shape("shape");
     shape.SetTransform(Matrix::CreateTranslation(0.f, 1.f, 0.f));
-    Tuple normal = shape.NormalAt(Point(0.f, 1.70711f, -0.70711f));
+    Intersection i;
+    Tuple normal = shape.NormalAt(Point(0.f, 1.70711f, -0.70711f), i);
     REQUIRE(normal == Vector(0.f, 0.70711f, -0.70711f));
 }
 
@@ -208,7 +215,8 @@ TEST_CASE("Computing the normal on a transformed shape", "[spheres]")
     Matrix scaling = Matrix::CreateScaling(1.f, 0.5f, 1.f);
     Matrix rotation = Matrix::CreateRotationZ(M_PI / 5.f);
     shape.SetTransform(scaling * rotation);
-    Tuple normal = shape.NormalAt(Point(0.f, std::sqrt(2.f) / 2.f, -std::sqrt(2.f) / 2.f));
+    Intersection i;
+    Tuple normal = shape.NormalAt(Point(0.f, std::sqrt(2.f) / 2.f, -std::sqrt(2.f) / 2.f), i);
     REQUIRE(normal == Vector(0.f, 0.97014f, -0.24254f));
 }
 

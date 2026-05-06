@@ -35,7 +35,6 @@ TEST_CASE("An intersection with a smooth triangle stores u/v", "[smooth-triangle
     REQUIRE(xs[0].GetV() == 0.25f);
 }
 
-#if 0
 TEST_CASE("A smooth triangle uses u/v to interpolate the normal", "[smooth-triangles]")
 {
     SmoothTriangle t = CreateTestSmoothTriangle();
@@ -46,4 +45,3 @@ TEST_CASE("A smooth triangle uses u/v to interpolate the normal", "[smooth-trian
     Tuple normal = t.NormalAt(Point(0.f, 0.f, 0.f), hit);
     REQUIRE(normal == Vector(-0.5547f, 0.83205f, 0.f));
 }
-#endif

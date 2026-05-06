@@ -33,7 +33,7 @@ int main()
             if (!xs.empty())
             {
                 Tuple position = ray.PositionAt(xs[0].GetT());
-                Tuple normalVector = sphere.NormalAt(position);
+                Tuple normalVector = sphere.NormalAt(position, xs[0]);
                 Tuple eyeVector = -ray.GetDirection();
                 Color color = Renderer::Lighting(sphere.GetMaterial(), sphere, light, position, eyeVector, normalVector,
                                                  EInShadow::No);

@@ -86,7 +86,8 @@ TEST_CASE("Normal vector on a cylinder", "[cylinders]")
         const auto& testCase = cases[i];
         DYNAMIC_SECTION("case " << i << ": " << testCase.name)
         {
-            Tuple n = cyl.NormalAtLocal(testCase.point);
+            Intersection intersection;
+            Tuple n = cyl.NormalAtLocal(testCase.point, intersection);
             REQUIRE(n == testCase.expectedNormal);
         }
     }
@@ -199,7 +200,8 @@ TEST_CASE("The normal vector on a cylinder's end caps", "[cylinders]")
         const auto& testCase = cases[i];
         DYNAMIC_SECTION("case " << i << ": " << testCase.name)
         {
-            Tuple n = cyl.NormalAtLocal(testCase.point);
+            Intersection intersection;
+            Tuple n = cyl.NormalAtLocal(testCase.point, intersection);
             REQUIRE(n == testCase.normal);
         }
     }

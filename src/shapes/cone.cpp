@@ -67,7 +67,7 @@ std::vector<Intersection> Cone::IntersectLocal(const Ray& ray) const
     return intersections;
 }
 
-Tuple Cone::NormalAtLocal(const Tuple& point) const
+Tuple Cone::NormalAtLocal(const Tuple& point, const Intersection& intersection) const
 {
     float y = std::sqrt(point.x * point.x + point.z * point.z);
     if (point.y > 0.f)

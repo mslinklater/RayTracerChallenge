@@ -36,7 +36,7 @@ class Cube : public Shape
      * @param point The position of the requested normal
      * @return The plane's upward-facing normal vector.
      */
-    Tuple NormalAtLocal(const Tuple& point) const override;
+    Tuple NormalAtLocal(const Tuple& point, const Intersection& intersection) const override;
 
   private:
     void CheckAxis(float origin, float direction, float& tmin, float& tmax) const;

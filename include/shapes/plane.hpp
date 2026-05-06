@@ -37,7 +37,7 @@ class Plane : public Shape
      * @param point Unused — normals are uniform across the plane.
      * @return The plane's upward-facing normal vector.
      */
-    Tuple NormalAtLocal(const Tuple& point) const override;
+    Tuple NormalAtLocal(const Tuple& point, const Intersection& intersection) const override;
 };
 
 // bool operator==(const Plane &p1, const Plane &p2);

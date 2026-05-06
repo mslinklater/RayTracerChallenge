@@ -99,7 +99,8 @@ TEST_CASE("The normal on the surface of a cube", "[cubes]")
         const auto& testCase = cases[i];
         DYNAMIC_SECTION("case " << i << ": " << testCase.name)
         {
-            Tuple normal = cube.NormalAtLocal(testCase.point);
+            Intersection intersection;
+            Tuple normal = cube.NormalAtLocal(testCase.point, intersection);
             REQUIRE(normal.IsEqual(testCase.expectedNormal));
         }
     }

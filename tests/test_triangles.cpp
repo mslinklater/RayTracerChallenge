@@ -20,9 +20,10 @@ TEST_CASE("Constructing a triangle", "[triangle]")
 TEST_CASE("Finding the normal on a triangle", "[triangle]")
 {
     Triangle t(Point(0.f, 1.f, 0.f), Point(-1.f, 0.f, 0.f), Point(1.f, 0.f, 0.f));
-    Tuple n1 = t.NormalAt(Point(0.f, 0.5f, 0.f));
-    Tuple n2 = t.NormalAt(Point(-0.5f, 0.75f, 0.f));
-    Tuple n3 = t.NormalAt(Point(0.5f, 0.25f, 0.f));
+    Intersection i;
+    Tuple n1 = t.NormalAt(Point(0.f, 0.5f, 0.f), i);
+    Tuple n2 = t.NormalAt(Point(-0.5f, 0.75f, 0.f), i);
+    Tuple n3 = t.NormalAt(Point(0.5f, 0.25f, 0.f), i);
     REQUIRE(n1 == t.GetNormal());
     REQUIRE(n2 == t.GetNormal());
     REQUIRE(n3 == t.GetNormal());

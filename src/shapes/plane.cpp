@@ -3,7 +3,7 @@
 #include <cassert>
 #include <cmath>
 
-Tuple Plane::NormalAtLocal(const Tuple& point) const
+Tuple Plane::NormalAtLocal(const Tuple& point, const Intersection& intersection) const
 {
     assert(point.IsValid());
     return Vector(0.f, 1.f, 0.f); // The normal of a plane is constant everywhere and points up the y-axis

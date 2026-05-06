@@ -36,7 +36,7 @@ class Cone : public Shape
      * @param point The position of the requested normal
      * @return The plane's upward-facing normal vector.
      */
-    Tuple NormalAtLocal(const Tuple& point) const override;
+    Tuple NormalAtLocal(const Tuple& point, const Intersection& intersection) const override;
 
     float GetMinimum() const
     {

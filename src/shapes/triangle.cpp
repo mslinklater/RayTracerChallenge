@@ -40,7 +40,7 @@ Tuple Triangle::GetNormal() const
     return normal;
 }
 
-Tuple Triangle::NormalAtLocal(const Tuple& point) const
+Tuple Triangle::NormalAtLocal(const Tuple& point, const Intersection& intersection) const
 {
     return normal;
 }

@@ -112,7 +112,8 @@ TEST_CASE("Computing the normal vector on a cone", "[cones]")
         const auto& testCase = cases[i];
         DYNAMIC_SECTION("case " << i << ": " << testCase.name)
         {
-            auto normal = cone.NormalAtLocal(testCase.point);
+            Intersection intersection;
+            auto normal = cone.NormalAtLocal(testCase.point, intersection);
             REQUIRE(normal == testCase.expectedNormal);
         }
     }

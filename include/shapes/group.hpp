@@ -42,7 +42,7 @@ class Group : public Shape
      * @param point A point on the sphere's surface in local space.
      * @return The outward-facing unit normal vector.
      */
-    Tuple NormalAtLocal(const Tuple& point) const override;
+    Tuple NormalAtLocal(const Tuple& point, const Intersection& intersection) const override;
 
     size_t GetNumChildren() const
     {

@@ -39,7 +39,7 @@ std::vector<Intersection> Group::IntersectLocal(const Ray& ray) const
     return intersections;
 }
 
-Tuple Group::NormalAtLocal(const Tuple& point) const
+Tuple Group::NormalAtLocal(const Tuple& point, const Intersection& intersection) const
 {
     return Vector(0.f, 0.f, 0.f);
 }

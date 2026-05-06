@@ -72,7 +72,7 @@ class Shape
      * transforms the result back to world space.
      * @param point A world-space point on the surface of the shape.
      */
-    Tuple NormalAt(const Tuple& point) const;
+    Tuple NormalAt(const Tuple& point, const Intersection& intersection) const;
 
     /**
      * @brief Convert a local normal to world space
@@ -90,7 +90,7 @@ class Shape
      * Override in subclasses to define the geometry-specific normal.
      * @param point A point already in the shape's local (object) space.
      */
-    virtual Tuple NormalAtLocal(const Tuple& point) const;
+    virtual Tuple NormalAtLocal(const Tuple& point, const Intersection& intersection) const;
 
     /**
      * @brief Intersects @p ray (in world space) with this shape.

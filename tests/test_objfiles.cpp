@@ -99,3 +99,13 @@ TEST_CASE("Converting an OBJ file to a group", "[obj_file]")
     REQUIRE(bFoundFirstGroup);
     REQUIRE(bFoundSecondGroup);
 }
+
+TEST_CASE("Vertex normal records", "[obj_file]")
+{
+    ObjFile obj("testdata/objfiles/contains_normals.obj");
+
+    REQUIRE(obj.GetNumVertexNormals() == 3);
+    REQUIRE(obj.GetVertexNormal(1) == ObjFileVertexNormal(0.0f, 0.0f, 1.0f));
+    REQUIRE(obj.GetVertexNormal(2) == ObjFileVertexNormal(0.707f, 0.0f, -0.707f));
+    REQUIRE(obj.GetVertexNormal(3) == ObjFileVertexNormal(1.0f, 2.0f, 3.0f));
+}

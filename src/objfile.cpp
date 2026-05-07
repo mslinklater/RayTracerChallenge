@@ -14,6 +14,15 @@ bool operator==(const ObjFileVertex& lhs, const ObjFileVertex& rhs)
 }
 
 //--------------------------------------------------------
+// ObjFileVertexNormal
+//--------------------------------------------------------
+
+bool operator==(const ObjFileVertexNormal& lhs, const ObjFileVertexNormal& rhs)
+{
+    return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z;
+}
+
+//--------------------------------------------------------
 // ObjFile
 //--------------------------------------------------------
 
@@ -40,18 +49,28 @@ ObjFile::ObjFile(const std::string& filename)
         {
             continue;
         }
+
         auto vertex = ParseVertex(line);
         if (vertex)
         {
             vertices.emplace_back(vertex->x, vertex->y, vertex->z);
             continue;
         }
+
+        auto vertexNormal = ParseVertexNormal(line);
+        if (vertexNormal)
+        {
+            vertexNormals.emplace_back(vertexNormal->x, vertexNormal->y, vertexNormal->z);
+            continue;
+        }
+
         auto face = ParseFace(line);
         if (face)
         {
             currentGroup->faces.push_back(std::move(*face));
             continue;
         }
+
         auto group = ParseGroup(line);
         if (group)
         {
@@ -108,6 +127,13 @@ uint32_t ObjFile::GetNumVertices() const
 
 //--------------------------------------------------------
 
+uint32_t ObjFile::GetNumVertexNormals() const
+{
+    return vertexNormals.size();
+}
+
+//--------------------------------------------------------
+
 const ObjFileVertex& ObjFile::GetVertex(int index) const
 {
     if (index < 1 || index > vertices.size())
@@ -115,6 +141,17 @@ const ObjFileVertex& ObjFile::GetVertex(int index) const
         throw std::out_of_range("Vertex index out of range: " + std::to_string(index));
     }
     return vertices[index - 1];
+}
+
+//--------------------------------------------------------
+
+const ObjFileVertexNormal& ObjFile::GetVertexNormal(int index) const
+{
+    if (index < 1 || index > vertexNormals.size())
+    {
+        throw std::out_of_range("Vertex normal index out of range: " + std::to_string(index));
+    }
+    return vertexNormals[index - 1];
 }
 
 //--------------------------------------------------------
@@ -137,6 +174,28 @@ std::optional<ObjFileVertex> ObjFile::ParseVertex(const std::string& line) const
     }
 
     return vertex;
+}
+
+//--------------------------------------------------------
+
+std::optional<ObjFileVertexNormal> ObjFile::ParseVertexNormal(const std::string& line) const
+{
+    std::istringstream stream(line);
+    std::string prefix;
+    ObjFileVertexNormal vertexNormal;
+
+    if (!(stream >> prefix >> vertexNormal.x >> vertexNormal.y >> vertexNormal.z) || prefix != "vn")
+    {
+        return std::nullopt;
+    }
+
+    stream >> std::ws; // consume any trailing whitespace
+    if (!stream.eof())
+    {
+        return std::nullopt; // extra data after the vertex coordinates
+    }
+
+    return vertexNormal;
 }
 
 //--------------------------------------------------------

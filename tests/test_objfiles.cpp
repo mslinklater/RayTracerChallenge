@@ -109,3 +109,19 @@ TEST_CASE("Vertex normal records", "[obj_file]")
     REQUIRE(obj.GetVertexNormal(2) == ObjFileVertexNormal(0.707f, 0.0f, -0.707f));
     REQUIRE(obj.GetVertexNormal(3) == ObjFileVertexNormal(1.0f, 2.0f, 3.0f));
 }
+
+TEST_CASE("Faces with normals", "[obj_file]")
+{
+    ObjFile obj("testdata/objfiles/faces_with_normals.obj");
+    ObjFile::GroupIndex groupIndex = obj.GetDefaultGroupIndex();
+    ObjFileTriangle t1 = obj.GetTriangle(groupIndex, 1);
+    ObjFileTriangle t2 = obj.GetTriangle(groupIndex, 2);
+
+    REQUIRE(*t1.p1 == obj.GetVertex(1));
+    REQUIRE(*t1.p2 == obj.GetVertex(2));
+    REQUIRE(*t1.p3 == obj.GetVertex(3));
+    REQUIRE(*t1.n1 == obj.GetVertexNormal(3));
+    REQUIRE(*t1.n2 == obj.GetVertexNormal(1));
+    REQUIRE(*t1.n3 == obj.GetVertexNormal(2));
+    REQUIRE(t1 == t2);
+}

@@ -23,6 +23,20 @@ bool operator==(const ObjFileVertexNormal& lhs, const ObjFileVertexNormal& rhs)
 }
 
 //--------------------------------------------------------
+// ObjFileTriangle
+//--------------------------------------------------------
+
+bool operator==(const ObjFileTriangle& lhs, const ObjFileTriangle& rhs)
+{
+    return *lhs.p1 == *rhs.p1 && *lhs.p2 == *rhs.p2 && *lhs.p3 == *rhs.p3 &&
+           ((lhs.n1 == nullptr && rhs.n1 == nullptr) ||
+            (lhs.n1 != nullptr && rhs.n1 != nullptr && *lhs.n1 == *rhs.n1)) &&
+           ((lhs.n2 == nullptr && rhs.n2 == nullptr) ||
+            (lhs.n2 != nullptr && rhs.n2 != nullptr && *lhs.n2 == *rhs.n2)) &&
+           ((lhs.n3 == nullptr && rhs.n3 == nullptr) || (lhs.n3 != nullptr && rhs.n3 != nullptr && *lhs.n3 == *rhs.n3));
+}
+
+//--------------------------------------------------------
 // ObjFile
 //--------------------------------------------------------
 
@@ -202,28 +216,111 @@ std::optional<ObjFileVertexNormal> ObjFile::ParseVertexNormal(const std::string&
 
 std::optional<ObjFileFace> ObjFile::ParseFace(const std::string& line) const
 {
-    // parse lines starting with 'f' followed by 3 or more vertex indices (e.g. "f 1 2 3", "f 3 4 5 6 7 8")
+    // Parses an index from a string. Returns an optionsl
+    auto parseIndex = [](const std::string& token) -> std::optional<uint32_t> {
+        if (token.empty())
+        {
+            return std::nullopt;
+        }
+
+        std::istringstream tokenStream(token);
+        uint32_t index = 0;
+        tokenStream >> index;
+        if (tokenStream.fail() || index == 0)
+        {
+            return std::nullopt;
+        }
+
+        tokenStream >> std::ws;
+        if (!tokenStream.eof())
+        {
+            return std::nullopt;
+        }
+
+        return index;
+    };
+
+    // Parses a pair from a string... a required vertex index and an optional normal index. The returned pair is itself
+    // optional
+    auto parseFaceVertex =
+        [&](const std::string& token) -> std::optional<std::pair<uint32_t, std::optional<uint32_t>>> {
+        std::vector<std::string> parts;
+        std::istringstream tokenStream(token);
+
+        for (std::string part; std::getline(tokenStream, part, '/');)
+        {
+            parts.push_back(part);
+        }
+
+        if (parts.empty() || parts.size() > 3)
+        {
+            return std::nullopt;
+        }
+
+        std::optional<uint32_t> vertexIndex = parseIndex(parts[0]);
+        if (!vertexIndex)
+        {
+            return std::nullopt;
+        }
+
+        std::optional<uint32_t> normalIndex;
+        if (parts.size() == 3 && !parts[2].empty())
+        {
+            normalIndex = parseIndex(parts[2]);
+            if (!normalIndex)
+            {
+                return std::nullopt;
+            }
+        }
+
+        return std::pair<uint32_t, std::optional<uint32_t>>{*vertexIndex, normalIndex};
+    };
+
+    // Entry point and setup here
     std::istringstream stream(line);
     char prefix;
-    std::vector<uint32_t> indices;
-    uint32_t index;
 
+    std::vector<uint32_t> vertexIndices;
+    std::vector<uint32_t> normalIndices;
+
+    bool hasAnyNormals = false;
+    bool hasAnyVerticesWithoutNormals = false;
+
+    // If line does not start with 'f' return null
     if (!(stream >> prefix) || prefix != 'f')
     {
         return std::nullopt;
     }
-    while (stream >> index)
+
+    for (std::string token; stream >> token;)
     {
-        indices.push_back(index);
+        std::optional<std::pair<uint32_t, std::optional<uint32_t>>> parsedToken = parseFaceVertex(token);
+        if (!parsedToken)
+        {
+            return std::nullopt;
+        }
+
+        vertexIndices.push_back(parsedToken->first);
+        if (parsedToken->second)
+        {
+            hasAnyNormals = true;
+            normalIndices.push_back(*parsedToken->second);
+        }
+        else
+        {
+            hasAnyVerticesWithoutNormals = true;
+        }
     }
-    stream >> std::ws; // consume any trailing whitespace
-    if (!stream.eof() || indices.size() < 3)
+
+    stream >> std::ws;
+    if (!stream.eof() || vertexIndices.size() < 3 || (hasAnyNormals && hasAnyVerticesWithoutNormals))
     {
-        return std::nullopt; // extra data after the vertex indices
+        return std::nullopt;
     }
 
     ObjFileFace face;
-    face.vertexIndices = std::move(indices);
+    face.vertexIndices = std::move(vertexIndices);
+    face.normalIndices = std::move(normalIndices);
 
     return face;
 }
@@ -281,12 +378,22 @@ void ObjFile::BuildTriangles()
     {
         for (const ObjFileFace& face : group->faces)
         {
+            const bool hasVertexNormals = !face.normalIndices.empty();
+
             for (size_t i = 1; i < face.vertexIndices.size() - 1; ++i)
             {
                 ObjFileTriangle triangle;
                 triangle.p1 = &GetVertex(face.vertexIndices[0]);
                 triangle.p2 = &GetVertex(face.vertexIndices[i]);
                 triangle.p3 = &GetVertex(face.vertexIndices[i + 1]);
+
+                if (hasVertexNormals)
+                {
+                    triangle.n1 = &GetVertexNormal(face.normalIndices[0]);
+                    triangle.n2 = &GetVertexNormal(face.normalIndices[i]);
+                    triangle.n3 = &GetVertexNormal(face.normalIndices[i + 1]);
+                }
+
                 group->triangles.push_back(triangle);
             }
         }

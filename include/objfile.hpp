@@ -1,4 +1,6 @@
 #pragma once
+#include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -38,11 +40,14 @@ struct ObjFileTriangle
     const ObjFileVertexNormal* n3 = nullptr;
 };
 
+bool operator==(const ObjFileTriangle& lhs, const ObjFileTriangle& rhs);
+
 //--------------------------------------------------------
 
 struct ObjFileFace
 {
     std::vector<uint32_t> vertexIndices;
+    std::vector<uint32_t> normalIndices;
 };
 
 //--------------------------------------------------------

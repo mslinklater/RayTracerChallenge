@@ -1,5 +1,6 @@
 #include "utils.hpp"
 #include "objfile.hpp"
+#include "shapes/smoothtriangle.hpp"
 #include "shapes/triangle.hpp"
 #include <algorithm>
 #include <cassert>
@@ -73,7 +74,18 @@ std::vector<Group> ObjFileToGroups(const std::string& filename)
             const Tuple p1 = Point(objTriangle.p1->x, objTriangle.p1->y, objTriangle.p1->z);
             const Tuple p2 = Point(objTriangle.p2->x, objTriangle.p2->y, objTriangle.p2->z);
             const Tuple p3 = Point(objTriangle.p3->x, objTriangle.p3->y, objTriangle.p3->z);
-            group.AddChild(Triangle(p1, p2, p3));
+
+            if (objTriangle.n1 != nullptr && objTriangle.n2 != nullptr && objTriangle.n3 != nullptr)
+            {
+                const Tuple n1 = Vector(objTriangle.n1->x, objTriangle.n1->y, objTriangle.n1->z);
+                const Tuple n2 = Vector(objTriangle.n2->x, objTriangle.n2->y, objTriangle.n2->z);
+                const Tuple n3 = Vector(objTriangle.n3->x, objTriangle.n3->y, objTriangle.n3->z);
+                group.AddChild(SmoothTriangle(p1, p2, p3, n1, n2, n3));
+            }
+            else
+            {
+                group.AddChild(Triangle(p1, p2, p3));
+            }
         }
 
         groups.push_back(group);

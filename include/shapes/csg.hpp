@@ -59,6 +59,8 @@ class CSG : public Shape
         return right;
     }
 
+    static bool IntersectionAllowed(Operation op, bool lhit, bool inl, bool inr);
+
   private:
     Operation operation;
     Shape* left = nullptr;

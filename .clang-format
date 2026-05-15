@@ -8,6 +8,7 @@ UseTab: Never
 
 BreakBeforeBraces: Custom
 BraceWrapping:
+  AfterCaseLabel: true
   AfterClass: true
   AfterControlStatement: Always
   AfterEnum: true
@@ -28,3 +29,4 @@ AllowShortLoopsOnASingleLine: false
 
 AlignAfterOpenBracket: Align
 PointerAlignment: Left
+IndentCaseBlocks: true

@@ -19,3 +19,24 @@ Tuple CSG::NormalAtLocal(const Tuple& point, const Intersection& intersection) c
 {
     return Vector(0.f, 0.f, 0.f);
 }
+
+bool CSG::IntersectionAllowed(Operation op, bool lhit, bool inl, bool inr)
+{
+    switch (op)
+    {
+    case OpUnion:
+        {
+            return (lhit && !inr) || (!lhit && !inl);
+        }
+    case OpIntersection:
+        {
+            return (lhit && inr) || (!lhit && inl);
+        }
+    case OpDifference:
+        {
+            return (lhit && !inr) || (!lhit && inl);
+        }
+    }
+
+    return false;
+}

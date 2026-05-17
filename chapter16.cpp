@@ -13,11 +13,11 @@
 #include "utils.hpp"
 #include "world.hpp"
 
-static constexpr int kCanvasSize = 128;
+static constexpr int kCanvasSize = 2048;
 
 int main()
 {
-    std::cout << "Chapter 15 challenge !!!" << std::endl;
+    std::cout << "Chapter 16 challenge !!!" << std::endl;
 
     Camera camera(kCanvasSize * (16.f / 9.f), kCanvasSize, M_PI / 4.0f);
     camera.SetTransform(
@@ -56,7 +56,7 @@ int main()
     std::cout << json << std::endl;
 
     Canvas canvas = Renderer::Render(camera, world);
-    canvas.WriteToPPM("../images/chapter15.ppm");
+    canvas.WriteToPPM("../images/chapter16.ppm");
     std::cout << "Done" << std::endl;
     return 0;
 }

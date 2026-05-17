@@ -60,7 +60,7 @@ class CSG : public Shape
     }
 
     static bool IntersectionAllowed(Operation op, bool lhit, bool inl, bool inr);
-    std::vector<Intersection> FilterIntersections(const std::vector<Intersection>& intersections);
+    std::vector<Intersection> FilterIntersections(const std::vector<Intersection>& intersections) const;
 
     bool Includes(ObjectId objectId) const override;
 

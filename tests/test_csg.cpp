@@ -78,17 +78,12 @@ TEST_CASE("Filtering a list of intersections", "[csg]")
         {CSG::OpDifference,   0, 1}
     };
 
-    // Sphere s1("s1");
-    // Cube s2("s2");
-
     for (auto& c : testCases)
     {
-#if 1
         Sphere s1("s1");
         Cube s2("s2");
         s1.SetObjectId(1);
         s2.SetObjectId(2);
-#endif
 
         CSG csg("csg", c.op, &s1, &s2);
 
@@ -101,4 +96,28 @@ TEST_CASE("Filtering a list of intersections", "[csg]")
         REQUIRE(result[0] == xs[c.x0]);
         REQUIRE(result[1] == xs[c.x1]);
     }
+}
+
+TEST_CASE("A ray misses a CSG object", "[csg]")
+{
+    CSG csg("csg", CSG::OpUnion, new Sphere("s1"), new Cube("s2"));
+    Ray ray(Point(0.f, 2.f, -5.f), Vector(0.f, 0.f, 1.f));
+
+    std::vector<Intersection> xs = csg.Intersect(ray);
+    REQUIRE(xs.empty());
+}
+
+TEST_CASE("A ray hits a CSG object", "[csg]")
+{
+    Sphere s1("s1");
+    Sphere s2("s2");
+    s2.SetTransform(Matrix::CreateTranslation(0.f, 0.f, 0.5f));
+    CSG csg("csg", CSG::OpUnion, &s1, &s2);
+    Ray ray(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f));
+    std::vector<Intersection> xs = csg.Intersect(ray);
+    REQUIRE(xs.size() == 2);
+    REQUIRE(xs[0].GetObjectId() == s1.GetObjectId());
+    REQUIRE(xs[1].GetObjectId() == s2.GetObjectId());
+    REQUIRE(xs[0].GetT() == 4.0f);
+    REQUIRE(xs[1].GetT() == 6.5f);
 }

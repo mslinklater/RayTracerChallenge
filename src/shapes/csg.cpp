@@ -1,4 +1,19 @@
 #include "shapes/csg.hpp"
+#include <algorithm>
+#include <atomic>
+
+namespace
+{
+std::atomic<ObjectId> nextStandaloneObjectId{kInvalidObjectId - 1};
+
+void EnsureStandaloneObjectId(Shape& shape)
+{
+    if (shape.GetObjectId() == kInvalidObjectId)
+    {
+        shape.SetObjectId(nextStandaloneObjectId.fetch_sub(1, std::memory_order_relaxed));
+    }
+}
+} // namespace
 
 CSG::CSG(const std::string& name, Operation op, Shape* leftChild, Shape* rightChild)
     : Shape(name), operation(op), left(leftChild), right(rightChild)
@@ -6,13 +21,25 @@ CSG::CSG(const std::string& name, Operation op, Shape* leftChild, Shape* rightCh
     assert(left != nullptr);
     assert(right != nullptr);
 
+    EnsureStandaloneObjectId(*left);
+    EnsureStandaloneObjectId(*right);
+
     left->SetParent(this);
     right->SetParent(this);
 }
 
 std::vector<Intersection> CSG::IntersectLocal(const Ray& ray) const
 {
-    return {};
+    std::vector<Intersection> leftIntersections = left->Intersect(ray);
+    std::vector<Intersection> rightIntersections = right->Intersect(ray);
+    std::vector<Intersection> allIntersections;
+    allIntersections.reserve(leftIntersections.size() + rightIntersections.size());
+    allIntersections.insert(allIntersections.end(), leftIntersections.begin(), leftIntersections.end());
+    allIntersections.insert(allIntersections.end(), rightIntersections.begin(), rightIntersections.end());
+    std::sort(allIntersections.begin(), allIntersections.end(),
+              [](const Intersection& a, const Intersection& b) { return a.GetT() < b.GetT(); });
+    std::vector<Intersection> result = FilterIntersections(allIntersections);
+    return result;
 }
 
 Tuple CSG::NormalAtLocal(const Tuple& point, const Intersection& intersection) const
@@ -41,7 +68,7 @@ bool CSG::IntersectionAllowed(Operation op, bool lhit, bool inl, bool inr)
     return false;
 }
 
-std::vector<Intersection> CSG::FilterIntersections(const std::vector<Intersection>& intersections)
+std::vector<Intersection> CSG::FilterIntersections(const std::vector<Intersection>& intersections) const
 {
     std::vector<Intersection> result;
     bool inl = false;
@@ -71,5 +98,6 @@ std::vector<Intersection> CSG::FilterIntersections(const std::vector<Intersectio
 
 bool CSG::Includes(ObjectId objectId) const
 {
+    assert(objectId != kInvalidObjectId);
     return left->Includes(objectId) || right->Includes(objectId);
 }

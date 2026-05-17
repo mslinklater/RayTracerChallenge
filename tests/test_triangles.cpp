@@ -64,6 +64,7 @@ TEST_CASE("A ray misses the p2-p3 edge", "[triangle]")
 TEST_CASE("A ray strikes a triangle", "[triangle]")
 {
     Triangle t(Point(0.f, 1.f, 0.f), Point(-1.f, 0.f, 0.f), Point(1.f, 0.f, 0.f));
+    t.SetObjectId(1);
     Ray r(Point(0.f, 0.5f, -2.f), Vector(0.f, 0.f, 1.f));
     std::vector<Intersection> xs = t.IntersectLocal(r);
     REQUIRE(xs.size() == 1);

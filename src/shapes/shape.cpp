@@ -203,3 +203,8 @@ std::vector<Intersection> Shape::IntersectLocal(const Ray& ray) const
     std::vector<Intersection> intersections;
     return intersections; // Default implementation returns an empty vector (no intersections)
 }
+
+bool Shape::Includes(ObjectId _objectId) const
+{
+    return objectId == _objectId;
+}

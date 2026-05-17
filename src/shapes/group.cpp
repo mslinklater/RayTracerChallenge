@@ -92,3 +92,9 @@ const Shape* Group::FindChildByName(const std::string& childName) const
     }
     return nullptr;
 }
+
+bool Group::Includes(ObjectId objectId) const
+{
+    return std::any_of(children.begin(), children.end(),
+                       [objectId](const ShapeUniquePtr& child) { return child->Includes(objectId); });
+}

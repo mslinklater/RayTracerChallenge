@@ -10,6 +10,7 @@
 TEST_CASE("Intersecting a cone with a ray", "[cones]")
 {
     Cone cone("cone");
+    cone.SetObjectId(1);
 
     struct TestCase
     {
@@ -21,9 +22,9 @@ TEST_CASE("Intersecting a cone with a ray", "[cones]")
     };
 
     std::vector<TestCase> cases = {
-        {"ray parallel to one half", Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f), 5.f, 5.f},
-        {"ray parallel to other half", Point(0.f, 0.f, -5.f), Vector(1.f, 1.f, 1.f), 8.66025f, 8.66025f},
-        {"ray at an angle", Point(1.f, 1.f, -5.f), Vector(-0.5f, -1.f, 1.f), 4.55006f, 49.44994f},
+        {"ray parallel to one half",   Point(0.f, 0.f, -5.f), Vector(0.f,   0.f,  1.f), 5.f,      5.f      },
+        {"ray parallel to other half", Point(0.f, 0.f, -5.f), Vector(1.f,   1.f,  1.f), 8.66025f, 8.66025f },
+        {"ray at an angle",            Point(1.f, 1.f, -5.f), Vector(-0.5f, -1.f, 1.f), 4.55006f, 49.44994f},
     };
 
     for (size_t i = 0; i < cases.size(); ++i)
@@ -43,6 +44,7 @@ TEST_CASE("Intersecting a cone with a ray", "[cones]")
 TEST_CASE("Intersecting a cone with a ray parallel to one of its halves", "[cones]")
 {
     Cone cone("cone");
+    cone.SetObjectId(1);
     Ray r(Point(0.f, 0.f, -1.f), Vector(0.f, 1.f, 1.f).Normalize());
     auto xs = cone.IntersectLocal(r);
     REQUIRE(xs.size() == 1);
@@ -69,13 +71,14 @@ TEST_CASE("Intersecting a cone's end caps", "[cones]")
     };
 
     Cone cone("cone");
+    cone.SetObjectId(1);
     cone.SetMinimum(-0.5f);
     cone.SetMaximum(0.5f);
     cone.SetClosed(true);
 
     std::vector<TestCase> cases = {
-        {"one", Point(0.f, 0.f, -5.f), Vector(0.f, 1.f, 0.f), 0},
-        {"two", Point(0.f, 0.f, -0.25f), Vector(0.f, 1.f, 1.f), 2},
+        {"one",   Point(0.f, 0.f, -5.f),   Vector(0.f, 1.f, 0.f), 0},
+        {"two",   Point(0.f, 0.f, -0.25f), Vector(0.f, 1.f, 1.f), 2},
         {"three", Point(0.f, 0.f, -0.25f), Vector(0.f, 1.f, 0.f), 4},
     };
 
@@ -102,9 +105,9 @@ TEST_CASE("Computing the normal vector on a cone", "[cones]")
 
     Cone cone("cone");
     const std::vector<TestCase> cases = {
-        {"one", Point(0.f, 0.f, 0.f), Vector(0.f, 0.f, 0.f)},
-        {"two", Point(1.f, 1.f, 1.f), Vector(1.f, -std::sqrt(2.f), 1.f)},
-        {"three", Point(-1.f, -1.f, 0.f), Vector(-1.f, 1.f, 0.f)},
+        {"one",   Point(0.f,  0.f,  0.f), Vector(0.f,  0.f,             0.f)},
+        {"two",   Point(1.f,  1.f,  1.f), Vector(1.f,  -std::sqrt(2.f), 1.f)},
+        {"three", Point(-1.f, -1.f, 0.f), Vector(-1.f, 1.f,             0.f)},
     };
 
     for (size_t i = 0; i < cases.size(); ++i)

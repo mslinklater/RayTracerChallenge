@@ -40,3 +40,36 @@ bool CSG::IntersectionAllowed(Operation op, bool lhit, bool inl, bool inr)
 
     return false;
 }
+
+std::vector<Intersection> CSG::FilterIntersections(const std::vector<Intersection>& intersections)
+{
+    std::vector<Intersection> result;
+    bool inl = false;
+    bool inr = false;
+
+    for (const auto& i : intersections)
+    {
+        bool lhit = left->Includes(i.GetObjectId());
+
+        if (IntersectionAllowed(operation, lhit, inl, inr))
+        {
+            result.push_back(i);
+        }
+
+        if (lhit)
+        {
+            inl = !inl;
+        }
+        else
+        {
+            inr = !inr;
+        }
+    }
+
+    return result;
+}
+
+bool CSG::Includes(ObjectId objectId) const
+{
+    return left->Includes(objectId) || right->Includes(objectId);
+}

@@ -12,6 +12,7 @@ Intersection::Intersection() : t(0.f), objectId(kInvalidObjectId)
 Intersection::Intersection(float t, ObjectId objectId) : t(t), objectId(objectId)
 {
     assert(std::isfinite(t));
+    // assert(objectId != kInvalidObjectId);
 }
 
 bool Intersection::operator==(const Intersection& other) const

@@ -87,6 +87,7 @@ TEST_CASE("A ray originates inside a sphere", "[spheres]")
     // Geogebra: documents/geogebra/sphere_intersection_test4.ggb
 
     Sphere sphere("sphere");
+    sphere.SetObjectId(1);
     Ray ray(Point(0.f, 0.f, 0.f), Vector(0.f, 0.f, 1.f));
     auto xs = sphere.Intersect(ray);
 
@@ -100,6 +101,7 @@ TEST_CASE("The sphere is behind the ray", "[spheres]")
     // Geogebra: documents/geogebra/sphere_intersection_test5.ggb
 
     Sphere sphere("sphere");
+    sphere.SetObjectId(1);
     Ray ray(Point(0.f, 0.f, 5.f), Vector(0.f, 0.f, 1.f));
     auto xs = sphere.Intersect(ray);
 

@@ -86,6 +86,8 @@ class Group : public Shape
     Shape& GetMutableChild(size_t index);
     const std::vector<ShapeUniquePtr>& GetChildren() const;
 
+    bool Includes(ObjectId objectId) const override;
+
   private:
     Shape& AddOwnedChild(ShapeUniquePtr child);
     const Shape* FindChildByName(const std::string& childName) const;

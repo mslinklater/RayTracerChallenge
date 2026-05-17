@@ -26,6 +26,7 @@ BraceWrapping:
 AllowShortFunctionsOnASingleLine: None
 AllowShortIfStatementsOnASingleLine: Never
 AllowShortLoopsOnASingleLine: false
+AlignArrayOfStructures: Left
 
 AlignAfterOpenBracket: Align
 PointerAlignment: Left

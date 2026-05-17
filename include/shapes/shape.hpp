@@ -123,6 +123,12 @@ class Shape
      */
     void SetParent(Shape* parent);
 
+    /**
+     * @brief Returns whether the shape with the given object ID is part of this shape's hierarchy.
+     * @param objectId The object ID to check for.
+     */
+    virtual bool Includes(ObjectId objectId) const;
+
   protected:
     void UpdateTransformCache() const;
     void EnsureTransformCache() const;

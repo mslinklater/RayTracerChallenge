@@ -36,6 +36,7 @@ TEST_CASE("Intersect with a coplanar ray", "[Planes]")
 TEST_CASE("A ray intersecting a plane from above", "[Planes]")
 {
     Plane plane("plane");
+    plane.SetObjectId(1);
     Ray ray(Point(0.f, 1.f, 0.f), Vector(0.f, -1.f, 0.f));
     auto xs = plane.IntersectLocal(ray);
 
@@ -46,6 +47,7 @@ TEST_CASE("A ray intersecting a plane from above", "[Planes]")
 TEST_CASE("A ray intersecting a plane from below", "[Planes]")
 {
     Plane plane("plane");
+    plane.SetObjectId(1);
     Ray ray(Point(0.f, -1.f, 0.f), Vector(0.f, 1.f, 0.f));
     auto xs = plane.IntersectLocal(ray);
 

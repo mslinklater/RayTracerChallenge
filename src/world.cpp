@@ -1,6 +1,7 @@
 #include "world.hpp"
 #include "light.hpp"
 #include "ray.hpp"
+#include "shapes/csg.hpp"
 #include "shapes/group.hpp"
 #include <cassert>
 #include <memory>
@@ -20,6 +21,13 @@ void CollectShapeHierarchy(Shape& shape, std::vector<Shape*>& hierarchy)
         {
             CollectShapeHierarchy(*child, hierarchy);
         }
+    }
+    else if (auto* csg = dynamic_cast<CSG*>(&shape))
+    {
+        assert(csg->GetLeft() != nullptr);
+        assert(csg->GetRight() != nullptr);
+        CollectShapeHierarchy(*csg->GetLeft(), hierarchy);
+        CollectShapeHierarchy(*csg->GetRight(), hierarchy);
     }
 }
 } // namespace
@@ -65,13 +73,20 @@ void World::AssignObjectIds(Shape& shape)
 {
     shape.SetObjectId(nextObjectId++);
 
-    // If this is a gruop, descend into the children and assign them IDs as well
+    // If this is a group, descend into children and assign IDs as well.
     if (auto* group = dynamic_cast<Group*>(&shape))
     {
         for (const ShapeUniquePtr& child : group->GetChildren())
         {
             AssignObjectIds(*child);
         }
+    }
+    else if (auto* csg = dynamic_cast<CSG*>(&shape))
+    {
+        assert(csg->GetLeft() != nullptr);
+        assert(csg->GetRight() != nullptr);
+        AssignObjectIds(*csg->GetLeft());
+        AssignObjectIds(*csg->GetRight());
     }
 }
 

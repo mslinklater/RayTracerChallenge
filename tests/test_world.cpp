@@ -5,6 +5,7 @@
 #include "patterns/test_pattern.hpp"
 #include "ray.hpp"
 #include "renderer.hpp"
+#include "shapes/csg.hpp"
 #include "shapes/group.hpp"
 #include "shapes/plane.hpp"
 #include "shapes/sphere.hpp"
@@ -581,6 +582,35 @@ TEST_CASE("Shading a grouped child should use the child's material", "[world][gr
     child.SetTransform(Matrix::CreateTranslation(0.f, 0.f, -3.f));
     group.AddChild(child);
     world.AddObject(group);
+
+    const Color color = Renderer::ColorAt(world, Ray(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f)));
+    REQUIRE(color == kColorRed);
+}
+
+TEST_CASE("CSG child intersections resolve through world object lookup", "[world][csg][ownership]")
+{
+    World world;
+    world.AddLight(Light(Point(0.f, 0.f, -10.f), Color(1.f, 1.f, 1.f)));
+
+    Sphere left("left");
+    left.GetMutableMaterial().SetColor(kColorRed).SetAmbient(1.f).SetDiffuse(0.f).SetSpecular(0.f);
+
+    Sphere right("right");
+    right.SetTransform(Matrix::CreateTranslation(0.f, 0.f, 0.5f));
+    right.GetMutableMaterial().SetColor(kColorGreen).SetAmbient(1.f).SetDiffuse(0.f).SetSpecular(0.f);
+
+    CSG csg("csg", CSG::OpUnion, &left, &right);
+    world.AddObject(csg);
+
+    const std::vector<Intersection> xs =
+        Renderer::IntersectWorld(world, Ray(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f)));
+
+    REQUIRE(xs.size() == 2);
+
+    const ObjectId leftId = world.GetObjectWithName("left").GetObjectId();
+    const ObjectId rightId = world.GetObjectWithName("right").GetObjectId();
+    REQUIRE(xs[0].GetObjectId() == leftId);
+    REQUIRE(xs[1].GetObjectId() == rightId);
 
     const Color color = Renderer::ColorAt(world, Ray(Point(0.f, 0.f, -5.f), Vector(0.f, 0.f, 1.f)));
     REQUIRE(color == kColorRed);

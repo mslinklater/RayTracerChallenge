@@ -60,31 +60,34 @@ if(NOT PARALLEL_TEST_JOBS)
     set(PARALLEL_TEST_JOBS 1)
 endif()
 
-set(SRC_FILES   src/utils.cpp
-                src/camera.cpp
-                src/color.cpp
-                src/matrix.cpp
-                src/shapes/plane.cpp
-                src/shapes/shape.cpp
-                src/shapes/sphere.cpp
-                src/shapes/cylinder.cpp
-                src/shapes/cone.cpp
-                src/shapes/cube.cpp
-                src/shapes/csg.cpp
-                src/shapes/group.cpp
-                src/shapes/smoothtriangle.cpp
-                src/pattern.cpp
-                src/ray.cpp
-                src/light.cpp
-                src/tuple.cpp
-                src/intersection.cpp
-                src/material.cpp
-                src/filesystem.cpp
-                src/renderer.cpp
-                src/objfile.cpp
-                src/world.cpp
-                src/shapes/triangle.cpp
-                src/canvas.cpp)
+set(SRC_FILES
+        src/bounds.cpp
+        src/camera.cpp
+        src/canvas.cpp
+        src/color.cpp
+        src/filesystem.cpp
+        src/intersection.cpp
+        src/light.cpp
+        src/material.cpp
+        src/matrix.cpp
+        src/objfile.cpp
+        src/pattern.cpp
+        src/ray.cpp
+        src/renderer.cpp
+        src/shapes/cone.cpp
+        src/shapes/csg.cpp
+        src/shapes/cube.cpp
+        src/shapes/cylinder.cpp
+        src/shapes/group.cpp
+        src/shapes/plane.cpp
+        src/shapes/shape.cpp
+        src/shapes/smoothtriangle.cpp
+        src/shapes/sphere.cpp
+        src/shapes/triangle.cpp
+        src/tuple.cpp
+        src/utils.cpp
+        src/world.cpp
+        )
 
 set(PROJECT_COVERAGE_FLAGS "")
 
@@ -152,6 +155,7 @@ add_raytracer_executable(Chapter16Challenge chapter16.cpp)
 
 # Test executable
 set(TEST_SRC
+                tests/test_bounds.cpp
                 tests/test_camera.cpp
                 tests/test_canvas.cpp
                 tests/test_color.cpp

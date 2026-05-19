@@ -1,4 +1,5 @@
 #pragma once
+#include "debugmacros.hpp"
 #include <cassert>
 #include <cmath>
 
@@ -16,9 +17,9 @@ struct Tuple
     float w; ///< Homogeneous component: 1 for points, 0 for vectors.
 
     /** @brief Adds two tuples component-wise. */
-    Tuple operator+(const Tuple &other) const;
+    Tuple operator+(const Tuple& other) const;
     /** @brief Subtracts @p other from this tuple component-wise. */
-    Tuple operator-(const Tuple &other) const;
+    Tuple operator-(const Tuple& other) const;
     /** @brief Negates all components. */
     Tuple operator-() const;
     /** @brief Scales all components by @p scalar. */
@@ -30,13 +31,13 @@ struct Tuple
      * @brief Computes the dot product with @p other (operator|).
      * @return The scalar dot product.
      */
-    float operator|(const Tuple &other) const;
+    float operator|(const Tuple& other) const;
 
     /**
      * @brief Computes the cross product with @p other (operator^).
      * @return A new vector perpendicular to both operands.
      */
-    Tuple operator^(const Tuple &other) const;
+    Tuple operator^(const Tuple& other) const;
 
     /** @brief Returns the Euclidean length of this tuple. */
     float Magnitude() const;
@@ -50,9 +51,9 @@ struct Tuple
      * @brief Compares two tuples using floating-point tolerance.
      * @return true if all components are within epsilon of each other.
      */
-    bool IsEqual(const Tuple &other) const;
+    bool IsEqual(const Tuple& other) const;
     /** @brief Equality operator using floating-point tolerance. */
-    bool operator==(const Tuple &other) const;
+    bool operator==(const Tuple& other) const;
 
     /** @brief Returns a unit-length copy of this tuple. */
     Tuple Normalize() const;
@@ -62,7 +63,7 @@ struct Tuple
      * @param normal The surface normal to reflect around (must be normalised).
      * @return The reflected tuple.
      */
-    Tuple Reflect(const Tuple &normal) const;
+    Tuple Reflect(const Tuple& normal) const;
 };
 
 /**
@@ -73,9 +74,9 @@ struct Tuple
  */
 inline Tuple Point(float x, float y, float z)
 {
-    assert(std::isfinite(x));
-    assert(std::isfinite(y));
-    assert(std::isfinite(z));
+    ASSERT_TRUE(std::isfinite(x), "Point::Point(x, y, z) - x is not finite");
+    ASSERT_TRUE(std::isfinite(y), "Point::Point(x, y, z) - y is not finite");
+    ASSERT_TRUE(std::isfinite(z), "Point::Point(x, y, z) - z is not finite");
     return Tuple{x, y, z, 1.f};
 }
 
@@ -83,11 +84,8 @@ inline Tuple Point(float x, float y, float z)
  * @brief Constructs a point tuple from another tuple, setting w = 1.
  * @param tuple The source tuple (x, y, z components are copied).
  */
-inline Tuple Point(const Tuple &tuple)
+inline Tuple Point(const Tuple& tuple)
 {
-    assert(std::isfinite(tuple.x));
-    assert(std::isfinite(tuple.y));
-    assert(std::isfinite(tuple.z));
     return Tuple{tuple.x, tuple.y, tuple.z, 1.f};
 }
 
@@ -99,6 +97,10 @@ inline Tuple Point(const Tuple &tuple)
  */
 inline Tuple Vector(float x, float y, float z)
 {
+    ASSERT_TRUE(std::isfinite(x), "Vector::Vector(x, y, z) - x is not finite");
+    ASSERT_TRUE(std::isfinite(y), "Vector::Vector(x, y, z) - y is not finite");
+    ASSERT_TRUE(std::isfinite(z), "Vector::Vector(x, y, z) - z is not finite");
+
     return Tuple{x, y, z, 0.f};
 }
 
@@ -106,10 +108,7 @@ inline Tuple Vector(float x, float y, float z)
  * @brief Constructs a vector tuple from another tuple, setting w = 0.
  * @param tuple The source tuple (x, y, z components are copied).
  */
-inline Tuple Vector(const Tuple &tuple)
+inline Tuple Vector(const Tuple& tuple)
 {
-    assert(std::isfinite(tuple.x));
-    assert(std::isfinite(tuple.y));
-    assert(std::isfinite(tuple.z));
     return Tuple{tuple.x, tuple.y, tuple.z, 0.f};
 }

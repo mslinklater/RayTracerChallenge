@@ -50,3 +50,9 @@ Tuple Sphere::NormalAtLocal(const Tuple& point, const Intersection& intersection
 
     return point - Point(0.f, 0.f, 0.f); // Normal is the vector from the center of the sphere to the point
 }
+
+BoundingBox Sphere::GetBounds() const
+{
+    // A unit sphere centered at the origin has a bounding box from (-1, -1, -1) to (1, 1, 1)
+    return BoundingBox(Point(-1.f, -1.f, -1.f), Point(1.f, 1.f, 1.f));
+}

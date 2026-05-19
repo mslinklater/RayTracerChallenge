@@ -1,11 +1,11 @@
 #pragma once
 #include "tuple.hpp"
 
-class Bounds
+class BoundingBox
 {
   public:
-    Bounds();
-    Bounds(const Tuple& min, const Tuple& max);
+    BoundingBox();
+    BoundingBox(const Tuple& min, const Tuple& max);
 
     const Tuple& GetMin() const
     {
@@ -15,6 +15,7 @@ class Bounds
     {
         return max;
     };
+    void AddPoint(const Tuple& point);
 
   private:
     Tuple min;

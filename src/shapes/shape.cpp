@@ -208,3 +208,8 @@ bool Shape::Includes(ObjectId _objectId) const
 {
     return objectId == _objectId;
 }
+
+BoundingBox Shape::GetBounds() const
+{
+    return BoundingBox();
+}

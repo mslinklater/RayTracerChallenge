@@ -13,7 +13,7 @@
 #include "tuple.hpp"
 #include "world.hpp"
 
-static constexpr int kCanvasSize = 2048;
+static constexpr int kCanvasSize = 512;
 
 int main()
 {

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "boundingbox.hpp"
 #include "intersection.hpp"
 #include "material.hpp"
 #include "matrix.hpp"
@@ -128,6 +129,7 @@ class Shape
      * @param objectId The object ID to check for.
      */
     virtual bool Includes(ObjectId objectId) const;
+    virtual BoundingBox GetBounds() const;
 
   protected:
     void UpdateTransformCache() const;

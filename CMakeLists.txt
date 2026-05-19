@@ -61,7 +61,7 @@ if(NOT PARALLEL_TEST_JOBS)
 endif()
 
 set(SRC_FILES
-        src/bounds.cpp
+        src/boundingbox.cpp
         src/camera.cpp
         src/canvas.cpp
         src/color.cpp

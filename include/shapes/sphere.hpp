@@ -1,4 +1,5 @@
 #pragma once
+#include "boundingbox.hpp"
 #include "shape.hpp"
 
 /**
@@ -36,6 +37,7 @@ class Sphere : public Shape
      * @return The outward-facing unit normal vector.
      */
     Tuple NormalAtLocal(const Tuple& point, const Intersection& intersection) const override;
+    BoundingBox GetBounds() const override;
 };
 
 /** @brief Equality comparison based on transform and material. */

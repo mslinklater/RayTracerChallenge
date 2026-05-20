@@ -21,7 +21,10 @@ class Triangle : public Shape
     }
 
     Tuple NormalAtLocal(const Tuple& point, const Intersection& intersection) const override;
+
     std::vector<Intersection> IntersectLocal(const Ray& ray) const override;
+
+    BoundingBox GetBounds() const override;
 
   protected:
     Tuple p1;

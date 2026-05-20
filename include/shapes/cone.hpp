@@ -38,6 +38,14 @@ class Cone : public Shape
      */
     Tuple NormalAtLocal(const Tuple& point, const Intersection& intersection) const override;
 
+    /**
+     * @brief Returns the bounding box of the cone in object space.
+     */
+    BoundingBox GetBounds() const override;
+
+    /**
+     * @brief Ruturns the minimum y value of the cone
+     */
     float GetMinimum() const
     {
         return minimum;
@@ -67,7 +75,6 @@ class Cone : public Shape
     bool CheckCap(const Ray& ray, float t, float radius) const; ///< Helper for checking ray-cap intersection
     void IntersectCaps(const Ray& ray,
                        std::vector<Intersection>& intersections) const; ///< Helper for intersecting end caps
-    ///
     float minimum = -std::numeric_limits<float>::infinity();
     float maximum = std::numeric_limits<float>::infinity();
     bool closed = false;

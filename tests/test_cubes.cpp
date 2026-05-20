@@ -107,3 +107,11 @@ TEST_CASE("The normal on the surface of a cube", "[cubes]")
         }
     }
 }
+
+TEST_CASE("A cube has a bounding box", "[cubes]")
+{
+    Cube c("cube");
+    BoundingBox b = c.GetBounds();
+    REQUIRE(b.GetMin() == Point(-1.f, -1.f, -1.f));
+    REQUIRE(b.GetMax() == Point(1.f, 1.f, 1.f));
+}

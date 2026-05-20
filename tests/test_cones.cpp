@@ -121,3 +121,24 @@ TEST_CASE("Computing the normal vector on a cone", "[cones]")
         }
     }
 }
+
+TEST_CASE("An unbounded cone has a bounding box", "[cones]")
+{
+    Cone c("cone");
+    BoundingBox b = c.GetBounds();
+    REQUIRE(b.GetMin() == Point(-std::numeric_limits<float>::max(), -std::numeric_limits<float>::max(),
+                                -std::numeric_limits<float>::max()));
+    REQUIRE(b.GetMax() == Point(std::numeric_limits<float>::max(), std::numeric_limits<float>::max(),
+                                std::numeric_limits<float>::max()));
+}
+
+TEST_CASE("A bounded cone has a bounding box", "[cones]")
+{
+    Cone c("cone");
+    c.SetMinimum(-5.f);
+    c.SetMaximum(3.f);
+    c.SetClosed(true);
+    BoundingBox b = c.GetBounds();
+    REQUIRE(b.GetMin() == Point(-5.f, -5.f, -5.f));
+    REQUIRE(b.GetMax() == Point(5.f, 3.f, 5.f));
+}

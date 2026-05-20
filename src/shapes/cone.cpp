@@ -110,3 +110,19 @@ void Cone::IntersectCaps(const Ray& ray, std::vector<Intersection>& intersection
         intersections.push_back(Intersection(t, objectId));
     }
 }
+
+BoundingBox Cone::GetBounds() const
+{
+    if (closed)
+    {
+        float radius = std::max(std::abs(minimum), std::abs(maximum));
+        return BoundingBox(Point(-radius, minimum, -radius), Point(radius, maximum, radius));
+    }
+    else
+    {
+        return BoundingBox(Point(-std::numeric_limits<float>::max(), -std::numeric_limits<float>::max(),
+                                 -std::numeric_limits<float>::max()),
+                           Point(std::numeric_limits<float>::max(), std::numeric_limits<float>::max(),
+                                 std::numeric_limits<float>::max()));
+    }
+}

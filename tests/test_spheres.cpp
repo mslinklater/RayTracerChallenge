@@ -231,3 +231,11 @@ TEST_CASE("A helper for producing a sphere with a glassy material", "[spheres]")
     REQUIRE(s.GetMaterial().GetTransparency() == 1.f);
     REQUIRE(s.GetMaterial().GetRefractiveIndex() == 1.5f);
 }
+
+TEST_CASE("A sphere has a bounding box", "[spheres]")
+{
+    Sphere s("sphere");
+    BoundingBox b = s.GetBounds();
+    REQUIRE(b.GetMin() == Point(-1.f, -1.f, -1.f));
+    REQUIRE(b.GetMax() == Point(1.f, 1.f, 1.f));
+}

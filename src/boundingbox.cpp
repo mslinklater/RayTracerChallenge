@@ -30,3 +30,11 @@ void BoundingBox::AddPoint(const Tuple& point)
     max.y = std::max(max.y, point.y);
     max.z = std::max(max.z, point.z);
 }
+
+BoundingBox operator+(const BoundingBox& b1, const BoundingBox& b2)
+{
+    return BoundingBox(Point(std::min(b1.GetMin().x, b2.GetMin().x), std::min(b1.GetMin().y, b2.GetMin().y),
+                             std::min(b1.GetMin().z, b2.GetMin().z)),
+                       Point(std::max(b1.GetMax().x, b2.GetMax().x), std::max(b1.GetMax().y, b2.GetMax().y),
+                             std::max(b1.GetMax().z, b2.GetMax().z)));
+}

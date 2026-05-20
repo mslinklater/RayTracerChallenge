@@ -68,3 +68,12 @@ std::vector<Intersection> Triangle::IntersectLocal(const Ray& ray) const
     }
     return intersections;
 }
+
+BoundingBox Triangle::GetBounds() const
+{
+    BoundingBox box;
+    box.AddPoint(p1);
+    box.AddPoint(p2);
+    box.AddPoint(p3);
+    return box;
+}

@@ -21,3 +21,5 @@ class BoundingBox
     Tuple min;
     Tuple max;
 };
+
+BoundingBox operator+(const BoundingBox& b1, const BoundingBox& b2);

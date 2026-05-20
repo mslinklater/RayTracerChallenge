@@ -208,3 +208,21 @@ TEST_CASE("The normal vector on a cylinder's end caps", "[cylinders]")
         }
     }
 }
+
+TEST_CASE("A cylinder has a bounding box", "[cylinders]")
+{
+    Cylinder c("cylinder");
+    BoundingBox b = c.GetBounds();
+    REQUIRE(b.GetMin() == Point(-1.f, -std::numeric_limits<float>::max(), -1.f));
+    REQUIRE(b.GetMax() == Point(1.f, std::numeric_limits<float>::max(), 1.f));
+}
+
+TEST_CASE("A bounded cylinder has a bounding box", "[cylinders]")
+{
+    Cylinder c("cylinder");
+    c.SetMinimum(-2.f);
+    c.SetMaximum(3.f);
+    BoundingBox b = c.GetBounds();
+    REQUIRE(b.GetMin() == Point(-1.f, -2.f, -1.f));
+    REQUIRE(b.GetMax() == Point(1.f, 3.f, 1.f));
+}

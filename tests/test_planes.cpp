@@ -54,3 +54,11 @@ TEST_CASE("A ray intersecting a plane from below", "[Planes]")
     REQUIRE(xs.size() == 1);
     REQUIRE(xs[0].GetT() == 1.f);
 }
+
+TEST_CASE("A plane has a bounding box", "[planes]")
+{
+    Plane p("plane");
+    BoundingBox b = p.GetBounds();
+    REQUIRE(b.GetMin() == Point(-std::numeric_limits<float>::max(), 0.f, -std::numeric_limits<float>::max()));
+    REQUIRE(b.GetMax() == Point(std::numeric_limits<float>::max(), 0.f, std::numeric_limits<float>::max()));
+}

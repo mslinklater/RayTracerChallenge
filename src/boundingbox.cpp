@@ -38,3 +38,9 @@ BoundingBox operator+(const BoundingBox& b1, const BoundingBox& b2)
                        Point(std::max(b1.GetMax().x, b2.GetMax().x), std::max(b1.GetMax().y, b2.GetMax().y),
                              std::max(b1.GetMax().z, b2.GetMax().z)));
 }
+
+bool BoundingBox::Contains(const Tuple& point) const
+{
+    return point.x >= min.x && point.x <= max.x && point.y >= min.y && point.y <= max.y && point.z >= min.z &&
+           point.z <= max.z;
+}

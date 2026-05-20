@@ -102,3 +102,34 @@ TEST_CASE("Adding one bounding box to another", "[bounds]")
     REQUIRE(b1.GetMin() == Point(-5.f, -7.f, -2.f));
     REQUIRE(b1.GetMax() == Point(14.f, 4.f, 8.f));
 }
+
+TEST_CASE("Checking to see if a box contains a given point", "[bounds]")
+{
+    struct TestCase
+    {
+        std::string name;
+        Tuple point;
+        bool expectedResult;
+    };
+
+    std::vector<TestCase> cases = {
+        {"1", Point(5.f,  -2.f, 0.f),  true },
+        {"2", Point(11.f, 4.f,  7.f),  true },
+        {"3", Point(8.f,  1.f,  3.f),  true },
+        {"4", Point(3.f,  0.f,  3.f),  false},
+        {"5", Point(8.f,  -4.f, 3.f),  false},
+        {"6", Point(8.f,  1.f,  -1.f), false},
+        {"7", Point(13.f, 1.f,  3.f),  false},
+        {"8", Point(8.f,  5.f,  3.f),  false},
+        {"9", Point(8.f,  1.f,  8.f),  false}
+    };
+
+    BoundingBox b(Point(5.f, -2.f, 0.f), Point(11.f, 4.f, 7.f));
+    for (const auto& testCase : cases)
+    {
+        DYNAMIC_SECTION("point " << testCase.name)
+        {
+            REQUIRE(b.Contains(testCase.point) == testCase.expectedResult);
+        }
+    }
+}

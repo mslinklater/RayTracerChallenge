@@ -17,6 +17,12 @@ class BoundingBox
     };
     void AddPoint(const Tuple& point);
 
+    /**
+     * @brief returns whether the bounding box contains the given point. Points on the boundary are considered to be
+     * contained.
+     */
+    bool Contains(const Tuple& point) const;
+
   private:
     Tuple min;
     Tuple max;

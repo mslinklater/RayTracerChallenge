@@ -1,4 +1,7 @@
 #include "boundingbox.hpp"
+#include "shapes/cube.hpp"
+#include "shapes/cylinder.hpp"
+#include "shapes/plane.hpp"
 #include "shapes/sphere.hpp"
 #include "tuple.hpp"
 #include <catch2/catch_test_macros.hpp>
@@ -9,8 +12,8 @@ TEST_CASE("Create an empty bounding box", "[bounds]")
 
     REQUIRE(b.GetMin() == Point(std::numeric_limits<float>::max(), std::numeric_limits<float>::max(),
                                 std::numeric_limits<float>::max()));
-    REQUIRE(b.GetMax() == Point(std::numeric_limits<float>::lowest(), std::numeric_limits<float>::lowest(),
-                                std::numeric_limits<float>::lowest()));
+    REQUIRE(b.GetMax() == Point(-std::numeric_limits<float>::max(), -std::numeric_limits<float>::max(),
+                                -std::numeric_limits<float>::max()));
 }
 
 TEST_CASE("Creating abounding box with a volume", "[bounds]")
@@ -58,4 +61,34 @@ TEST_CASE("A sphere has a bounding box", "[bounds]")
 
 TEST_CASE("A plane has a bounding box", "[bounds]")
 {
+    Plane p("plane");
+    BoundingBox b = p.GetBounds();
+    REQUIRE(b.GetMin() == Point(-std::numeric_limits<float>::max(), 0.f, -std::numeric_limits<float>::max()));
+    REQUIRE(b.GetMax() == Point(std::numeric_limits<float>::max(), 0.f, std::numeric_limits<float>::max()));
+}
+
+TEST_CASE("A cube has a bounding box", "[bounds]")
+{
+    Cube c("cube");
+    BoundingBox b = c.GetBounds();
+    REQUIRE(b.GetMin() == Point(-1.f, -1.f, -1.f));
+    REQUIRE(b.GetMax() == Point(1.f, 1.f, 1.f));
+}
+
+TEST_CASE("A cylinder has a bounding box", "[bounds]")
+{
+    Cylinder c("cylinder");
+    BoundingBox b = c.GetBounds();
+    REQUIRE(b.GetMin() == Point(-1.f, -std::numeric_limits<float>::max(), -1.f));
+    REQUIRE(b.GetMax() == Point(1.f, std::numeric_limits<float>::max(), 1.f));
+}
+
+TEST_CASE("A bounded cylinder has a bounding box", "[bounds]")
+{
+    Cylinder c("cylinder");
+    c.SetMinimum(-2.f);
+    c.SetMaximum(3.f);
+    BoundingBox b = c.GetBounds();
+    REQUIRE(b.GetMin() == Point(-1.f, -2.f, -1.f));
+    REQUIRE(b.GetMax() == Point(1.f, 3.f, 1.f));
 }

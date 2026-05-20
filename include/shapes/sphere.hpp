@@ -37,6 +37,10 @@ class Sphere : public Shape
      * @return The outward-facing unit normal vector.
      */
     Tuple NormalAtLocal(const Tuple& point, const Intersection& intersection) const override;
+
+    /**
+     * @brief Returns the axis-aligned bounding box of the sphere in world space.
+     */
     BoundingBox GetBounds() const override;
 };
 

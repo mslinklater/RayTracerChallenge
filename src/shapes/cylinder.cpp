@@ -3,6 +3,7 @@
 #include "ray.hpp"
 #include <cassert>
 #include <cmath>
+#include <limits>
 
 bool operator==(const Cylinder& s1, const Cylinder& s2)
 {
@@ -103,4 +104,9 @@ void Cylinder::IntersectCaps(const Ray& ray, std::vector<Intersection>& intersec
     {
         intersections.push_back(Intersection(t, objectId));
     }
+}
+
+BoundingBox Cylinder::GetBounds() const
+{
+    return BoundingBox(Point(-1.f, minimum, -1.f), Point(1.f, maximum, 1.f));
 }

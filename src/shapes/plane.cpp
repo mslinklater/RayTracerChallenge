@@ -24,3 +24,10 @@ std::vector<Intersection> Plane::IntersectLocal(const Ray& ray) const
     intersections.push_back(Intersection(t, GetObjectId()));
     return intersections;
 }
+
+BoundingBox Plane::GetBounds() const
+{
+    // A plane is infinite, so we return an infinite bounding box
+    return BoundingBox(Point(-std::numeric_limits<float>::max(), 0.f, -std::numeric_limits<float>::max()),
+                       Point(std::numeric_limits<float>::max(), 0.f, std::numeric_limits<float>::max()));
+}

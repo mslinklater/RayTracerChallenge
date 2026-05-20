@@ -129,6 +129,9 @@ class Shape
      * @param objectId The object ID to check for.
      */
     virtual bool Includes(ObjectId objectId) const;
+    /**
+     * @brief Returns the bounding box of this shape in world space.
+     */
     virtual BoundingBox GetBounds() const;
 
   protected:

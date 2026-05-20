@@ -37,6 +37,11 @@ class Cylinder : public Shape
      */
     Tuple NormalAtLocal(const Tuple& point, const Intersection& intersection) const override;
 
+    /**
+     * @brief Returns the axis-aligned bounding box of the cylinder in world space.
+     */
+    BoundingBox GetBounds() const override;
+
     float GetMinimum() const
     {
         return minimum;
@@ -71,9 +76,9 @@ class Cylinder : public Shape
     void IntersectCaps(const Ray& ray,
                        std::vector<Intersection>& intersections) const; ///< Helper for intersecting end caps
 
-    float minimum = -std::numeric_limits<float>::infinity(); ///< Minimum y value (default: infinite)
-    float maximum = std::numeric_limits<float>::infinity();  ///< Maximum y value (default: infinite)
-    bool closed = false;                                     ///< Whether the cylinder has end caps (default: open)
+    float minimum = -std::numeric_limits<float>::max(); ///< Minimum y value (default: max)
+    float maximum = std::numeric_limits<float>::max();  ///< Maximum y value (default: max)
+    bool closed = false;                                ///< Whether the cylinder has end caps (default: open)
 };
 
 /** @brief Equality comparison based on transform and material. */

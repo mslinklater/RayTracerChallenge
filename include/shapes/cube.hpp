@@ -38,6 +38,11 @@ class Cube : public Shape
      */
     Tuple NormalAtLocal(const Tuple& point, const Intersection& intersection) const override;
 
+    /**
+     * @brief Returns the axis-aligned bounding box of the cube in world space.
+     */
+    BoundingBox GetBounds() const override;
+
   private:
     void CheckAxis(float origin, float direction, float& tmin, float& tmax) const;
 };

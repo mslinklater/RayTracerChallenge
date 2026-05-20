@@ -38,6 +38,10 @@ class Plane : public Shape
      * @return The plane's upward-facing normal vector.
      */
     Tuple NormalAtLocal(const Tuple& point, const Intersection& intersection) const override;
+    /**
+     * @brief Returns the axis-aligned bounding box of the plane in world space.
+     */
+    BoundingBox GetBounds() const override;
 };
 
 // bool operator==(const Plane &p1, const Plane &p2);

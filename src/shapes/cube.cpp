@@ -66,3 +66,8 @@ void Cube::CheckAxis(float origin, float direction, float& tmin, float& tmax) co
         std::swap(tmin, tmax);
     }
 }
+
+BoundingBox Cube::GetBounds() const
+{
+    return BoundingBox(Point(-1.f, -1.f, -1.f), Point(1.f, 1.f, 1.f));
+}

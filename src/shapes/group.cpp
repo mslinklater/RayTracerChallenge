@@ -1,4 +1,5 @@
 #include "shapes/group.hpp"
+#include "boundingbox.hpp"
 #include <algorithm>
 #include <stdexcept>
 
@@ -97,4 +98,14 @@ bool Group::Includes(ObjectId objectId) const
 {
     return std::any_of(children.begin(), children.end(),
                        [objectId](const ShapeUniquePtr& child) { return child->Includes(objectId); });
+}
+
+BoundingBox Group::GetBounds() const
+{
+    BoundingBox bounds;
+    for (const ShapeUniquePtr& child : children)
+    {
+        bounds.Extend(child->GetBoundsInParentSpace());
+    }
+    return bounds;
 }

@@ -213,3 +213,9 @@ BoundingBox Shape::GetBounds() const
 {
     return BoundingBox();
 }
+
+BoundingBox Shape::GetBoundsInParentSpace() const
+{
+    BoundingBox localBounds = GetBounds();
+    return localBounds.Transform(transform);
+}

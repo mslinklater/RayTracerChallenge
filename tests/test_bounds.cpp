@@ -1,7 +1,7 @@
 #include "boundingbox.hpp"
-#include "shapes/cone.hpp"
 #include "shapes/cube.hpp"
 #include "shapes/cylinder.hpp"
+#include "shapes/sphere.hpp"
 #include "shapes/triangle.hpp"
 #include "tuple.hpp"
 #include <catch2/catch_test_macros.hpp>
@@ -132,4 +132,39 @@ TEST_CASE("Checking to see if a box contains a given point", "[bounds]")
             REQUIRE(b.Contains(testCase.point) == testCase.expectedResult);
         }
     }
+}
+
+TEST_CASE("Checking to see if a box contains a given box", "[bounds]")
+{
+    struct TestCase
+    {
+        std::string name;
+        BoundingBox box;
+        bool expectedResult;
+    };
+
+    std::vector<TestCase> cases = {
+        {"1", BoundingBox(Point(5.f, -2.f, 0.f),  Point(11.f, 4.f, 7.f)), true },
+        {"2", BoundingBox(Point(6.f, -1.f, 1.f),  Point(10.f, 3.f, 6.f)), true },
+        {"3", BoundingBox(Point(4.f, -3.f, -1.f), Point(10.f, 3.f, 6.f)), false},
+        {"4", BoundingBox(Point(6.f, -1.f, 1.f),  Point(12.f, 5.f, 8.f)), false}
+    };
+
+    BoundingBox b(Point(5.f, -2.f, 0.f), Point(11.f, 4.f, 7.f));
+    for (const auto& testCase : cases)
+    {
+        DYNAMIC_SECTION("box " << testCase.name)
+        {
+            REQUIRE(b.Contains(testCase.box) == testCase.expectedResult);
+        }
+    }
+}
+
+TEST_CASE("Transforming a bounding box", "[bounds]")
+{
+    BoundingBox b(Point(-1.f, -1.f, -1.f), Point(1.f, 1.f, 1.f));
+    Matrix rotation = Matrix::CreateRotationX(M_PI / 4.f) * Matrix::CreateRotationY(M_PI / 4.f);
+    BoundingBox rotated = b.Transform(rotation);
+    REQUIRE(rotated.GetMin() == Point(-1.4142f, -1.7071f, -1.7071f));
+    REQUIRE(rotated.GetMax() == Point(1.4142f, 1.7071f, 1.7071f));
 }

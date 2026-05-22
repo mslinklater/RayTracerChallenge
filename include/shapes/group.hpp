@@ -88,6 +88,11 @@ class Group : public Shape
 
     bool Includes(ObjectId objectId) const override;
 
+    /**
+     * @brief Returns the bounding box of this shape in world space.
+     */
+    BoundingBox GetBounds() const override;
+
   private:
     Shape& AddOwnedChild(ShapeUniquePtr child);
     const Shape* FindChildByName(const std::string& childName) const;

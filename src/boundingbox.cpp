@@ -1,4 +1,5 @@
 #include "boundingbox.hpp"
+#include "matrix.hpp"
 
 BoundingBox::BoundingBox()
     : min(Point(std::numeric_limits<float>::max(), std::numeric_limits<float>::max(),
@@ -43,4 +44,28 @@ bool BoundingBox::Contains(const Tuple& point) const
 {
     return point.x >= min.x && point.x <= max.x && point.y >= min.y && point.y <= max.y && point.z >= min.z &&
            point.z <= max.z;
+}
+
+bool BoundingBox::Contains(const BoundingBox& box) const
+{
+    return Contains(box.GetMin()) && Contains(box.GetMax());
+}
+
+BoundingBox BoundingBox::Transform(const Matrix& matrix) const
+{
+    // Transform all 8 corners of the box and return a new box that contains them
+    BoundingBox result;
+    for (int x = 0; x <= 1; ++x)
+    {
+        for (int y = 0; y <= 1; ++y)
+        {
+            for (int z = 0; z <= 1; ++z)
+            {
+                Tuple corner = Point(min.x + x * (max.x - min.x), min.y + y * (max.y - min.y),
+                                     min.z + z * (max.z - min.z));
+                result.AddPoint(matrix * corner);
+            }
+        }
+    }
+    return result;
 }

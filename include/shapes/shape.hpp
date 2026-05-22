@@ -134,6 +134,11 @@ class Shape
      */
     virtual BoundingBox GetBounds() const;
 
+    /**
+     * @brief Returns the bounding box of this shape in the space of the parent
+     */
+    BoundingBox GetBoundsInParentSpace() const;
+
   protected:
     void UpdateTransformCache() const;
     void EnsureTransformCache() const;

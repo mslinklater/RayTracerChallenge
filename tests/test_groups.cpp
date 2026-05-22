@@ -1,6 +1,7 @@
 #include "intersection.hpp"
 #include "maths.hpp"
 #include "matrix.hpp"
+#include "shapes/cylinder.hpp"
 #include "shapes/group.hpp"
 #include "shapes/sphere.hpp"
 #include "test_shapes.hpp"
@@ -146,8 +147,25 @@ TEST_CASE("Converting a normal from object to world space", "[groups]")
     REQUIRE(n == Vector(0.2857f, 0.4286f, -0.8571f));
 }
 
+TEST_CASE("A group has a bounding box that contains its children", "[groups]")
+{
+    Sphere s("sphere");
+    s.SetTransform(Matrix::CreateTranslation(2.f, 5.f, -3.f) * Matrix::CreateScaling(2.f, 2.f, 2.f));
+    Cylinder c("cylinder");
+    c.SetMinimum(-2.f);
+    c.SetMaximum(2.f);
+    c.SetClosed(true); // TODO: - change to be 'has caps'
+    c.SetTransform(Matrix::CreateTranslation(-4.f, -1.f, 4.f) * Matrix::CreateScaling(0.5f, 1.f, 0.5f));
+    Group group("group");
+    group.AddChild(s);
+    group.AddChild(c);
+    BoundingBox b = group.GetBounds();
+    REQUIRE(b.GetMin() == Point(-4.5f, -3.f, -5.f));
+    REQUIRE(b.GetMax() == Point(4.f, 7.f, 4.5f));
+}
+
 #if 0
-TEST_CASE("Finding the normal on a child object", "[groups]")
+TEST_CASE("Finding the hormal on a child object", "[groups]")
 {
     Group g1("group1");
     g1.SetTransform(Matrix::CreateRotationY(kPi / 2.f));

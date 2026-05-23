@@ -168,3 +168,79 @@ TEST_CASE("Transforming a bounding box", "[bounds]")
     REQUIRE(rotated.GetMin() == Point(-1.4142f, -1.7071f, -1.7071f));
     REQUIRE(rotated.GetMax() == Point(1.4142f, 1.7071f, 1.7071f));
 }
+
+TEST_CASE("Intersecting a ray with a bounding box at the origin", "[bounds]")
+{
+    BoundingBox b(Point(-1.f, -1.f, -1.f), Point(1.f, 1.f, 1.f));
+
+    struct TestCase
+    {
+        std::string name;
+        Tuple origin;
+        Tuple direction;
+        bool expectedResult;
+    };
+
+    std::vector<TestCase> cases = {
+        {"1",  Point(5.f,  0.5f, 0.f),  Vector(-1.f, 0.f,  0.f),  true },
+        {"2",  Point(5.f,  0.5f, 0.f),  Vector(1.f,  0.f,  0.f),  true },
+        {"3",  Point(0.5f, 5.f,  0.f),  Vector(0.f,  -1.f, 0.f),  true },
+        {"4",  Point(0.5f, -5.f, 0.f),  Vector(0.f,  1.f,  0.f),  true },
+        {"5",  Point(0.5f, 0.f,  5.f),  Vector(0.f,  0.f,  -1.f), true },
+        {"6",  Point(0.5f, 0.f,  -5.f), Vector(0.f,  0.f,  1.f),  true },
+        {"7",  Point(0.f,  0.5f, 0.f),  Vector(0.f,  0.f,  1.f),  true },
+        {"8",  Point(-2.f, 0.f,  0.f),  Vector(2.f,  4.f,  6.f),  false},
+        {"9",  Point(0.f,  -2.f, 0.f),  Vector(6.f,  2.f,  4.f),  false},
+        {"10", Point(0.f,  0.f,  -2.f), Vector(4.f,  6.f,  2.f),  false},
+        {"11", Point(2.f,  0.f,  2.f),  Vector(0.f,  0.f,  -1.f), false},
+        {"12", Point(0.f,  2.f,  2.f),  Vector(0.f,  -1.f, 0.f),  false},
+        {"13", Point(2.f,  2.f,  0.f),  Vector(-1.f, 0.f,  0.f),  false}
+    };
+
+    for (const auto& testCase : cases)
+    {
+        DYNAMIC_SECTION("case " << testCase.name)
+        {
+            Ray ray(testCase.origin, testCase.direction.Normalize());
+            REQUIRE(b.Intersect(ray) == testCase.expectedResult);
+        }
+    }
+}
+
+TEST_CASE("Intersecting a ray with a non cubic bounding box", "[bounds]")
+{
+    BoundingBox b(Point(5.f, -2.f, 0.f), Point(11.f, 4.f, 7.f));
+
+    struct TestCase
+    {
+        std::string name;
+        Tuple origin;
+        Tuple direction;
+        bool expectedResult;
+    };
+
+    std::vector<TestCase> cases = {
+        {"1",  Point(15.f, 1.f,  2.f),  Vector(-1.f, 0.f,  0.f),  true },
+        {"2",  Point(-5.f, -1.f, 4.f),  Vector(1.f,  0.f,  0.f),  true },
+        {"3",  Point(7.f,  6.f,  5.f),  Vector(0.f,  -1.f, 0.f),  true },
+        {"4",  Point(9.f,  -5.f, 6.f),  Vector(0.f,  1.f,  0.f),  true },
+        {"5",  Point(8.f,  2.f,  12.f), Vector(0.f,  0.f,  -1.f), true },
+        {"6",  Point(6.f,  0.f,  -5.f), Vector(0.f,  0.f,  1.f),  true },
+        {"7",  Point(8.f,  1.f,  3.5f), Vector(0.f,  0.f,  1.f),  true },
+        {"8",  Point(9.f,  -1.f, -8.f), Vector(2.f,  4.f,  6.f),  false},
+        {"9",  Point(8.f,  3.f,  -4.f), Vector(6.f,  2.f,  4.f),  false},
+        {"10", Point(9.f,  -1.f, -2.f), Vector(4.f,  6.f,  2.f),  false},
+        {"11", Point(4.f,  0.f,  9.f),  Vector(0.f,  0.f,  -1.f), false},
+        {"12", Point(8.f,  6.f,  -1.f), Vector(0.f,  -1.f, 0.f),  false},
+        {"13", Point(12.f, 5.f,  4.f),  Vector(-1.f, 0.f,  0.f),  false}
+    };
+
+    for (const auto& testCase : cases)
+    {
+        DYNAMIC_SECTION("case " << testCase.name)
+        {
+            Ray ray(testCase.origin, testCase.direction.Normalize());
+            REQUIRE(b.Intersect(ray) == testCase.expectedResult);
+        }
+    }
+}

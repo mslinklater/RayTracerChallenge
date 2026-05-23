@@ -1,4 +1,5 @@
 #pragma once
+#include "ray.hpp"
 #include "tuple.hpp"
 
 class Matrix;
@@ -49,6 +50,11 @@ class BoundingBox
         max.y = std::max(max.y, other.GetMax().y);
         max.z = std::max(max.z, other.GetMax().z);
     }
+
+    /**
+     * @brief Returns whether the ray intersects the bounding box.
+     */
+    bool Intersect(const Ray& ray) const;
 
   private:
     Tuple min;

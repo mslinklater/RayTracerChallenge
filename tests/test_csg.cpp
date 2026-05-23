@@ -121,3 +121,15 @@ TEST_CASE("A ray hits a CSG object", "[csg]")
     REQUIRE(xs[0].GetT() == 4.0f);
     REQUIRE(xs[1].GetT() == 6.5f);
 }
+
+TEST_CASE("A CSG shape has a bounding box that contains its children", "[csg]")
+{
+    Sphere left("left");
+    Sphere right("right");
+    right.SetTransform(Matrix::CreateTranslation(2.f, 3.f, 4.f));
+    CSG csg("csg", CSG::OpDifference, &left, &right);
+
+    BoundingBox b = csg.GetBounds();
+    REQUIRE(b.GetMin() == Point(-1.f, -1.f, -1.f));
+    REQUIRE(b.GetMax() == Point(3.f, 4.f, 5.f));
+}

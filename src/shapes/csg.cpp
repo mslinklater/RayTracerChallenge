@@ -101,3 +101,13 @@ bool CSG::Includes(ObjectId objectId) const
     assert(objectId != kInvalidObjectId);
     return left->Includes(objectId) || right->Includes(objectId);
 }
+
+BoundingBox CSG::GetBounds() const
+{
+    BoundingBox leftBounds = left->GetBoundsInParentSpace();
+    BoundingBox rightBounds = right->GetBoundsInParentSpace();
+    BoundingBox result;
+    result.Extend(leftBounds);
+    result.Extend(rightBounds);
+    return result;
+}

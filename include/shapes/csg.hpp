@@ -44,6 +44,11 @@ class CSG : public Shape
      */
     Tuple NormalAtLocal(const Tuple& point, const Intersection& intersection) const override;
 
+    /**
+     * @brief Returns the bounding box of the cone in object space.
+     */
+    BoundingBox GetBounds() const override;
+
     Operation GetOperation() const
     {
         return operation;
